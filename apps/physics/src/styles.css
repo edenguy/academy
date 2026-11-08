@@ -272,9 +272,6 @@ input[type='range'].slider::-moz-range-progress {
   border-radius: var(--r-pill);
   background: var(--accent);
 }
-[dir='rtl'] input[type='range'].slider::-webkit-slider-runnable-track {
-  background: linear-gradient(270deg, var(--accent) var(--p, 0%), var(--surface-3) var(--p, 0%));
-}
 input[type='range'].slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 28px;
