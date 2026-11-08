@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Renders the Academy hub's WhatsApp/Open-Graph share card (og-card.html) to a 1200×1200 JPG
-// per locale, using a subject-neutral "spark" mark — this page spans every subject, so it
-// must never wear one subject's icon (e.g. Math Academy's ∫). Run after any copy change.
+// per locale, using the hub-and-spoke mark (one center node, three branches) that matches
+// docs/hub/favicon.svg — this page spans every subject, so it must never wear one subject's
+// own icon (e.g. Math Academy's ∫). Run after any copy change.
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -11,9 +12,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatePath = join(__dirname, 'og-card.html');
 const outDir = join(__dirname, '..', 'docs', 'hub', 'social');
 
-// A simple four-point "spark" — discovery/insight, deliberately not tied to any one subject.
-const SPARK_SVG = `<svg viewBox="0 0 100 100" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-  <path d="M50 4 C53 30 70 47 96 50 C70 53 53 70 50 96 C47 70 30 53 4 50 C30 47 47 30 50 4 Z"/>
+// One center node branching to three — literally what this hub is (one place, several
+// subjects) rather than a generic "AI sparkle". Matches docs/hub/favicon.svg.
+const SPARK_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+    <line x1="32" y1="30" x2="32" y2="17"/>
+    <line x1="32" y1="30" x2="43.3" y2="36.5"/>
+    <line x1="32" y1="30" x2="20.7" y2="36.5"/>
+  </g>
+  <circle cx="32" cy="30" r="6.5" fill="#ffffff"/>
+  <circle cx="32" cy="17" r="4" fill="#ffffff"/>
+  <circle cx="43.3" cy="36.5" r="4" fill="#ffffff"/>
+  <circle cx="20.7" cy="36.5" r="4" fill="#ffffff"/>
 </svg>`;
 
 const CARDS = [
@@ -22,14 +32,14 @@ const CARDS = [
     dir: 'rtl',
     title: 'האקדמיה',
     subtitle: 'Academy',
-    tagline: 'כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.',
+    tagline: 'התחיל מצולל אחד שלמד נייטרוקס בעשר בלילה בשדה תעופה, כי לא רצה לשנן בלי להבין. היום זה אוסף שיעורים בנושאים שונים, באותה שיטה. כרגע בפיילוט חינמי.',
   },
   {
     file: 'preview-square-en.jpg',
     dir: 'ltr',
     title: 'Academy',
     subtitle: 'האקדמיה',
-    tagline: 'A free, independent study tool: understand through simulation and curiosity, not memorization. One subject at a time, in Hebrew and English.',
+    tagline: "Started with one diver learning Nitrox at 10pm in an airport, because memorizing without understanding wasn't enough. Now it's lessons across subjects, same method. Currently a free pilot.",
   },
 ];
 
