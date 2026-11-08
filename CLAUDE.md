@@ -13,6 +13,13 @@ Bilingual (Hebrew first, English second) from day one, for every piece of learne
 content, in every subject — never an afterthought bolted on later. See `docs/index.html` for
 the mission statement as actually shown to visitors.
 
+**The one idea every lesson is built on:** you grab a handle and move it, and the idea
+responds — a slider under a Riemann-sum curve, sliders over partial pressures in the Nitrox
+lab. That's not a UI flourish, it's the actual teaching method (simulate, don't memorize), and
+it's also why the hub's own logo and hero are literally a handle on a curve (see "Visual
+design system" below and `HUB_LLD.md` §0). Every new subject should have at least one
+interactive explorer the learner drags/scrubs, not just a quiz.
+
 Currently free, as a pilot — that is not a permanent commitment. Don't state or imply
 anywhere that it's free *forever*; tie "free" to the pilot phase wherever it's mentioned (see
 `docs/index.html`'s own phrasing), and don't add a pricing/payment claim of any kind without
@@ -129,10 +136,11 @@ Today every subject supports exactly `en` and `he`. To add a third language (say
 3. Update `vite.config.ts`: `base: '/academy/subjects/<subject>/'`,
    `outDir: '../../docs/subjects/<subject>'`.
 4. Give it its own logo mark — subject-specific is correct here (unlike the hub page, which
-   must stay neutral since it spans every subject; see `docs/index.html`'s "spark" mark vs.
-   Math Academy's `∫`).
-5. Add a card for it on `docs/index.html`, replacing its "coming soon" placeholder if one
-   exists.
+   must stay neutral since it spans every subject; see `docs/hub/logo.svg`'s neutral "Handle"
+   mark vs. Math Academy's `∫`).
+5. Add it in **two places** on the hub (`docs/index.html`): a card in the subjects grid and a
+   node on the hero handle's curve (`SUBJECTS` array in `docs/hub/hub.js`) — replacing a
+   "coming soon" placeholder if one exists.
 6. `cd apps/<subject> && npm install && npm run build` and commit the result under `docs/`.
 
 **Content organization within a subject (decided, not yet built):** once a subject has more
@@ -146,18 +154,57 @@ project's own explore-anything spirit. Math Academy's current schema is still fl
 implicit topic, "integrals") — this structure applies once there's a second topic to actually
 navigate between; don't build the nested picker UI before that's true.
 
-## The hub page (`docs/index.html`)
+## The hub page (`docs/index.html`, `docs/hub/hub.css`, `docs/hub/hub.js`)
 
-Plain static HTML (no framework, no build step) with a real language toggle — never show both
-languages inline in the same block of text. Every bilingual string is two elements,
-`<span class="t-he">...</span><span class="t-en">...</span>`, and CSS
+Plain static HTML/CSS/vanilla JS (no framework, no build step) with a real language toggle —
+never show both languages inline in the same block of text. Every bilingual string is two
+elements, `<span class="t-he">...</span><span class="t-en">...</span>`, and CSS
 (`[data-lang="he"] .t-en, [data-lang="en"] .t-he { display: none; }`) shows only one; a small
 inline script flips `data-lang`/`dir`/`lang` on `<html>`, persists the choice to
 `localStorage`, and runs once, synchronously, in `<head>` before first paint (same pattern
 each subject app's own pre-paint theme script uses) so there's no flash of the wrong language
-or direction. The hub keeps its own neutral "spark" mark and its own orbit-diagram hero visual
-— subject-specific icon colors show up only on the subject cards, never on the hub's own
-chrome (see "What this is" above on why the hub can't wear any one subject's icon).
+or direction.
+
+The hub keeps its own neutral "Handle" mark (`docs/hub/logo.svg` — a handle on a spectrum
+curve, the one gesture every lesson shares) and a draggable hero handle that scrubs between
+subjects on that same curve — subject-specific icon colors show up only on the subject cards
+and inside the hero handle's nodes, never on the hub's own chrome (top bar, buttons, headings;
+see "What this is" above on why the hub can't wear any one subject's icon). Full design spec:
+`HUB_LLD.md` at the repo root (kept outside `docs/` so it never gets served).
+
+## Visual design system (hub) and UX approach
+
+The hub (`docs/hub/hub.css`) is deliberately **typographically and tonally distinct from the
+subject apps**: hub = the "OS" (system chrome, neutral), subjects = "apps" (their own
+personality). Don't blur that line — e.g. don't bring Rubik or a subject's violet→pink pair
+onto the hub, and don't bring the hub's Plex/mono "instrument" look into a subject app
+uninvited.
+
+- **Register:** "futuristic hi-tech" here means *a well-lit instrument*, not an "AI product" —
+  no sparkles, neural-net dots, mesh-gradient blobs, gradient-filled headlines, emoji icons, or
+  text claiming "AI"/"smart"/"adaptive". Dark-first (near-black indigo, one soft light at the
+  top-start corner), light mode is "paper lab". Glow is reserved for things that are live or
+  draggable — nothing static glows. Full ban list: `HUB_LLD.md` §7.
+- **Typography:** IBM Plex Sans Hebrew (headings/body, both languages) + IBM Plex Mono
+  (readouts, chips, numbers — tabular, uppercase-Latin-only, never on Hebrew). Subject apps
+  keep Rubik; this is intentional, not inconsistency.
+- **Color tokens** (`:root` / `:root[data-theme="dark"]` in `hub.css`): `--bg/--bg-2`,
+  `--panel` (glass: blur + hairline border + inset top-edge highlight), `--ink/--ink-2/--muted`,
+  `--accent` (hub's own electric violet, *not* Math's violet→pink), `--teal/--violet/--pink/
+  --amber/--blue` (the "spectrum" — the only multi-hue gradient on the page, used for the logo
+  curve and the hero curve; never as a background wash). A subject's own `--c1/--c2` are set
+  inline on its card, never promoted to hub tokens.
+- **Numbers never mirror:** every number, formula, airport/mix code is an LTR island
+  (`.num`/`dir="ltr"` + `unicode-bidi: isolate`) inside the RTL page — same rule the subject
+  apps already follow. Hebrew text is never tracked or uppercased.
+- **Motion:** `cubic-bezier(.2,.8,.2,1)`, 180–320 ms; the one idle animation (the logo
+  "breathing") is 5 s and off under `prefers-reduced-motion`; no infinite float/bob/particles.
+- **Never invent a number for a live demo.** A demo-displayed constant (e.g. the Nitrox demo's
+  1.4 pO₂ limit) must be read from and cited to the subject's own source of truth
+  (`apps/nitrox/src/science/limits.ts`'s `DEFAULT_PLANNING_PPO2`), never hardcoded — this is
+  rule 6 ("never invent a fact") applied to the hub's own live infographics.
+
+Full rationale, exact CSS, copy and acceptance checklist: `HUB_LLD.md`.
 
 ## Working with a collaborator
 
@@ -192,11 +239,14 @@ npm run export:pdf    # same content as a printable PDF
 - **Done:** Nitrox Academy, migrated in whole from its own repo — the mature, full-featured
   subject (chapters, assessment engine, PWA/offline support). Math Academy pilot — 3 lessons
   on the definite integral, each with a live `IntegralExplorer` (Riemann-sum visualization)
-  and a short quiz, bilingual throughout. The Academy hub landing page (`docs/index.html`)
-  with its own neutral logo, mission statement, real EN/HE toggle, an animated orbit-diagram
-  hero visual, and WhatsApp/Open-Graph share cards (Hebrew live, English ready as an asset —
-  see "Content review round trip" above on why a static page can only carry one locale's meta
-  tags at a time).
+  and a short quiz, bilingual throughout. The Academy hub landing page (`docs/index.html`,
+  `docs/hub/`) — a "lit instrument" visual system built around the neutral "Handle" mark, a
+  mission statement about the method (not a personal narrative — see "Visual design system"
+  below), a real EN/HE toggle, a draggable hero handle that scrubs between subjects, two live
+  mini-simulations (Riemann rectangles, Nitrox pO₂ vs depth), a memorize-vs-move infographic,
+  and WhatsApp/Open-Graph share cards (Hebrew live, English ready as an asset — see "Content
+  review round trip" above on why a static page can only carry one locale's meta tags at a
+  time). Full spec: `HUB_LLD.md`.
 - **Decided, not yet built:** the topic-first content structure described above, for whenever
   Math Academy (or a future subject) grows past one topic.
 - **Not started:** a third subject (Physics Academy and Chemistry Academy are placeholder
