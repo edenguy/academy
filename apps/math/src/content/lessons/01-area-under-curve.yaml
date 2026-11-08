@@ -1,6 +1,7 @@
 # Lesson 1 — the big idea: approximate any area with rectangles, and check it against a
 # shape we can already verify by hand (a triangle), before trying one we can't.
 id: area-under-curve
+topic: integrals
 order: 1
 
 title:
@@ -61,7 +62,8 @@ intro:
       לקיצור הדרך הזה שם.
 
 explorers:
-  - fn: line
+  - kind: integral
+    fn: line
     a: 0
     b: 6
     initialN: 4
@@ -69,7 +71,8 @@ explorers:
     caption:
       en: "Check it: a straight line, area already known (18)"
       he: "בדיקה: קו ישר, שטח ידוע מראש (18)"
-  - fn: parabola
+  - kind: integral
+    fn: parabola
     a: 0
     b: 4
     initialN: 4

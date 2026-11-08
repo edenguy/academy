@@ -1,0 +1,127 @@
+# Lesson 4 (topic: derivatives, lesson 1) — motivate the derivative via average vs.
+# instantaneous rate of change, the same secant-to-tangent construction Physics Academy uses
+# for velocity. Curve: f(x) = 0.5x², f'(x) = x (see src/math/derivative.ts).
+id: rate-of-change
+topic: derivatives
+order: 1
+
+title:
+  en: "Rate of Change: From Average Slope to the Derivative"
+  he: "קצב שינוי: מהשיפוע הממוצע לנגזרת"
+
+subtitle:
+  en: "Chapter 1 · how fast, right now?"
+  he: "פרק 1 · באיזה קצב, ברגע הזה?"
+
+intro:
+  - en: >-
+      A runner's speed over a {{200}}m race isn't one number. Over the whole race it might
+      average out to [[8]] m/s — but at the start, right off the blocks, they're much slower;
+      mid-race, at full sprint, much faster. "Average speed" and "speed right now" are
+      genuinely different questions, and this chapter is about the second one.
+    he: >-
+      המהירות של רץ ב-{{200}} מ' היא לא מספר אחד. על פני כל המרוץ היא אולי מתאזנת סביב [[8]]
+      מ'/ש' — אבל בהתחלה, רגע אחרי היציאה, הוא הרבה יותר איטי; באמצע המרוץ, בשיא הספרינט, הרבה
+      יותר מהיר. "מהירות ממוצעת" ו"מהירות ברגע הזה" הן שתי שאלות שונות לגמרי, והפרק הזה עוסק
+      בשנייה.
+  - en: >-
+      Start with the question you already know how to answer: the **average** rate of change.
+      For any function {{f}}, between two points {{x₁}} and {{x₂}}, it's just {{Δy/Δx}} — the
+      same slope formula from a straight line, {{m = [f(x₂) − f(x₁)] / (x₂ − x₁)}}. It's the
+      slope of the **secant line** connecting the two points on the graph.
+    he: >-
+      נתחילו מהשאלה שאתם כבר יודעים לענות עליה: קצב השינוי ה**ממוצע**. לכל פונקציה {{f}}, בין
+      שתי נקודות {{x₁}} ו-{{x₂}}, הוא פשוט {{Δy/Δx}} — אותה נוסחת שיפוע שמוכרת לכם מקו ישר,
+      {{m = [f(x₂) − f(x₁)] / (x₂ − x₁)}}. זה השיפוע של **הקו החותך** (secant) שמחבר בין שתי
+      הנקודות על הגרף.
+  - en: >-
+      Now shrink the gap. Slide {{x₂}} closer and closer to {{x₁}} — the secant line pivots,
+      and in the limit, as {{Δx → 0}}, it settles into the **tangent line** at {{x₁}}: the line
+      that just grazes the curve at a single point. Its slope is the **instantaneous** rate of
+      change — the **derivative** — written {{f′(x₁)}} or {{dy/dx}}:
+    he: >-
+      עכשיו מכווצים את הפער. מזיזים את {{x₂}} קרוב יותר ויותר ל-{{x₁}} — הקו החותך מסתובב, ובגבול,
+      כש-{{Δx → 0}}, הוא מתייצב בתור **קו המשיק** (tangent) ב-{{x₁}}: הקו שרק נוגע בעקומה בנקודה
+      אחת. השיפוע שלו הוא קצב השינוי ה**רגעי** — ה**נגזרת** — ונכתב {{f′(x₁)}} או {{dy/dx}}:
+  - en: >-
+      {{f′(x₁) = lim(Δx→0)}} {{[f(x₁+Δx) − f(x₁)] / Δx}}. That's the whole definition — the
+      same secant slope as before, just pushed to its limit.
+    he: >-
+      {{f′(x₁) = lim(Δx→0)}} {{[f(x₁+Δx) − f(x₁)] / Δx}}. זו ההגדרה כולה — אותו שיפוע קו חותך
+      כמו קודם, רק נדחף לגבול שלו.
+  - en: >-
+      You may already recognize this gesture: it's exactly the one Math Academy's sibling,
+      **Physics Academy**, uses to get from average velocity to instantaneous velocity on a
+      position-vs-time graph — grab two points, watch the secant collapse into a tangent. The
+      idea is identical; only the letters change. Here {{f(x) = 0.5x²}} is just a shape, not a
+      position in time — but "how fast is it changing, right now" means the same thing either
+      way.
+    he: >-
+      ייתכן שהתנועה הזו כבר מוכרת לכם: היא בדיוק זו שבה **אקדמיית הפיזיקה**, "אחותה" של אקדמיית
+      המתמטיקה, משתמשת כדי לעבור ממהירות ממוצעת למהירות רגעית על גרף מיקום-זמן — תופסים שתי
+      נקודות, ורואים את הקו החותך מתכווץ למשיק. הרעיון זהה; רק האותיות משתנות. כאן {{f(x) =
+      0.5x²}} היא רק צורה, לא מיקום בזמן — אבל "באיזה קצב היא משתנה, ברגע הזה" אומר אותו דבר
+      בשני המקרים.
+  - en: >-
+      Try it below on {{f(x) = 0.5x²}}: drag {{x₁}} to [[1]] and {{x₂}} to [[3]] — the average
+      rate is {{(4.5 − 0.5) / 2 = [[2]]}}. Now drag {{x₂}} back toward {{x₁}}: the average rate
+      slides toward **[[1]]**, the exact instantaneous rate at {{x = 1}}.
+    he: >-
+      נסו למטה על {{f(x) = 0.5x²}}: גררו את {{x₁}} ל-[[1]] ואת {{x₂}} ל-[[3]] — קצב השינוי
+      הממוצע הוא {{(4.5 − 0.5) / 2 = [[2]]}}. עכשיו גררו את {{x₂}} בחזרה לכיוון {{x₁}}: קצב
+      השינוי הממוצע נע לכיוון **[[1]]**, הקצב הרגעי המדויק ב-{{x = 1}}.
+
+explorers:
+  - kind: secant
+    curve: quadratic
+    initialX1: 1
+    initialX2: 3
+    caption:
+      en: "f(x) = 0.5x² — drag x1 and x2, watch the secant become a tangent"
+      he: "f(x) = 0.5x² — גררו את x1 ו-x2, צפו בקו החותך הופך למשיק"
+
+keyPoints:
+  - en: "Average rate of change between x1 and x2: m = [f(x2) − f(x1)] / (x2 − x1) — the secant slope."
+    he: "קצב שינוי ממוצע בין x1 ל-x2: m = [f(x2) − f(x1)] / (x2 − x1) — שיפוע הקו החותך."
+  - en: "The derivative f′(x) is the instantaneous rate of change: the limit of the average rate as x2 → x1, i.e. the tangent line's slope."
+    he: "הנגזרת f′(x) היא קצב השינוי הרגעי: הגבול של הקצב הממוצע כש-x2 שואף ל-x1, כלומר שיפוע קו המשיק."
+  - en: "Same gesture, different subject: this is exactly Physics Academy's average-to-instantaneous velocity construction, applied to any function instead of just position."
+    he: "אותה תנועה, נושא אחר: זה בדיוק מה שאקדמיית הפיזיקה עושה כדי לעבור ממהירות ממוצעת לרגעית, רק מיושם על כל פונקציה ולא רק על מיקום."
+
+quiz:
+  - type: numeric
+    id: q1-average-rate
+    prompt:
+      en: "For f(x) = 0.5x², what is the average rate of change between x = 2 and x = 4?"
+      he: "עבור f(x) = 0.5x², מה קצב השינוי הממוצע בין x = 2 ל-x = 4?"
+    correctValue: 3
+    tolerance: 0.1
+    explanation:
+      en: "f(2) = 2, f(4) = 8. Average rate = (8 − 2) / (4 − 2) = 6 / 2 = 3."
+      he: "f(2) = 2, f(4) = 8. קצב ממוצע = (8 − 2) / (4 − 2) = 6 / 2 = 3."
+  - type: mcq
+    id: q2-secant-to-tangent
+    prompt:
+      en: "As x2 slides closer and closer to x1, what does the secant line's slope approach?"
+      he: "ככל ש-x2 מתקרב יותר ויותר ל-x1, לאיזה ערך שואף שיפוע הקו החותך?"
+    choices:
+      - en: Zero, always
+        he: אפס, תמיד
+      - en: The instantaneous rate of change at x1 — the derivative, f′(x1)
+        he: קצב השינוי הרגעי ב-x1 — הנגזרת, f′(x1)
+      - en: It doesn't approach anything in particular
+        he: הוא לא שואף לשום דבר מסוים
+    correctIndex: 1
+    explanation:
+      en: "This is the definition of the derivative: f′(x1) = lim(Δx→0) [f(x1+Δx) − f(x1)] / Δx. The secant becomes the tangent exactly at that limit."
+      he: "זו ההגדרה של הנגזרת: f′(x1) = lim(Δx→0) [f(x1+Δx) − f(x1)] / Δx. הקו החותך הופך למשיק בדיוק בגבול הזה."
+  - type: numeric
+    id: q3-instantaneous-rate
+    prompt:
+      en: "For f(x) = 0.5x², what is the exact instantaneous rate of change (the derivative) at x = 5?"
+      he: "עבור f(x) = 0.5x², מה קצב השינוי הרגעי המדויק (הנגזרת) ב-x = 5?"
+    correctValue: 5
+    tolerance: 0.1
+    explanation:
+      en: "For f(x) = 0.5x², the derivative is f′(x) = x (you'll see why in the next lesson's power rule). So f′(5) = 5."
+      he: "עבור f(x) = 0.5x², הנגזרת היא f′(x) = x (תראו למה בשיעור הבא, בחוק החזקה). אז f′(5) = 5."

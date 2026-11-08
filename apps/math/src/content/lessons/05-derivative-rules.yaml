@@ -1,0 +1,110 @@
+# Lesson 5 (topic: derivatives, lesson 2) — the power rule for polynomial and root functions
+# only (grade-י scope; rational functions and product/quotient rules are grade-י"א, out of
+# scope here per the official curriculum PDF, p.25-29).
+id: derivative-rules
+topic: derivatives
+order: 2
+
+title:
+  en: "Derivative Rules: Skipping the Limit Every Time"
+  he: "חוקי גזירה: לגזור בלי לחזור לגבול כל פעם"
+
+subtitle:
+  en: "Chapter 2 · the pattern behind the limit"
+  he: "פרק 2 · התבנית שמאחורי הגבול"
+
+intro:
+  - en: >-
+      Computing a limit by hand every time you need a derivative would get old fast. Instead,
+      mathematicians found that the limit definition always simplifies to the **same pattern**
+      for a power of x — so once you know the pattern, you never need the limit again.
+    he: >-
+      לחשב גבול ביד כל פעם שצריך נגזרת היה נהיה מייגע מהר מאוד. במקום זה, מתמטיקאים גילו
+      שהגדרת הגבול תמיד מתפשטת ל**אותה תבנית**, עבור חזקה של x — אז ברגע שמכירים את התבנית, אין
+      יותר צורך בגבול.
+  - en: >-
+      **The power rule:** for {{f(x) = xⁿ}}, the derivative is {{f′(x) = n·xⁿ⁻¹}} — bring the
+      power down as a multiplier, then reduce the power by one. Try it on {{f(x) = x³}}:
+      {{f′(x) = 3x²}}.
+    he: >-
+      **חוק החזקה:** עבור {{f(x) = xⁿ}}, הנגזרת היא {{f′(x) = n·xⁿ⁻¹}} — מורידים את החזקה כגורם
+      כפל, ואז מקטינים את החזקה באחת. נסו על {{f(x) = x³}}: {{f′(x) = 3x²}}.
+  - en: >-
+      The rule isn't just for whole-number powers. A square root is a power in disguise:
+      {{√x = x^(1/2)}}. The same rule applies: {{f′(x) = (1/2)·x^(-1/2) = 1 / (2√x)}}. Same
+      pattern, fractional exponent.
+    he: >-
+      החוק לא מיועד רק לחזקות שלמות. שורש ריבועי הוא חזקה במסווה: {{√x = x^(1/2)}}. אותו חוק
+      חל: {{f′(x) = (1/2)·x^(-1/2) = 1 / (2√x)}}. אותה תבנית, מעריך שברי.
+  - en: >-
+      Two more rules make everything easier: a **constant multiplier** rides along unchanged —
+      {{d/dx[c·f(x)] = c·f′(x)}} — and derivatives of a **sum** add term by term —
+      {{d/dx[f(x) + g(x)] = f′(x) + g′(x)}}. Together, these three rules let you differentiate
+      any polynomial or root function term by term, with no limit in sight.
+    he: >-
+      שני חוקים נוספים מקלים על הכול: **מקדם קבוע** רוכב ללא שינוי — {{d/dx[c·f(x)] = c·f′(x)}}
+      — ונגזרות של **סכום** מתחברות איבר-איבר — {{d/dx[f(x) + g(x)] = f′(x) + g′(x)}}. יחד, שלושת
+      החוקים האלה מאפשרים לגזור כל פולינום או פונקציית שורש איבר-איבר, בלי שום גבול באופק.
+  - en: >-
+      Play with the explorer: pick a power ({{√x, x, x², x³}}), adjust the coefficient, and
+      watch {{f(x)}} (blue) and {{f′(x)}} (orange, dashed) respond together. Notice that
+      raising the power makes the derivative graph steeper and more curved — the pattern
+      scales exactly as the rule predicts.
+    he: >-
+      שחקו בסימולטור: בחרו חזקה ({{√x, x, x², x³}}), כווננו את המקדם, וצפו ב-{{f(x)}} (כחול)
+      וב-{{f′(x)}} (כתום, מקווקו) מגיבים יחד. שימו לב שהעלאת החזקה הופכת את גרף הנגזרת לתלול
+      ומעוקל יותר — התבנית מתכווננת בדיוק כפי שהחוק מנבא.
+
+explorers:
+  - kind: powerRule
+    initialPower: 2
+    initialCoeff: 1
+    caption:
+      en: "Adjust the power and coefficient — f and f' respond live"
+      he: "כווננו את החזקה והמקדם — f ו-f' מגיבים בזמן אמת"
+
+keyPoints:
+  - en: "Power rule: d/dx[xⁿ] = n·xⁿ⁻¹ — works for whole-number and fractional powers alike (a root is a fractional power)."
+    he: "חוק החזקה: d/dx[xⁿ] = n·xⁿ⁻¹ — עובד גם לחזקות שלמות וגם לחזקות שבריות (שורש הוא חזקה שברית)."
+  - en: "Constant-multiple rule: d/dx[c·f(x)] = c·f′(x)."
+    he: "חוק הכפל בקבוע: d/dx[c·f(x)] = c·f′(x)."
+  - en: "Sum rule: d/dx[f(x) + g(x)] = f′(x) + g′(x) — differentiate a polynomial term by term."
+    he: "חוק הסכום: d/dx[f(x) + g(x)] = f′(x) + g′(x) — גוזרים פולינום איבר-איבר."
+
+quiz:
+  - type: numeric
+    id: q1-power-rule-basic
+    prompt:
+      en: "Using the power rule, what is the derivative of f(x) = x⁴ at x = 2?"
+      he: "בעזרת חוק החזקה, מה הנגזרת של f(x) = x⁴ ב-x = 2?"
+    correctValue: 32
+    tolerance: 0.1
+    explanation:
+      en: "f′(x) = 4x³. At x = 2: 4 × 8 = 32."
+      he: "f′(x) = 4x³. ב-x = 2: 4 × 8 = 32."
+  - type: numeric
+    id: q2-power-rule-coefficient
+    prompt:
+      en: "What is the derivative of f(x) = 3x² at x = 1?"
+      he: "מה הנגזרת של f(x) = 3x² ב-x = 1?"
+    correctValue: 6
+    tolerance: 0.1
+    explanation:
+      en: "f′(x) = 3 · 2x = 6x (constant-multiple rule + power rule). At x = 1: 6 × 1 = 6."
+      he: "f′(x) = 3 · 2x = 6x (חוק הכפל בקבוע + חוק החזקה). ב-x = 1: 6 × 1 = 6."
+  - type: mcq
+    id: q3-root-as-power
+    prompt:
+      en: "Why does the power rule work on f(x) = √x?"
+      he: "למה חוק החזקה עובד על f(x) = √x?"
+    choices:
+      - en: It doesn't — roots need a completely different rule.
+        he: הוא לא עובד — לשורשים צריך חוק שונה לגמרי.
+      - en: Because √x is x raised to the power 1/2, so it's still a power function.
+        he: כי √x הוא x בחזקת 1/2, אז זו עדיין פונקציית חזקה.
+      - en: Because √x happens to have the same derivative as x².
+        he: כי ל-√x יש במקרה אותה נגזרת כמו ל-x².
+    correctIndex: 1
+    explanation:
+      en: "√x = x^(1/2) is a power function with a fractional exponent, so the same rule (bring the power down, reduce it by one) applies directly: d/dx[x^(1/2)] = (1/2)x^(-1/2)."
+      he: "√x = x^(1/2) היא פונקציית חזקה עם מעריך שברי, אז אותו חוק (מורידים את החזקה, מקטינים אותה באחת) חל ישירות: d/dx[x^(1/2)] = (1/2)x^(-1/2)."

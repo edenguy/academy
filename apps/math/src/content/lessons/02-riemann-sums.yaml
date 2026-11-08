@@ -1,6 +1,7 @@
 # Lesson 2 — formalize left/right/midpoint sums, show how they bracket the true area for an
 # increasing function, and land on the ∫ notation as shorthand for "the limit as n → ∞".
 id: riemann-sums
+topic: integrals
 order: 2
 
 title:
@@ -57,7 +58,8 @@ intro:
       שהוא: הגבול של סכום מלבנים.
 
 explorers:
-  - fn: parabola
+  - kind: integral
+    fn: parabola
     a: 0
     b: 4
     initialN: 6

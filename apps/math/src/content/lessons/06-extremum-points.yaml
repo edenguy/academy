@@ -1,0 +1,115 @@
+# Lesson 6 (topic: derivatives, lesson 3) — sign of f' to determine increasing/decreasing,
+# and extremum points where f' = 0 and the sign flips. Curve: f(x) = x³ - 3x (see
+# src/math/derivative.ts's cubicWave, extrema hand-verified at x = ±1).
+id: extremum-points
+topic: derivatives
+order: 3
+
+title:
+  en: "Where a Function Rises, Falls, and Stops"
+  he: "איפה הפונקציה עולה, יורדת ועוצרת"
+
+subtitle:
+  en: "Chapter 3 · reading the graph from the derivative"
+  he: "פרק 3 · קוראים את הגרף מתוך הנגזרת"
+
+intro:
+  - en: >-
+      The derivative isn't just a number at one point — its **sign** tells you the whole shape
+      of the graph around it. Where {{f′(x) > 0}}, the function is climbing. Where
+      {{f′(x) < 0}}, it's falling. This single idea is the most common full-function-behavior
+      question on the exam, and it comes entirely from the sign, not the formula.
+    he: >-
+      הנגזרת היא לא רק מספר בנקודה אחת — ה**סימן** שלה מספר לכם את כל צורת הגרף סביבה. במקום
+      שבו {{f′(x) > 0}}, הפונקציה עולה. במקום שבו {{f′(x) < 0}}, היא יורדת. הרעיון היחיד הזה
+      הוא שאלת חקירת הפונקציה הנפוצה ביותר במבחן, והיא מגיעה כולה מהסימן, לא מהנוסחה.
+  - en: >-
+      Somewhere between "climbing" and "falling," the function has to **stop**, even if only
+      for an instant — and at that instant, the tangent line is flat: {{f′(x) = 0}}. A point
+      where the derivative is zero **and** the sign flips around it is called a **local
+      extremum**: a local maximum if {{f′}} goes from {{+}} to {{−}}, a local minimum if it
+      goes from {{−}} to {{+}}.
+    he: >-
+      אי שם בין "עולה" ל"יורדת", הפונקציה חייבת **לעצור**, גם אם רק לרגע — וברגע הזה, קו המשיק
+      שטוח: {{f′(x) = 0}}. נקודה שבה הנגזרת אפס **והסימן שלה מתהפך** סביבה נקראת **נקודת קיצון
+      מקומית**: מקסימום מקומי אם {{f′}} עובר מ-{{+}} ל-{{−}}, מינימום מקומי אם היא עוברת
+      מ-{{−}} ל-{{+}}.
+  - en: >-
+      Take {{f(x) = x³ − 3x}}. Its derivative is {{f′(x) = 3x² − 3}}, which is zero exactly
+      when {{x = ±1}}. Checking the sign on either side: {{f′}} is positive for {{x < -1}},
+      negative between {{-1}} and {{[[1]]}}, and positive again for {{x > 1}}. So {{x = -1}} is
+      a local **maximum** ({{f(-1) = [[2]]}}) and {{x = 1}} is a local **minimum**
+      ({{f(1) = [[-2]]}}).
+    he: >-
+      ניקח את {{f(x) = x³ − 3x}}. הנגזרת שלה היא {{f′(x) = 3x² − 3}}, שהיא אפס בדיוק כאשר
+      {{x = ±1}}. בדיקת הסימן משני הצדדים: {{f′}} חיובית עבור {{x < -1}}, שלילית בין {{-1}}
+      ל-{{[[1]]}}, וחיובית שוב עבור {{x > 1}}. אז {{x = -1}} היא נקודת מקסימום **מקומית**
+      ({{f(-1) = [[2]]}}) ו-{{x = 1}} היא נקודת מינימום **מקומית** ({{f(1) = [[-2]]}}).
+  - en: >-
+      Drag along the curve below and watch the readout: green while {{f′ > 0}} (rising), the
+      other color while {{f′ < 0}} (falling), and purple right at the two marked extremum
+      points — where the sign you're watching actually flips.
+    he: >-
+      גררו לאורך העקומה למטה וצפו בקריאה: ירוק כש-{{f′ > 0}} (עולה), צבע אחר כש-{{f′ < 0}}
+      (יורדת), וסגול בדיוק בשתי נקודות הקיצון המסומנות — איפה שהסימן שאתם עוקבים אחריו באמת
+      מתהפך.
+
+explorers:
+  - kind: extremum
+    curve: cubicWave
+    initialX: -2
+    caption:
+      en: "f(x) = x³ − 3x — drag along the curve, watch the sign of f' flip"
+      he: "f(x) = x³ − 3x — גררו לאורך העקומה, צפו בסימן של f' מתהפך"
+
+keyPoints:
+  - en: "f'(x) > 0 means f is increasing there; f'(x) < 0 means f is decreasing there."
+    he: "f'(x) > 0 פירושו ש-f עולה שם; f'(x) < 0 פירושו ש-f יורדת שם."
+  - en: "A local extremum requires f'(x) = 0 AND a sign change around that point — f'(x) = 0 alone isn't enough (the sign could stay the same on both sides)."
+    he: "נקודת קיצון מקומית דורשת f'(x) = 0 וגם שינוי סימן סביב אותה נקודה — f'(x) = 0 לבד לא מספיק (הסימן יכול להישאר אותו דבר משני הצדדים)."
+  - en: "Local max: f' goes from + to −. Local min: f' goes from − to +."
+    he: "מקסימום מקומי: f' עוברת מ-+ ל--. מינימום מקומי: f' עוברת מ-- ל-+."
+
+quiz:
+  - type: numeric
+    id: q1-find-critical-point
+    prompt:
+      en: "For f(x) = x² − 4x, at what x-value is f'(x) = 0?"
+      he: "עבור f(x) = x² − 4x, באיזה ערך x מתקיים f'(x) = 0?"
+    correctValue: 2
+    tolerance: 0.1
+    explanation:
+      en: "f′(x) = 2x − 4. Setting 2x − 4 = 0 gives x = 2."
+      he: "f′(x) = 2x − 4. פתרון 2x − 4 = 0 נותן x = 2."
+  - type: mcq
+    id: q2-increasing-or-decreasing
+    prompt:
+      en: "If f'(5) = -3, what does that tell you about f near x = 5?"
+      he: "אם f'(5) = -3, מה זה אומר על f ליד x = 5?"
+    choices:
+      - en: f is increasing near x = 5
+        he: f עולה ליד x = 5
+      - en: f is decreasing near x = 5
+        he: f יורדת ליד x = 5
+      - en: x = 5 must be a local extremum
+        he: x = 5 חייבת להיות נקודת קיצון מקומית
+    correctIndex: 1
+    explanation:
+      en: "A negative derivative means the function is falling there. (And since f'(5) ≠ 0, x = 5 can't be an extremum at all.)"
+      he: "נגזרת שלילית פירושה שהפונקציה יורדת שם. (ומכיוון ש-f'(5) ≠ 0, x = 5 בכלל לא יכולה להיות נקודת קיצון.)"
+  - type: mcq
+    id: q3-extremum-needs-sign-change
+    prompt:
+      en: "f'(3) = 0. Is x = 3 necessarily a local extremum?"
+      he: "f'(3) = 0. האם x = 3 היא בהכרח נקודת קיצון מקומית?"
+    choices:
+      - en: "Yes — f'(x) = 0 is always enough on its own."
+        he: "כן — f'(x) = 0 תמיד מספיק בפני עצמו."
+      - en: "Not necessarily — only if the sign of f' actually flips around x = 3."
+        he: "לא בהכרח — רק אם הסימן של f' באמת מתהפך סביב x = 3."
+      - en: "No — f'(x) = 0 never indicates an extremum."
+        he: "לא — f'(x) = 0 אף פעם לא מעיד על נקודת קיצון."
+    correctIndex: 1
+    explanation:
+      en: "f'(x) = 0 only marks a candidate point. It's a genuine local extremum only when the sign of f' actually changes on either side — otherwise the graph just flattens for an instant and keeps going the same direction."
+      he: "f'(x) = 0 מסמנת רק נקודה מועמדת. היא נקודת קיצון מקומית אמיתית רק כשהסימן של f' באמת משתנה משני הצדדים — אחרת הגרף פשוט משתטח לרגע וממשיך באותו כיוון."
