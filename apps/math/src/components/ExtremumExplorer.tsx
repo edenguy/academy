@@ -103,8 +103,8 @@ export function ExtremumExplorer({ config, locale }: { config: ExtremumExplorerC
         onPointerMove={(e) => dragging.current && setFromClientX(e.clientX)}
         onPointerUp={() => (dragging.current = false)}
       >
-        <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--line-strong)" strokeWidth={1.5} />
-        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={VB_H - PAD_B} stroke="var(--line-strong)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={VB_H - PAD_B} stroke="var(--axis)" strokeWidth={1.5} />
         <text x={scaleX(a)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{a}</text>
         <text x={scaleX(b)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{b}</text>
 

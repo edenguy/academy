@@ -16,6 +16,7 @@
   --surface-3: #e3eafc;
   --line: rgba(31, 68, 173, 0.12);
   --line-strong: rgba(31, 68, 173, 0.26);
+  --axis: rgba(31, 68, 173, 0.45);
   --ink: #101b36;
   --ink-2: #324268;
   --muted: #647094;
@@ -47,6 +48,7 @@
   --surface-3: #1c2e58;
   --line: rgba(140, 170, 255, 0.16);
   --line-strong: rgba(140, 170, 255, 0.32);
+  --axis: rgba(140, 170, 255, 0.5);
   --ink: #eaf0ff;
   --ink-2: #bdccf0;
   --muted: #8295c4;
@@ -214,7 +216,9 @@ a { color: inherit; }
   border-radius: 16px;
 }
 
-/* Range sliders */
+/* Range sliders. A numeric scale never mirrors under RTL (same rule as every other
+   number/formula in this project) — without this, the browser renders the native track
+   backwards (min on the right) because it inherits the page's dir="rtl". */
 input[type='range'].slider {
   -webkit-appearance: none;
   appearance: none;
@@ -223,6 +227,7 @@ input[type='range'].slider {
   background: transparent;
   cursor: pointer;
   touch-action: pan-y;
+  direction: ltr;
 }
 input[type='range'].slider::-webkit-slider-runnable-track {
   height: 8px;

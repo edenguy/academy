@@ -119,8 +119,8 @@ export function PowerRuleExplorer({ config, locale }: { config: PowerRuleExplore
       </div>
 
       <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-auto" role="img" aria-label={t('lesson.powerRuleGraph')}>
-        <line x1={PAD_L} y1={zeroY} x2={VB_W - PAD_R} y2={zeroY} stroke="var(--line-strong)" strokeWidth={1.5} />
-        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={VB_H - PAD_B} stroke="var(--line-strong)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={zeroY} x2={VB_W - PAD_R} y2={zeroY} stroke="var(--axis)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={VB_H - PAD_B} stroke="var(--axis)" strokeWidth={1.5} />
         <text x={scaleX(X_MIN)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{X_MIN}</text>
         <text x={scaleX(X_MAX)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{X_MAX}</text>
         <path d={fPath} fill="none" stroke="var(--series-a)" strokeWidth={3} strokeLinecap="round" />

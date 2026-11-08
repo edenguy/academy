@@ -56,8 +56,8 @@ export function AccelerationExplorer({ config, locale }: { config: AccelAreaExpl
       </div>
 
       <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-auto" role="img" aria-label={t('lesson.velocityGraph')}>
-        <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--line-strong)" strokeWidth={1.5} />
-        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={scaleY(0)} stroke="var(--line-strong)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
+        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
         <text x={scaleX(0)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">0</text>
         <text x={scaleX(duration)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{duration}</text>
         {rects.map((r, i) => (
