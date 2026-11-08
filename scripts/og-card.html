@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 1200px; }
+  body {
+    font-family: 'Rubik', 'Segoe UI', sans-serif;
+    background:
+      radial-gradient(900px 700px at 15% -5%, rgba(98,80,214,0.16), transparent 60%),
+      radial-gradient(800px 700px at 100% 10%, rgba(232,123,164,0.16), transparent 55%),
+      radial-gradient(900px 800px at 50% 115%, rgba(42,120,214,0.12), transparent 60%),
+      linear-gradient(180deg, #fdf6ff 0%, #f4ecff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .badge {
+    width: 260px; height: 260px; border-radius: 64px;
+    background: linear-gradient(145deg, #6250d6, #e87ba4);
+    box-shadow: 0 30px 70px -20px rgba(98,80,214,0.45);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 56px;
+  }
+  .badge svg { width: 54%; height: 54%; }
+  .title { font-size: 76px; font-weight: 700; color: #241233; line-height: 1.15; }
+  .subtitle { font-size: 40px; font-weight: 600; color: #7c6a95; margin-top: 14px; }
+  .tagline { font-size: 32px; color: #4a3a63; margin-top: 36px; max-width: 920px; line-height: 1.5; }
+  [dir="rtl"] { direction: rtl; }
+</style>
+</head>
+<body>
+  <div class="card" id="card" dir="rtl">
+    <div class="badge" id="badge"></div>
+    <div class="title" id="title"></div>
+    <div class="subtitle" id="subtitle"></div>
+    <div class="tagline" id="tagline"></div>
+  </div>
+</body>
+</html>

@@ -16,8 +16,9 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: false,
-    // The built app is committed to the repo root so GitHub Pages serves it as-is.
-    outDir: process.env.ACADEMY_MATH_OUT_DIR ?? '../../math',
+    // The built app is committed under docs/, which GitHub Pages is configured to serve
+    // (Settings → Pages → Branch: main, folder: /docs) — apps/ (source) is never published.
+    outDir: process.env.ACADEMY_MATH_OUT_DIR ?? '../../docs/math',
     emptyOutDir: true,
   },
 });

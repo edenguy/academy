@@ -4,8 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<meta name="description" content="שיעורים משחקיים ובלתי רשמיים במתמטיקה ומדעים, בעברית ובאנגלית.">
+<meta name="description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
 <title>האקדמיה · Academy</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="האקדמיה">
+<meta property="og:locale" content="he_IL">
+<meta property="og:url" content="https://edenguy.github.io/academy/">
+<meta property="og:title" content="האקדמיה · Academy">
+<meta property="og:description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
+<meta property="og:image" content="https://edenguy.github.io/academy/social/preview-square.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="האקדמיה · Academy">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="האקדמיה · Academy">
+<meta name="twitter:description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן.">
+<meta name="twitter:image" content="https://edenguy.github.io/academy/social/preview-square.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
@@ -49,6 +65,13 @@
   .subject.soon { opacity: 0.55; box-shadow: none; }
   .subject h2 { font-size: 20px; font-weight: 700; margin: 0 0 6px; }
   .subject p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .logo {
+    width: 56px; height: 56px; border-radius: 16px; margin-bottom: 14px;
+    background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    box-shadow: 0 8px 20px -8px rgba(98,42,182,0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo svg { width: 56%; height: 56%; }
   .badge {
     display: inline-block; margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
     color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent);
@@ -60,13 +83,22 @@
 </head>
 <body>
   <div class="wrap">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 4 C53 30 70 47 96 50 C70 53 53 70 50 96 C47 70 30 53 4 50 C30 47 47 30 50 4 Z"/>
+      </svg>
+    </div>
     <span class="eyebrow">גיא עדן · Guy Eden</span>
     <h1>האקדמיה</h1>
     <p class="lede">
-      שיעורים משחקיים ובלתי רשמיים, בעברית ובאנגלית — בכל פעם נושא אחד, עם סימולציות חיות במקום שינון.
-      <br>
-      Playful, unofficial lessons in Hebrew and English — one subject at a time, with live
-      simulations instead of memorization.
+      האקדמיה היא אוסף שיעורים חינמיים ועצמאיים, שנבנים כי מישהו רצה להבין נושא לעומק — לא
+      כדי להשיג תעודה. כל שיעור משלב סימולציה חיה במקום שינון, ונכתב מההתחלה בעברית ובאנגלית.
+      גדלים נושא אחד בכל פעם.
+      <br><br>
+      Academy is a growing set of free, independent lessons built because someone wanted to
+      truly understand a subject — not to earn a certificate. Every lesson pairs a live
+      simulation with the idea it teaches, instead of asking you to memorize it, and is
+      written in Hebrew and English from day one. We add one subject at a time.
     </p>
 
     <div class="subjects">

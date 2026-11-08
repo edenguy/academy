@@ -15,7 +15,7 @@ npm install
 npm run dev          # http://localhost:5173/academy/math/
 npm run typecheck
 npm test
-npm run build        # writes ../../math at the repo root (commit it)
+npm run build        # writes ../../docs/math (commit it)
 npm run check         # typecheck + test + build, in one shot
 ```
 
