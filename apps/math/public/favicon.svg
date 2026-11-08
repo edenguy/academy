@@ -6,5 +6,7 @@
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <text x="32" y="46" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff">&#8747;</text>
+  <path d="M40 14 c-3 0-5 2-5 6 v24 c0 4-2 6-5 6" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="41" cy="14" r="3.2" fill="#ffffff"/>
+  <circle cx="29" cy="50" r="3.2" fill="#ffffff"/>
 </svg>

@@ -24,7 +24,12 @@
     "continue": "Continue",
     "review": "Review lesson",
     "done": "Done",
-    "questionsCount": "{{count}} practice questions"
+    "questionsCount": "{{count}} practice questions",
+    "startAria": "Start: {{title}}",
+    "reviewAria": "Review: {{title}}"
+  },
+  "hero": {
+    "signatureHint": "Slide your finger along the graph"
   },
   "lesson": {
     "backHome": "All lessons",

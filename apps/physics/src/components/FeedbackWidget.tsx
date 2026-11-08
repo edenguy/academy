@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { Icon } from './ui/Icon';
@@ -26,7 +26,29 @@ export function FeedbackWidget() {
   const [email, setEmail] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
+  const [hidden, setHidden] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Collision fix (§5.8): hide the FAB whenever a control it would otherwise cover — the quiz
+  // action row, the lesson nav — is substantially on screen. No layout shift, no scroll
+  // listener: one IntersectionObserver watching every [data-fab-avoid] element.
+  useEffect(() => {
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-fab-avoid]'));
+    if (targets.length === 0) {
+      setHidden(false);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const states = new Map(Array.from(observer.takeRecords().concat(entries)).map((e) => [e.target, e.isIntersecting]));
+        entries.forEach((e) => states.set(e.target, e.isIntersecting));
+        setHidden(targets.some((el) => states.get(el)));
+      },
+      { threshold: 0.3 },
+    );
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   function reset() {
     setType('Question');
@@ -41,8 +63,8 @@ export function FeedbackWidget() {
     setStatus('sending');
     const data = new FormData();
     data.append('access_key', WEB3FORMS_ACCESS_KEY);
-    data.append('subject', `Physics Academy feedback: ${type}`);
-    data.append('from_name', 'Physics Academy feedback widget');
+    data.append('subject', `${t('app.name')} feedback: ${type}`);
+    data.append('from_name', `${t('app.name')} feedback widget`);
     data.append('type', type);
     data.append('message', message);
     if (email) data.append('email', email);
@@ -74,9 +96,14 @@ export function FeedbackWidget() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t('feedback.open')}
-        className="fixed bottom-5 end-5 z-40 w-14 h-14 rounded-full grid place-items-center bg-accent text-accent-ink shadow-[0_10px_28px_-8px_var(--glow)] hover:brightness-110 active:scale-95 transition"
+        className={clsx(
+          'ledge fixed bottom-5 end-5 z-40 bg-accent text-accent-ink rounded-pill grid place-items-center transition-[transform,opacity] duration-[220ms]',
+          'w-12 h-12 sm:w-auto sm:h-11 sm:px-4 sm:inline-flex sm:items-center sm:gap-2',
+          hidden ? 'translate-y-[140%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100',
+        )}
       >
-        <Icon name="message" size={24} />
+        <Icon name="envelope" size={20} />
+        <span className="hidden sm:inline text-sm font-semibold">{t('feedback.open')}</span>
       </button>
 
       {open && (
@@ -86,14 +113,14 @@ export function FeedbackWidget() {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="w-full sm:max-w-md max-h-[92dvh] overflow-y-auto bg-surface border border-line rounded-t-[24px] sm:rounded-[24px] p-6 pb-safe shadow-2xl">
+          <div className="elev-2 no-stripe w-full sm:max-w-md max-h-[92dvh] overflow-y-auto rounded-t-[var(--r-xl)] sm:rounded-[var(--r-xl)] p-6 pb-safe">
             <div className="flex items-start justify-between mb-1">
               <h2 className="text-lg font-bold text-ink">{t('feedback.title')}</h2>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="w-8 h-8 rounded-full grid place-items-center text-muted hover:bg-surface-2 hover:text-ink"
+                className="w-8 h-8 rounded-pill grid place-items-center text-muted hover:bg-surface-2 hover:text-ink"
               >
                 <Icon name="x" size={18} />
               </button>
@@ -107,9 +134,10 @@ export function FeedbackWidget() {
                     key={opt.value}
                     type="button"
                     onClick={() => setType(opt.value)}
+                    aria-pressed={type === opt.value}
                     className={clsx(
-                      'rounded-xl border px-3 py-2 text-sm font-semibold transition-colors',
-                      type === opt.value ? 'border-accent text-accent bg-accent-soft' : 'border-line text-ink-2 hover:border-line-strong',
+                      'rounded-pill px-3 h-9 text-sm font-semibold transition-colors',
+                      type === opt.value ? 'bg-accent text-accent-ink ledge' : 'elev-0 text-ink-2 hover:text-ink',
                     )}
                   >
                     {t(opt.labelKey)}
@@ -127,7 +155,7 @@ export function FeedbackWidget() {
                   rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-accent resize-y"
+                  className="elev-0 w-full px-3 py-2.5 text-sm text-ink outline-none focus:border-accent focus:ring-4 focus:ring-accent-soft resize-y transition-shadow"
                 />
               </div>
 
@@ -135,8 +163,8 @@ export function FeedbackWidget() {
                 <label className="block text-xs font-semibold text-ink-2 mb-1.5">{t('feedback.fileLabel')}</label>
                 <label
                   className={clsx(
-                    'flex items-center gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm cursor-pointer',
-                    file ? 'border-accent text-accent border-solid' : 'border-line-strong text-muted hover:border-accent',
+                    'elev-0 flex items-center gap-2 px-3 py-2.5 text-sm cursor-pointer',
+                    file ? 'text-accent border-accent' : 'text-muted',
                   )}
                 >
                   <Icon name="paperclip" size={16} />
@@ -160,7 +188,7 @@ export function FeedbackWidget() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-accent"
+                  className="elev-0 w-full px-3 py-2.5 text-sm text-ink outline-none focus:border-accent focus:ring-4 focus:ring-accent-soft transition-shadow"
                 />
               </div>
 

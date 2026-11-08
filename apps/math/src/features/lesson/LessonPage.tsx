@@ -10,6 +10,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { Rich } from '@/components/ui/Rich';
 import { LessonExplorer } from '@/components/LessonExplorer';
 import { Quiz } from '@/components/Quiz';
+import { lessonSignature } from '@/math/lessonSignature';
 
 export function LessonPage() {
   const { t } = useTranslation();
@@ -28,32 +29,41 @@ export function LessonPage() {
         <Icon name="arrow" size={16} className="rotate-180 rtl:rotate-0" /> {t('lesson.backHome')}
       </LinkButton>
 
-      <header>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-semibold text-accent">{pick(lesson.subtitle, locale)}</span>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-muted bg-surface-3 rounded-full px-2 py-0.5 num">
-            {pick(TOPICS[lesson.topic].curriculumBadge, locale)}
-          </span>
+      <header className="flex items-start gap-3">
+        <span className="hidden md:grid shrink-0 num w-9 h-9 rounded-pill bg-accent-soft text-accent place-items-center font-mono text-[15px] font-semibold mt-1">
+          {lesson.order}
+        </span>
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-sm font-semibold text-accent">{pick(lesson.subtitle, locale)}</span>
+            <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-2 h-6 inline-flex items-center">
+              {pick(TOPICS[lesson.topic].curriculumBadge, locale)}
+            </span>
+          </div>
+          <h1 className="font-display font-extrabold text-[28px] md:text-[40px] leading-[1.12] text-ink">{pick(lesson.title, locale)}</h1>
         </div>
-        <h1 className="text-2xl md:text-4xl text-ink">{pick(lesson.title, locale)}</h1>
       </header>
 
-      <div className="lesson-prose space-y-4">
+      <div className="lesson-prose space-y-4 max-w-[68ch]">
         {lesson.intro.map((p, i) => (
           <Rich key={i} text={pick(p, locale)} />
         ))}
       </div>
 
-      {lesson.explorers?.map((explorer, i) => <LessonExplorer key={i} config={explorer} locale={locale} />)}
+      {lesson.explorers?.map((explorer, i) => (
+        <div key={i} className="my-8">
+          <LessonExplorer config={explorer} locale={locale} />
+        </div>
+      ))}
 
-      <Card flat className="space-y-3">
-        <div className="flex items-center gap-2 font-semibold text-ink">
-          <Icon name="lightbulb" size={20} className="text-highlight" /> {t('lesson.keyPointsTitle')}
+      <Card variant="card" className="space-y-3">
+        <div className="flex items-center gap-2 font-semibold text-[15px] text-ink">
+          <Icon name="pin" size={20} className="text-accent-2" /> {t('lesson.keyPointsTitle')}
         </div>
         <ul className="space-y-2">
           {lesson.keyPoints.map((kp, i) => (
             <li key={i} className="flex gap-2.5 text-ink-2 text-[15px]">
-              <Icon name="star" size={16} className="text-accent-2 shrink-0 mt-1" />
+              <span className="shrink-0 w-1.5 h-1.5 rounded-pill bg-accent-2 mt-[0.6em]" aria-hidden="true" />
               <Rich text={pick(kp, locale)} />
             </li>
           ))}
@@ -62,25 +72,25 @@ export function LessonPage() {
 
       <section>
         <h2 className="text-xl text-ink mb-3 flex items-center gap-2">
-          <Icon name="book" size={20} className="text-accent" /> {t('lesson.quizTitle')}
+          <Icon name="target" size={20} className="text-accent" /> {t('lesson.quizTitle')}
         </h2>
-        <Quiz questions={lesson.quiz} locale={locale} onAllDone={() => markDone(lesson.id)} />
+        <Quiz questions={lesson.quiz} locale={locale} onAllDone={() => markDone(lesson.id)} signature={lessonSignature(lesson)} />
       </section>
 
-      <nav className="flex items-center justify-between pt-2 gap-3">
+      <nav className="flex items-center justify-between pt-2 gap-3" data-fab-avoid>
         {prev ? (
-          <LinkButton to={`/lesson/${prev.id}`} variant="secondary" size="sm">
+          <LinkButton to={`/lesson/${prev.id}`} variant="secondary" size="md">
             <Icon name="arrow" size={16} className="rotate-180 rtl:rotate-0" /> {t('lesson.prevLesson')}
           </LinkButton>
         ) : (
           <span />
         )}
         {next ? (
-          <LinkButton to={`/lesson/${next.id}`} size="sm">
+          <LinkButton to={`/lesson/${next.id}`} size="md">
             {t('lesson.nextLesson')} <Icon name="arrow" size={16} className="rtl:-scale-x-100" />
           </LinkButton>
         ) : (
-          <LinkButton to="/" variant="secondary" size="sm">
+          <LinkButton to="/" variant="secondary" size="md">
             {t('lesson.backToLessons')}
           </LinkButton>
         )}

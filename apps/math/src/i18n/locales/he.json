@@ -24,7 +24,12 @@
     "continue": "המשך",
     "review": "חזרה על השיעור",
     "done": "הושלם",
-    "questionsCount": "{{count}} שאלות תרגול"
+    "questionsCount": "{{count}} שאלות תרגול",
+    "startAria": "התחלה: {{title}}",
+    "reviewAria": "חזרה על השיעור: {{title}}"
+  },
+  "hero": {
+    "signatureHint": "הזיזו את האצבע על הגרף"
   },
   "lesson": {
     "backHome": "כל השיעורים",

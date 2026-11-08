@@ -5,6 +5,8 @@ import { motion } from 'motion/react';
 import { FUNCTIONS, rectangles, riemannSum, type SumMode } from '@/math/integral';
 import { pick, type Locale } from '@/content/localize';
 import type { IntegralExplorerConfig } from '@/content/schema';
+import { Card } from './ui/Card';
+import { Icon } from './ui/Icon';
 
 const VB_W = 640;
 const VB_H = 320;
@@ -51,34 +53,40 @@ export function IntegralExplorer({ config, locale }: { config: IntegralExplorerC
 
   const rects = useMemo(() => rectangles(spec.fn, a, b, n, mode), [spec, a, b, n, mode]);
   const estimate = useMemo(() => riemannSum(spec.fn, a, b, n, mode), [spec, a, b, n, mode]);
+  const pct = ((n - 1) / (MAX_RECTANGLES - 1)) * 100;
 
   return (
-    <div className="card-flat p-4 md:p-5 space-y-4">
-      {config.caption && <div className="text-sm font-semibold text-accent">{pick(config.caption, locale)}</div>}
+    <Card variant="bench" className="space-y-4">
+      {config.caption && (
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+          <Icon name="handle" size={16} /> {pick(config.caption, locale)}
+        </div>
+      )}
 
       <div className="flex items-end justify-between gap-3 flex-wrap">
-        <div>
-          <div className="text-xs text-muted">{t('lesson.estimate')}</div>
+        <div className="elev-0 px-3.5 py-2.5 min-w-[112px]">
+          <div className="text-[13px] text-muted">{t('lesson.estimate')}</div>
           <motion.div
             key={`${n}-${mode}`}
-            initial={{ scale: 0.88, opacity: 0.4 }}
+            initial={{ scale: 0.94, opacity: 0.5 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.18 }}
-            className="readout text-3xl md:text-4xl font-bold text-ink"
+            transition={{ duration: 0.12 }}
+            className="readout text-[30px] md:text-[36px] font-semibold text-ink"
           >
             {estimate.toFixed(2)}
           </motion.div>
         </div>
         {modes.length > 1 && (
-          <div className="inline-flex rounded-full bg-surface-3 p-1 gap-1" role="group">
+          <div className="elev-0 inline-flex p-1 gap-1" role="group" style={{ '--ledge': '2px' } as React.CSSProperties}>
             {modes.map((m) => (
               <button
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
+                aria-pressed={mode === m}
                 className={clsx(
-                  'rounded-full px-3 py-1.5 text-sm font-medium transition-colors',
-                  mode === m ? 'bg-accent text-accent-ink' : 'text-ink-2 hover:text-ink',
+                  'rounded-pill px-3.5 h-9 text-sm font-semibold transition-colors',
+                  mode === m ? 'bg-accent text-accent-ink ledge' : 'text-ink-2 hover:text-ink',
                 )}
               >
                 {t(`lesson.mode.${m}`)}
@@ -88,34 +96,42 @@ export function IntegralExplorer({ config, locale }: { config: IntegralExplorerC
         )}
       </div>
 
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-auto" role="img" aria-label={t('lesson.estimate')}>
-        <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
-        <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
-        <text x={scaleX(a)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{a}</text>
-        <text x={scaleX(b)} y={VB_H - 8} textAnchor="middle" className="fill-muted text-[12px] num">{b}</text>
-        <path d={areaPath} fill="var(--series-a-soft)" />
-        {rects.map((r, i) => (
-          <motion.rect
-            key={i}
-            x={scaleX(r.x)}
-            y={scaleY(Math.max(0, r.height))}
-            width={Math.max(0, scaleX(r.x + r.width) - scaleX(r.x))}
-            height={Math.max(0, scaleY(0) - scaleY(Math.max(0, r.height)))}
-            fill="var(--series-b-soft)"
-            stroke="var(--series-b)"
-            strokeWidth={1.25}
-            initial={false}
-            animate={{
-              x: scaleX(r.x),
-              y: scaleY(Math.max(0, r.height)),
-              width: Math.max(0, scaleX(r.x + r.width) - scaleX(r.x)),
-              height: Math.max(0, scaleY(0) - scaleY(Math.max(0, r.height))),
-            }}
-            transition={{ duration: 0.22 }}
-          />
-        ))}
-        <path d={curvePath} fill="none" stroke="var(--series-a)" strokeWidth={3} strokeLinecap="round" />
-      </svg>
+      <div className="elev-0 overflow-hidden" style={{ padding: '8px 8px 4px' }}>
+        <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-auto" style={{ direction: 'ltr' }} role="img" aria-label={t('lesson.estimate')}>
+          {Array.from({ length: 9 }).map((_, i) => (
+            <line key={`v${i}`} x1={PAD_L + (PLOT_W / 8) * i} y1={PAD_T} x2={PAD_L + (PLOT_W / 8) * i} y2={VB_H - PAD_B} stroke="var(--grid)" strokeWidth={1} />
+          ))}
+          {Array.from({ length: 5 }).map((_, i) => (
+            <line key={`h${i}`} x1={PAD_L} y1={PAD_T + (PLOT_H / 4) * i} x2={VB_W - PAD_R} y2={PAD_T + (PLOT_H / 4) * i} stroke="var(--grid)" strokeWidth={1} />
+          ))}
+          <line x1={PAD_L} y1={scaleY(0)} x2={VB_W - PAD_R} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
+          <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={scaleY(0)} stroke="var(--axis)" strokeWidth={1.5} />
+          <text x={scaleX(a)} y={VB_H - 8} textAnchor="middle" className="axis-label fill-muted text-[12px] num">{a}</text>
+          <text x={scaleX(b)} y={VB_H - 8} textAnchor="middle" className="axis-label fill-muted text-[12px] num">{b}</text>
+          <path d={areaPath} fill="var(--series-a-soft)" />
+          {rects.map((r, i) => (
+            <motion.rect
+              key={i}
+              x={scaleX(r.x)}
+              y={scaleY(Math.max(0, r.height))}
+              width={Math.max(0, scaleX(r.x + r.width) - scaleX(r.x))}
+              height={Math.max(0, scaleY(0) - scaleY(Math.max(0, r.height)))}
+              fill="var(--series-b-soft)"
+              stroke="var(--series-b)"
+              strokeWidth={1.25}
+              initial={false}
+              animate={{
+                x: scaleX(r.x),
+                y: scaleY(Math.max(0, r.height)),
+                width: Math.max(0, scaleX(r.x + r.width) - scaleX(r.x)),
+                height: Math.max(0, scaleY(0) - scaleY(Math.max(0, r.height))),
+              }}
+              transition={{ duration: 0.22 }}
+            />
+          ))}
+          <path d={curvePath} fill="none" stroke="var(--series-a)" strokeWidth={3} strokeLinecap="round" />
+        </svg>
+      </div>
 
       <div className="flex items-center gap-4">
         <label htmlFor={`n-${fn}-${a}-${b}`} className="text-sm text-ink-2 shrink-0 whitespace-nowrap">
@@ -129,9 +145,10 @@ export function IntegralExplorer({ config, locale }: { config: IntegralExplorerC
           max={MAX_RECTANGLES}
           value={n}
           onChange={(e) => setN(Number(e.target.value))}
+          style={{ '--p': `${pct}%` } as React.CSSProperties}
         />
         <span className="readout text-ink font-semibold w-10 text-end shrink-0">{n}</span>
       </div>
-    </div>
+    </Card>
   );
 }

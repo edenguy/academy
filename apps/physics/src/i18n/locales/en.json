@@ -15,7 +15,7 @@
   "home": {
     "eyebrowNew": "New pilot",
     "heroTitle": "Come discover",
-    "heroTitle2": "why things move the way they move",
+    "heroTitle2": "why things really move",
     "heroBody": "Playful lessons with a live simulation: drag a handle along a motion graph and watch velocity and acceleration respond — instead of memorizing a formula.",
     "lessonsTitle": "Lessons",
     "lessonLabel": "Lesson {{n}}",
@@ -23,7 +23,12 @@
     "continue": "Continue",
     "review": "Review lesson",
     "done": "Done",
-    "questionsCount": "{{count}} practice questions"
+    "questionsCount": "{{count}} practice questions",
+    "startAria": "Start: {{title}}",
+    "reviewAria": "Review: {{title}}"
+  },
+  "hero": {
+    "signatureHint": "Slide your finger along the graph"
   },
   "lesson": {
     "backHome": "All lessons",
