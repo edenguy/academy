@@ -52,5 +52,22 @@
   "footer": {
     "disclaimer": "Math Academy is an independent, unofficial study tool, not a substitute for classroom instruction. Content is automatically checked against known mathematical values.",
     "credit": "Created by Guy Eden"
+  },
+  "feedback": {
+    "open": "Feedback",
+    "title": "Question, idea, or bug?",
+    "subtitle": "We'd love to hear it. Feel free to attach a screenshot.",
+    "typeQuestion": "Question",
+    "typeIdea": "Idea",
+    "typeFeature": "Feature request",
+    "typeBug": "Bug report",
+    "messageLabel": "What would you like to tell us?",
+    "fileLabel": "Screenshot (optional)",
+    "fileChoose": "Choose a file…",
+    "emailLabel": "Email, if you want a reply (optional)",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Thanks! We've got your message.",
+    "error": "Something went wrong. Please try again."
   }
 }

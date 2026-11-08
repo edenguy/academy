@@ -192,6 +192,72 @@
 
   footer { margin-top: 40px; font-size: 12px; color: var(--muted); text-align: center; }
   footer a { color: inherit; }
+
+  /* ---------- Feedback widget ---------- */
+  .feedback-fab {
+    position: fixed; inset-inline-end: 22px; bottom: 22px; z-index: 40;
+    width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    box-shadow: 0 10px 28px -8px rgba(98,42,182,0.55);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 180ms ease;
+  }
+  .feedback-fab:hover { transform: scale(1.08); }
+  .feedback-fab svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .feedback-overlay {
+    position: fixed; inset: 0; z-index: 50; background: rgba(5,2,15,0.55); backdrop-filter: blur(4px);
+    display: none; align-items: flex-end; justify-content: center; padding: 0;
+  }
+  .feedback-overlay.open { display: flex; }
+  @media (min-width: 620px) { .feedback-overlay { align-items: center; padding: 20px; } }
+
+  .feedback-modal {
+    width: 100%; max-width: 480px; max-height: 92dvh; overflow-y: auto;
+    background: var(--surface-solid); border: 1px solid var(--line);
+    border-radius: 24px 24px 0 0; padding: 22px 22px calc(22px + env(safe-area-inset-bottom));
+    box-shadow: var(--hero-shadow);
+  }
+  @media (min-width: 620px) { .feedback-modal { border-radius: 24px; } }
+  .feedback-modal h2 { font-size: 19px; font-weight: 700; margin: 0 0 4px; }
+  .feedback-modal .sub { font-size: 13px; color: var(--muted); margin: 0 0 18px; }
+  .feedback-close {
+    float: inline-end; background: none; border: none; cursor: pointer; color: var(--muted);
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .feedback-close:hover { background: var(--line); color: var(--ink); }
+
+  .feedback-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+  .feedback-type {
+    border: 1px solid var(--line); border-radius: 12px; padding: 9px 10px; background: transparent;
+    color: var(--ink-2); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center;
+  }
+  .feedback-type.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+
+  .feedback-field { margin-bottom: 12px; }
+  .feedback-field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); margin-bottom: 5px; }
+  .feedback-field textarea, .feedback-field input[type="email"] {
+    width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface-solid);
+    border: 1px solid var(--line-strong); border-radius: 12px; padding: 10px 12px; resize: vertical;
+  }
+  .feedback-field textarea:focus, .feedback-field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .feedback-file {
+    display: flex; align-items: center; gap: 8px; border: 1px dashed var(--line-strong); border-radius: 12px;
+    padding: 10px 12px; font-size: 13px; color: var(--muted); cursor: pointer;
+  }
+  .feedback-file:hover { border-color: var(--accent); }
+  .feedback-file input { display: none; }
+  .feedback-file.has-file { color: var(--accent); border-style: solid; border-color: var(--accent); }
+
+  .feedback-submit {
+    width: 100%; margin-top: 4px; border: none; border-radius: 999px; cursor: pointer;
+    background: linear-gradient(145deg, var(--accent), var(--accent-2)); color: #fff;
+    font: inherit; font-weight: 700; font-size: 15px; padding: 12px; transition: opacity 150ms ease;
+  }
+  .feedback-submit:disabled { opacity: 0.6; cursor: default; }
+  .feedback-status { font-size: 13px; margin-top: 10px; text-align: center; }
+  .feedback-status.ok { color: #0ca30c; }
+  .feedback-status.err { color: #d03b3b; }
 </style>
 </head>
 <body>
@@ -317,6 +383,61 @@
     <footer>edenguy/academy &middot; <a href="https://edenguy.github.io">edenguy.github.io</a></footer>
   </div>
 
+  <button class="feedback-fab" id="feedback-open" type="button" aria-label="Feedback">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <div class="feedback-overlay" id="feedback-overlay">
+    <div class="feedback-modal">
+      <button class="feedback-close" id="feedback-close" type="button" aria-label="Close">✕</button>
+      <h2><span class="t-he">שאלה, רעיון או באג?</span><span class="t-en">Question, idea, or bug?</span></h2>
+      <p class="sub">
+        <span class="t-he">נשמח לשמוע. אפשר גם לצרף תמונת מסך.</span>
+        <span class="t-en">We'd love to hear it. Feel free to attach a screenshot.</span>
+      </p>
+      <form id="feedback-form">
+        <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-hub">
+        <input type="hidden" name="subject" id="feedback-subject-field" value="Academy hub feedback: Question">
+        <input type="hidden" name="from_name" value="Academy hub feedback widget">
+        <div class="feedback-types" role="group" aria-label="Feedback type">
+          <button type="button" class="feedback-type active" data-type="Question">
+            <span class="t-he">שאלה</span><span class="t-en">Question</span>
+          </button>
+          <button type="button" class="feedback-type" data-type="Idea">
+            <span class="t-he">רעיון</span><span class="t-en">Idea</span>
+          </button>
+          <button type="button" class="feedback-type" data-type="Feature request">
+            <span class="t-he">בקשת שיפור</span><span class="t-en">Feature request</span>
+          </button>
+          <button type="button" class="feedback-type" data-type="Bug report">
+            <span class="t-he">דיווח על באג</span><span class="t-en">Bug report</span>
+          </button>
+        </div>
+        <div class="feedback-field">
+          <label for="feedback-message"><span class="t-he">מה תרצו לספר לנו?</span><span class="t-en">What would you like to tell us?</span></label>
+          <textarea id="feedback-message" name="message" rows="4" required></textarea>
+        </div>
+        <div class="feedback-field">
+          <label><span class="t-he">תמונת מסך (רשות)</span><span class="t-en">Screenshot (optional)</span></label>
+          <label class="feedback-file" id="feedback-file-label">
+            <span id="feedback-file-text">
+              <span class="t-he">בחירת קובץ…</span><span class="t-en">Choose a file…</span>
+            </span>
+            <input type="file" name="attachment" id="feedback-file" accept="image/*">
+          </label>
+        </div>
+        <div class="feedback-field">
+          <label for="feedback-email"><span class="t-he">אימייל לחזרה אליכם (רשות)</span><span class="t-en">Email, if you want a reply (optional)</span></label>
+          <input type="email" id="feedback-email" name="email">
+        </div>
+        <button class="feedback-submit" type="submit" id="feedback-submit">
+          <span class="t-he">שליחה</span><span class="t-en">Send</span>
+        </button>
+        <div class="feedback-status" id="feedback-status"></div>
+      </form>
+    </div>
+  </div>
+
   <script>
     function applyLang(lang) {
       document.documentElement.lang = lang;
@@ -338,6 +459,78 @@
     document.getElementById('theme-toggle').addEventListener('click', function () {
       applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
     });
+
+    // --- Feedback widget ---
+    (function () {
+      var overlay = document.getElementById('feedback-overlay');
+      var form = document.getElementById('feedback-form');
+      var status = document.getElementById('feedback-status');
+      var submitBtn = document.getElementById('feedback-submit');
+      var subjectField = document.getElementById('feedback-subject-field');
+      var fileInput = document.getElementById('feedback-file');
+      var fileLabel = document.getElementById('feedback-file-label');
+      var fileText = document.getElementById('feedback-file-text');
+      var selectedType = 'Question';
+
+      function open() { overlay.classList.add('open'); document.getElementById('feedback-message').focus(); }
+      function close() { overlay.classList.remove('open'); }
+
+      document.getElementById('feedback-open').addEventListener('click', open);
+      document.getElementById('feedback-close').addEventListener('click', close);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+
+      document.querySelectorAll('.feedback-type').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.feedback-type').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          selectedType = btn.dataset.type;
+          subjectField.value = 'Academy hub feedback: ' + selectedType;
+        });
+      });
+
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files[0]) {
+          fileText.textContent = fileInput.files[0].name;
+          fileLabel.classList.add('has-file');
+        } else {
+          fileLabel.classList.remove('has-file');
+        }
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        status.textContent = '';
+        status.className = 'feedback-status';
+        submitBtn.disabled = true;
+
+        var data = new FormData(form);
+        data.append('page', location.href);
+        data.append('language', document.documentElement.lang);
+        data.append('theme', document.documentElement.dataset.theme || '');
+
+        fetch('https://api.web3forms.com/submit', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (result) {
+            if (result.success) {
+              var isHe = document.documentElement.lang === 'he';
+              status.textContent = isHe ? 'תודה! קיבלנו את ההודעה שלכם.' : "Thanks! We've got your message.";
+              status.className = 'feedback-status ok';
+              form.reset();
+              fileText.innerHTML = '<span class="t-he">בחירת קובץ…</span><span class="t-en">Choose a file…</span>';
+              fileLabel.classList.remove('has-file');
+              setTimeout(close, 1800);
+            } else {
+              throw new Error(result.message || 'failed');
+            }
+          })
+          .catch(function () {
+            var isHe = document.documentElement.lang === 'he';
+            status.textContent = isHe ? 'משהו השתבש. נסו שוב, או כתבו ישירות.' : 'Something went wrong. Please try again.';
+            status.className = 'feedback-status err';
+          })
+          .finally(function () { submitBtn.disabled = false; });
+      });
+    })();
   </script>
 </body>
 </html>

@@ -2,7 +2,8 @@ import type { SVGProps } from 'react';
 
 export type IconName =
   | 'home' | 'book' | 'check' | 'x' | 'chevron' | 'play' | 'arrow' | 'sun' | 'moon'
-  | 'globe' | 'sparkle' | 'star' | 'alert' | 'lightbulb' | 'refresh' | 'trophy' | 'speaker' | 'speakerMute';
+  | 'globe' | 'sparkle' | 'star' | 'alert' | 'lightbulb' | 'refresh' | 'trophy' | 'speaker' | 'speakerMute'
+  | 'message' | 'paperclip';
 
 const paths: Record<IconName, string> = {
   home: 'M3 11.5 12 4l9 7.5M5 10v10h14V10',
@@ -23,6 +24,8 @@ const paths: Record<IconName, string> = {
   trophy: 'M8 4h8v5a4 4 0 0 1-8 0V4Zm-4 1h4v3a3 3 0 0 1-3-3H4Zm16 0h-4v3a3 3 0 0 0 3-3h1ZM12 13v4m-4 4h8m-6 0 1-4h2l1 4',
   speaker: 'M4 9v6h4l5 4V5L8 9H4Zm12.5-.5a5 5 0 0 1 0 7M19 5.5a9 9 0 0 1 0 13',
   speakerMute: 'M4 9v6h4l5 4V5L8 9H4Zm11 1 6 6m0-6-6 6',
+  message: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',
+  paperclip: 'M21.4 11.1 12.3 20a4.5 4.5 0 1 1-6.4-6.4l8.5-8.5a3 3 0 1 1 4.2 4.2L10 18a1.5 1.5 0 1 1-2.1-2.1l7.1-7.1',
 };
 
 export function Icon({ name, size = 20, className, ...rest }: { name: IconName; size?: number } & SVGProps<SVGSVGElement>) {

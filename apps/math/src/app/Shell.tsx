@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { clsx } from 'clsx';
 import { Icon } from '@/components/ui/Icon';
 import { Logo } from '@/components/Logo';
+import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { useAmbient } from '@/audio/useAmbient';
 import { useLocale, useThemeToggle } from './providers';
 
@@ -87,6 +88,7 @@ export function Shell() {
       <main id="content" className="flex-1 min-w-0 px-4 md:px-8 py-6 md:py-10 max-w-5xl w-full mx-auto">
         <Outlet />
       </main>
+      <FeedbackWidget />
     </div>
   );
 }
