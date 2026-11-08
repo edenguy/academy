@@ -11,6 +11,18 @@ feature claim.
 This document is opinionated on purpose. Where it says "do X", do X; where it offers a
 variant, it says so explicitly. Everything else is decided.
 
+**Revision (mobile rebalance, after the first live review on a phone).** The first
+implementation of this spec was reviewed on a phone and read as sparse and under-scaled:
+a 64 px dead band under the top bar, the handle panel pushed below the fold with 7 px
+labels and 5 px tap targets, a method strip of skeleton-loader-looking cards stacked a
+screen tall, subject cards ~370 px tall for two lines of content, and a footer whose 16 px
+mono mark rendered as a smudge. The sections below were revised in place to what now ships;
+where a decision changed, the old one is noted as *superseded* so the reasoning survives.
+Decisions that changed: §3.1 #6 (ruler ticks dropped from the hero), §5.2 (hero order on
+phones, node placement, axis chips, constant-size controls, `touch-action`, keyboard
+mapping), §5.3 (real formula instead of placeholder lines; tile layout), §5.6 (card anatomy,
+2-column grid, Hebrew names), §5.7 (footer stack), §5.8 (feedback widget, new).
+
 ---
 
 ## 0. The one idea the whole page is built on
@@ -215,7 +227,7 @@ English asset card (`preview-square-en.jpg`) tagline:
 | live.title | ככה נראה שיעור כאן | This is what a lesson looks like here |
 | live.hint | תזיזו את הידית | Move the handle |
 | live.tab.math | אינטגרל · מלבנים | Integral · rectangles |
-| live.tab.nitrox | נייטרוקס · לחץ חלקי | Nitrox · partial pressure |
+| live.tab.nitrox | נייטרוקס · לחץ חלקי | Nitrox · pO₂ (the longer "partial pressure" wrapped the tab to two lines on phones) |
 | live.math.n | מלבנים | rectangles |
 | live.math.estimate | שטח משוער | estimated area |
 | live.math.exact | מדויק | exact |
@@ -225,6 +237,9 @@ English asset card (`preview-square-en.jpg`) tagline:
 | live.open | לשיעור המלא | Open the full lesson |
 | story.title | איך זה התחיל | How it started |
 | subjects.title | נושאים | Subjects |
+| subjects.count | 3 פעילים · 1 בקרוב | 3 LIVE · 1 SOON |
+| hero.axis | נייטרוקס / מתמטיקה / פיזיקה / כימיה | NITROX / MATH / PHYSICS / CHEM |
+| feedback.fab | משוב | Feedback |
 | status.live | פעיל | Live |
 | status.pilot | פיילוט | Pilot |
 | status.soon | בקרוב | Soon |
@@ -255,9 +270,11 @@ What reads as premium/modern to a 15-year-old in 2026 is the look of a **well-li
    "instrument" cue and it costs nothing.
 5. **Glow = alive.** Glow is only on things you can move or that are reporting a live value
    (the handle, slider thumbs, the status dot). Nothing static glows.
-6. **Ruler ticks.** A short row of tick marks (every 20 px, taller every 100 px, `--line`
-   color) under the hero demo and under each live demo. The measurement motif ties every
-   visual back to "this is a simulation".
+6. **Ruler ticks — superseded.** A row of tick marks under the hero panel was specified as a
+   "measurement motif". In practice, at phone width it read as a dashed progress bar / a
+   skeleton loader, i.e. static decoration that glowed with meaning it didn't have (which
+   §3.1 #5 forbids). Removed. The instrument cue is now carried by things that are actually
+   live: the hairline cursor, the axis chips under the hero curve (§5.2), the mono readouts.
 7. **Motion with physics, not bounce.** `cubic-bezier(.2,.8,.2,1)`, 180–320 ms. One slow idle
    (the mark breathing, 5 s). No infinite float/bob, no particles, no parallax layers.
 
@@ -311,7 +328,9 @@ body { background:
 [dir="ltr"] body { /* same, light source stays at the start corner */ }
 [dir="rtl"] body { background-position: 100% 0%, 0 0; }  /* or write the gradient at 100% 0% for rtl */
 ```
-No grid lines on the body. The measurement motif lives in the ruler ticks, not a wallpaper.
+No grid lines on the body. Paint the background on `<html>` (`min-height: 100%`), **not** with
+`background-attachment: fixed` — fixed attachment is unreliable on mobile browsers and left
+the lower page unlit in dark mode in the first implementation.
 
 Contrast: `--muted` on `--bg` in dark ≈ 4.9:1, in light ≈ 4.6:1 — both pass for ≥ 14 px text.
 Don't go lighter than these.
@@ -338,17 +357,29 @@ Scale:
 
 | role | family / weight | size | line-height | tracking |
 |---|---|---|---|---|
-| h1 | Plex Sans Hebrew 700 | `clamp(42px, 7.2vw, 80px)` | 1.02 HE / 0.98 EN | 0 HE / −0.02em EN |
-| h2 | Plex Sans Hebrew 600 | `clamp(24px, 3.2vw, 34px)` | 1.15 | 0 / −0.01em |
+| h1 (HE) | Plex Sans Hebrew 700 | `clamp(44px, 7.2vw, 80px)` | 1.04 | 0 |
+| h1 (EN) | Plex Sans Hebrew 700 | `clamp(38px, 5.2vw, 64px)` | 1.0 | −0.02em |
+| h2 | Plex Sans Hebrew 600 | `clamp(22px, 3vw, 32px)` | 1.2 | 0 / −0.01em |
 | lede | Plex Sans Hebrew 400 | `clamp(17px, 1.6vw, 19px)` | 1.6 | 0 |
 | body | Plex Sans Hebrew 400 | 15–16px | 1.55 | 0 |
 | chip / label | Plex Mono 500 | 12–13px | 1 | +0.08em, uppercase — **Latin only** |
 | readout | Plex Mono 500, tabular-nums | 28–40px | 1 | 0 |
 
+The two h1 sizes differ on purpose: "Don't memorize it." is ~1.9× wider than "לא משננים."
+at the same size, and at 80 px it broke into three lines in the 7fr column ("Don't / memorize
+it. / Grab it."). Each language must fit its headline in exactly two lines at 390 and 1440;
+`text-wrap: balance` is on as a safety net.
+
 Rules: Hebrew is never tracked (negative or positive) and never uppercased — enforce with
 `:root[lang="he"] h1, :root[lang="he"] h2 { letter-spacing: 0 }` and keep chip uppercase on
 `.t-en` only. Every number, airport code and formula is an LTR island:
 `.num { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }`.
+Plex Mono has **no Hebrew glyphs** — a chip set in Mono with Hebrew inside silently falls back
+to a system face (this happened to the eyebrow, the status chips and the hero readout in the
+first build). So chips/eyebrow/status/axis labels are Plex Sans 600 by default, and only their
+`.t-en` span switches to Mono uppercase. Don't put `.num` (LTR) on a Hebrew sentence that
+merely contains digits (`3 פעילים · 1 בקרוב`); Hebrew text with numbers renders correctly in
+its own RTL context.
 
 ### 3.4 Surfaces, radii, shadows
 
@@ -403,7 +434,9 @@ reviewable; the pre-paint script stays inline in `<head>` so there's no flash of
 language/direction/theme. Keep `<html lang="he" dir="rtl">` as the server-side default.
 
 Max content width **1080 px** (up from 860 — the page now has real content). Section
-vertical rhythm: 96 px desktop, 64 px ≤ 720 px. Side gutters `clamp(16px, 5vw, 48px)`.
+vertical rhythm: 96 px desktop, **56 px** below 720 px, and the hero starts 20 px under the
+top bar on phones (the original 64 px there was a dead band that pushed the handle below the
+fold). Side gutters `clamp(16px, 5vw, 48px)`.
 Everything uses logical properties (`margin-inline-start`, `inset-inline-end`, `text-align:
 start`) so RTL/LTR is a free flip.
 
@@ -438,76 +471,103 @@ dashboard. Don't reintroduce it.)
 
 ### 5.2 Hero — "the Handle, live"
 
-Layout: 2-column grid `minmax(0,7fr) minmax(0,5fr)` from 900 px up, text at the start
-column; single column below 900 (headline → demo → lede → CTAs, so the demo is above the
-fold on a phone).
+Layout: the hero is three grid items — `.hero-copy` (eyebrow + h1), `.hero-panel` (the
+handle), `.hero-more` (lede + CTAs) — so the DOM order *is* the phone order:
+**headline → the handle → lede → CTAs**, and the thing you grab is on the first screen of a
+390×844 phone (panel top ≈ 250 px). From 900 px up: `grid-template-areas: "copy panel" "more
+panel"`, columns `minmax(0,7fr) minmax(0,5fr)`, the panel vertically centred against the
+copy. (The first build put the whole text column first and the panel landed below the fold
+on phones — a drift from this spec that the mobile review caught.)
 
-Text column: eyebrow (§2.3), h1 (§2.1; line 2 is `--ink` with a 2 px `--spectrum` underline
-drawn as a `::after`, **not** gradient-filled text), lede (§2.2, max 52ch), CTAs (§2.4;
-primary = filled `--accent`, secondary = hairline outline).
+Copy: eyebrow (§2.3), h1 (§2.1; line 2 is `--ink` with a 4 px `--spectrum` underline drawn as
+a `::after`, **not** gradient-filled text), lede (§2.2, max 52ch), CTAs (§2.4; primary =
+filled `--accent`, secondary = hairline outline).
 
-Visual column: a `.panel.panel--hero` containing **the hero handle** — a large, draggable
-version of the mark that doubles as a subject scrubber:
+Panel: a `.panel.panel--spectrum-edge.hero-panel` containing **the hero handle** — a large,
+draggable version of the mark that doubles as a subject scrubber:
 
-- `<svg viewBox="0 0 520 360">` with the curve `M 40 290 C 230 290, 290 70, 480 70` (the mark's
-  curve scaled; midpoint = (260, 180)), stroke 6, `url(#spectrumHero)` (userSpaceOnUse along
-  the curve's bounding diagonal).
-- Four **subject nodes** on the curve at arc-length fractions `0.14, 0.40, 0.64, 0.88`
-  (positions computed once in JS via `getPointAtLength`), r = 9, filled with each subject's
-  `--c2` (teal, Math violet, blue, amber), "soon" nodes at 45 % opacity with a dashed ring.
-  Node order along the curve = story order (Nitrox first). Each node has a mono chip label
-  above it (`NITROX`, `MATH`, `PHYSICS`, `CHEM` in EN; in HE the chips are Plex Sans 600 13 px:
-  נייטרוקס / מתמטיקה / פיזיקה / כימיה).
-- The **handle**: `<g class="hero-handle">` (halo r 16 + white r 9 + a vertical hairline from
-  y = 30 to y = 330 through the handle), `cursor: grab`, `tabindex="0"`, `role="slider"`,
-  `aria-valuemin/max/now` over the four subjects, `aria-valuetext` = subject name + status.
-- A **readout row** under the SVG, mono: `● NITROX · LIVE` (EN) / `● נייטרוקס · פעיל` (HE),
-  plus an "open →" link that targets the snapped subject's URL (hidden for "soon").
-- A ruler tick row along the panel's bottom edge (§3.1 #6).
+- `<svg viewBox="0 0 520 300">` with the curve `M 40 256 C 230 256, 290 48, 480 48` (the
+  mark's curve scaled), stroke 6 with `vector-effect: non-scaling-stroke` so it stays 6 px on
+  a phone, `url(#spectrumHero)` (userSpaceOnUse along the curve's bounding diagonal). A
+  hairline cursor runs from y = 16 to the bottom edge (y = 300) so it visually continues into
+  the axis row below.
+- Four **subject nodes** placed by **target x** (`74, 200, 322, 446` SVG units; the y is
+  looked up on the sampled curve), not by arc-length fraction — arc fractions bunched the
+  middle nodes ~63 px apart at phone width, too close for labels. Node order along the
+  curve = story order (Nitrox first). Dots are filled with each subject's own colour (teal,
+  Math violet, Physics blue, amber), "soon" nodes at 35 % fill with a dashed ring.
+- Nodes and the handle are drawn at unit size and **counter-scaled in JS**
+  (`transform: translate(x,y) scale(k)`, `k = 520 / renderedWidth`, clamped to [1, 1.8],
+  re-measured with a `ResizeObserver`) so they are the same on-screen size whether the panel
+  is 300 px or 440 px wide. Dot r 7 (9 when active), handle thumb r 9 + halo r 17.
+- **Axis chips**, not in-SVG labels: an HTML row (`.hero-axis`, 30 px tall) under the SVG
+  with one `<button class="axis-chip">` per subject, absolutely positioned at
+  `left: x/520 %` and centred with `translateX(-50%)`. Plex Sans 600 12 px in HE
+  (נייטרוקס / מתמטיקה / פיזיקה / כימיה), Plex Mono 11 px uppercase in EN (`NITROX` / `MATH`
+  / `PHYSICS` / `CHEM`). The active chip is filled `--accent`; "soon" chips are dashed and
+  muted. Tapping a chip snaps the handle there — it is the touch-friendly way to pick a
+  subject (a 5 px SVG dot is not a tap target). Labels inside the SVG were tried first and
+  scaled down to ~7 px on a phone; HTML text doesn't scale with the drawing.
+- The **handle**: `<g class="hero-handle-group">` (halo + white thumb with an `--accent`
+  ring), `cursor: grab`, `tabindex="0"`, `role="slider"`, `aria-valuemin/max/now` over the
+  four subjects, `aria-valuetext` = subject name + status.
+- A **readout row** under the axis, separated by a hairline: `● נייטרוקס · פעיל` (HE, Plex
+  Sans 600) / `● NITROX · LIVE` (EN, mono) and a small outlined pill button "לשיעור המלא" /
+  "Open the full lesson" with a mirrored arrow, targeting the snapped subject's URL (hidden
+  for "soon").
+- No ruler (§3.1 #6, superseded).
 
 Behavior (vanilla, `hub.js`):
 
-1. On init, sample the path into 240 points (`getTotalLength` + `getPointAtLength`), store
-   `[x, y, s]`. The curve is monotonic in x, so "nearest point to pointer" = binary search
-   on x. Place nodes at the stored fractions. Handle starts on node 0 (Nitrox).
-2. `pointerdown` on the handle (or anywhere on the SVG) → `setPointerCapture`, add
-   `.dragging`; `pointermove` → map `clientX` to SVG x via `getScreenCTM().inverse()`, find
-   nearest sample, set the group's `transform: translate(x, y)` and the hairline's x; the
-   readout updates live to the *nearest* node's subject (so it changes mid-drag, which is
-   the point — it responds while you move).
-3. `pointerup` → snap to the nearest node with a 260 ms transition; set `data-active`
-   subject on `<body>`, which the matching subject card (§5.6) uses to show a glow ring
-   (`[data-active="math"] .subject[data-subject="math"] { box-shadow: 0 0 0 1px var(--c2),
-   0 0 32px -6px var(--c2) }`).
-4. Keyboard: ←/→ (mirrored under RTL: in RTL, → moves to the *previous* node so the arrow
-   key matches the visual direction), Home/End, Enter/Space opens the active subject.
-5. Clicking a node directly snaps to it. Double-click/tap on a live node opens it.
+1. On init, sample the path into 240 points (`getTotalLength` + `getPointAtLength`). The
+   curve is monotonic in x, so "nearest point to an x" = binary search. Resolve each
+   subject's target x to a sample, position its node and its axis chip. Handle starts on
+   node 0 (Nitrox).
+2. `pointerdown` anywhere on the SVG → `setPointerCapture`, add `.dragging`; `pointermove`
+   → map `clientX` to SVG x via `getScreenCTM().inverse()`, place the handle on the nearest
+   sample and move the hairline; the readout and the active axis chip update live to the
+   *nearest* node's subject (so it changes mid-drag — it responds while you move).
+3. `pointerup`/`pointercancel` → snap to the nearest node with a 260 ms transition; set
+   `data-active` on `<body>`, which the matching subject card (§5.6) uses for its glow.
+4. Keyboard: arrow keys follow the **visual** direction — the curve never mirrors, so → is
+   always "the next node to the right", in both languages (the earlier "mirror under RTL"
+   rule was wrong for an unmirrored drawing: pressing → moved the handle left). Home/End,
+   Enter/Space opens the active live subject.
+5. Clicking a node or its axis chip snaps to it. Double-click on a live node opens it.
 6. Idle: if the user hasn't touched it after 2.5 s, the handle makes **one** slow pass to
-   node 1 and back (3 s) to advertise that it moves — then stays still. Not looped.
-7. Touch: `touch-action: none` on the SVG only (page still scrolls elsewhere).
+   node 1 and back (3 s) to advertise that it moves — then stays still. Not looped. Off
+   under `prefers-reduced-motion`.
+7. Touch: `touch-action: pan-y` on the SVG — horizontal drags scrub, vertical swipes still
+   scroll the page. (`touch-action: none` made the whole panel a dead zone for scrolling on
+   phones; a swipe that lands on it simply did nothing.)
 
 ### 5.3 Method strip — "למה לא פשוט לשנן?" (infographic 1)
 
-A panel with two rows, each a horizontal flow of 3–4 steps joined by SVG arrows. This is the
-"simulate vs memorize" diagram the brief asks for, and it explains the mechanism — it does
-**not** claim outcomes or retention statistics (nothing here is a fact we can source; the
-captions are Guy's premise stated as a premise).
+A panel with two rows, each titled (method.rowA / method.rowB, 12 px: muted for A, `--accent`
+for B) and each a horizontal flow of 3–4 **step tiles** joined by SVG arrows, with a caption.
+This is the "simulate vs memorize" diagram the brief asks for, and it explains the mechanism
+— it does **not** claim outcomes or retention statistics (nothing here is a fact we can
+source; the captions are Guy's premise stated as a premise).
 
-Row A — `לשנן` / `Memorize` (muted, `--ink-2`, no glow):
-`נוסחה` (a small card with three flat text lines) → `תשובה` (a card with one bold line) →
-`זוכרים עד המבחן` (same card, 40 % opacity, with a thin "X" strike).
-Caption: method.captionA.
+A step tile = a 56 px (64 px ≥ 720) hairline box holding one small visual, with an 11–12.5 px
+label underneath. The **"formula" is real**: `∫₀² x² dx`, set in Plex Mono with HTML
+`<sub>/<sup>` (not Unicode superscripts — glyph coverage), and its answer `8/3`. That is
+Math Academy's own integral, the one the live demo below computes; *superseded:* the first
+build drew the formula as three grey placeholder bars, which read as a skeleton loader at
+every width and was the single thing that made the page look unfinished.
 
-Row B — `להזיז` / `Move it` (full ink, the handle glows):
-`נוסחה` (same card) → `ידית` (a mini slider: track + glowing thumb, **animated** on reveal:
-the thumb slides 20 % → 70 %) → `רואים מה משתנה` (a mini chart whose bar grows in sync with
-the thumb — pure CSS `transform: scaleY`, driven by the same keyframe timing) →
-`מבינים למה` (the card from step 1, now with the lines "lit" in `--accent`).
-Caption: method.captionB.
+Row A — `לשנן` / `Memorize`: `∫₀² x² dx` (label נוסחה) → `8/3` (תשובה) → `8/3` struck through
+at 45 % (זוכרים עד המבחן). Caption: method.captionA.
 
-Rows stack vertically; steps stack vertically below 640 px (arrows rotate 90°). All arrows
-mirror under RTL (§6.3). Row B's animation plays once on reveal; on hover of the row it
-replays.
+Row B — `להזיז` / `Move it`: `∫₀² x² dx` (נוסחה) → a mini slider, thumb glowing and
+**animated** on reveal 18 % → 74 % (ידית) → three bars that grow in a 80 ms stagger (רואים
+מה משתנה) → the formula again, lit in `--accent` on `--accent-soft` with a soft glow
+(מבינים למה). Caption: method.captionB.
+
+Steps are `flex: 1 1 0; max-width: 150px`, so on a phone all four tiles of row B fit on **one
+line** (~65 px each at 390) and the strip is ~320 px tall instead of a screen and a half of
+vertically stacked cards (*superseded:* "steps stack vertically below 640 px"). Arrows mirror
+under RTL (§6.3). Row B's animation plays once on reveal; hovering the row replays it.
 
 ### 5.4 Live preview — "ככה נראה שיעור כאן" (infographic 2, actually live)
 
@@ -522,7 +582,9 @@ the subject. Tabs are `role="tablist"`; the active tab is remembered in `localSt
 - `<svg viewBox="0 0 480 240">`: axes in `--line-strong`; area under the curve in
   `rgba(98,80,214,.14)` (Math's `--accent-soft`); rectangles fill `rgba(98,80,214,.28)` stroke
   `#6250d6` (Math's violet — this demo wears Math's color because it *is* Math's lesson);
-  curve stroke `--ink` 2.5.
+  curve stroke `--ink` 2.5 — the curve is a polyline **generated from f(x) in JS** (48
+  points), not a hand-drawn cubic that approximates x² (the rectangles' tops sit exactly on
+  f at the midpoints, so the curve must too).
 - Controls row: `<input type="range" class="handle-slider">` + mono readout `n = 4`.
 - Readout block: `live.math.estimate` → mono 36 px, 2 decimals, re-rendered on each input
   with a 160 ms `scale .94→1` pop; next to it, smaller: `live.math.exact 2.667` (∫₀² x² dx =
@@ -562,27 +624,41 @@ simply follows the method strip and live preview now.
 
 ### 5.6 Subjects
 
-Title `נושאים` / `Subjects` with a mono count chip (`2 LIVE · 2 SOON` EN / `2 פעילים · 2 בקרוב` HE
-in Plex Sans). Grid `repeat(auto-fit, minmax(240px, 1fr))`, gap 16.
+Title `נושאים` / `Subjects` with a count chip (`3 LIVE · 1 SOON` EN in mono / `3 פעילים · 1
+בקרוב` HE in Plex Sans — update it when a subject lights up). Grid: one column on phones,
+**two columns from 640 px** (`repeat(2, minmax(0,1fr))`), gap 14–16. *Superseded:*
+`auto-fit, minmax(240px, 1fr)` — with four subjects at 1080 px that produced 3 + 1 and left
+one card orphaned on its own row.
 
-Card anatomy (`.subject.panel`, `data-subject="nitrox|math|physics|chemistry"`, inline
-`--c1/--c2`):
+Card anatomy (`.subject`, `data-subject="nitrox|math|physics|chemistry"`, inline `--c1/--c2`),
+**header row first**, so a card is ~150 px tall on a phone instead of ~370:
 
-1. Tile 44 px, rx 14, `linear-gradient(145deg, var(--c1), var(--c2))`, white glyph (§3.6).
-2. Name (Plex Sans 600 19 px) + status chip (`status.*`, dot in `--c2` for live/pilot).
-3. One-liner (keep the existing two; they're good):
+1. `.subject-head`: a 42 px tile (rx 13, `linear-gradient(145deg, var(--c1), var(--c2))`,
+   white glyph, §3.6) beside a stacked **name + status chip**. *Superseded:* tile above
+   name above description above status, each on its own row — on a 358 px card that was
+   mostly air.
+2. Name is **bilingual**, like everything else on the page: HE uses the app's own Hebrew name
+   from its `<title>` (אקדמיית נייטרוקס / אקדמיית המתמטיקה / אקדמיית הפיזיקה / אקדמיית
+   הכימיה), EN the English one. Plex Sans 600 17–18 px. Status chip (`status.*`) in `--c2`,
+   Plex Sans 600 12 px HE / mono 11 px EN.
+3. One-liner, 14 px `--ink-2`:
    - Nitrox: `אוויר מועשר: לחץ חלקי, MOD וגבולות חמצן — דרך סימולציה, לא שינון.` /
      `Enriched air: partial pressure, MOD and oxygen limits — through simulation, not memorization.`
-   - Math: `אינטגרלים: מתחילים במלבנים, מגיעים לקיצור דרך.` /
-     `Integrals: start with rectangles, arrive at a shortcut.`
-4. **Signature line**: a 100 % wide, 28 px tall SVG at the card's bottom with a short curve
-   in `--c2` (`stroke-dasharray` = length; draws itself on hover, 420 ms) and a small handle
-   dot that rides to the end. Each subject gets its own curve shape: Nitrox a descending
-   pressure line, Math a parabola with two rectangles under it, Physics a sine, Chemistry a
-   logistic. It's a 6-line SVG per card and it makes every card feel like a lesson's doorway.
+   - Math (now two topics — derivatives and integrals, see `apps/math/src/content/topics.ts`):
+     `נגזרות ואינטגרלים: משיפוע ממוצע לנגזרת, וממלבנים לקיצור דרך.` /
+     `Derivatives and integrals: from average slope to the derivative, and from rectangles to a shortcut.`
+   - Physics: `תנועה: מיקום, מהירות ותאוצה — גוררים ידית על גרף ורואים את הקשר ביניהם.` /
+     `Motion: position, velocity and acceleration — drag a handle on a graph and watch how they connect.`
+   - Chemistry (soon): `עדיין בעבודה.` / `Still in the works.`
+4. **Signature line**: a 100 % wide, 22 px tall SVG pinned to the card's bottom (`margin-top:
+   auto`) with a short curve in `--c2` (`vector-effect: non-scaling-stroke`) and a small
+   handle dot that appears on hover. Each subject gets its own curve shape: Nitrox a
+   descending pressure line, Math a parabola with two rectangles under it, Physics a sine,
+   Chemistry a logistic. It's a 6-line SVG per card and it makes every card feel like a
+   lesson's doorway.
 5. Hover: lift 2 px, border → `--c2`, glow `0 0 32px -6px var(--c2)`; the whole card is the
    `<a>`.
-6. "Soon" cards: 55 % opacity, dashed `--line-strong` border, no hover lift, no link, the
+6. "Soon" cards: 60 % opacity, dashed `--line-strong` border, no hover lift, no link, the
    signature line static. No "notify me" (no backend; don't fake one).
 
 Cards get `[data-active=…]` glow from the hero scrubber (§5.2 step 3); clicking a card never
@@ -590,8 +666,26 @@ moves the hero handle (one-way, so the cards stay plain links).
 
 ### 5.7 Footer
 
-Single line, `--muted`, 13 px: `footer` copy (§2.6) · `logo-mono.svg` at 16 px ·
-`github.com/edenguy/academy` (text link, external-link icon). Nothing else.
+A centred **stack**, `--muted`, 13 px: the full Handle mark (`logo.svg`, 22 px — *superseded:*
+`logo-mono.svg` at 16 px, which rendered as an unreadable smudge in the muted colour) · line
+1 `נבנה על ידי גיא עדן · כלי לימוד עצמאי` · line 2 `חינם בזמן הפיילוט · בעברית ובאנגלית` ·
+`github.com/edenguy/academy` (text link, external-link icon). Nothing else. The single-line
+version wrapped on phones with a stray `·` starting a line. Bottom padding 96 px so the
+feedback button (§5.8) never sits on the link at the end of the page.
+
+### 5.8 Feedback widget (added after this spec; reskinned to hub tokens)
+
+A fixed button at the end-bottom corner opens a small form (question / idea / feature request /
+bug report, message, optional screenshot and email) that posts to a form-relay service; it
+exists so a learner can report something without a GitHub account. Rules for it on the hub:
+
+- Icon is an **envelope**, not a speech bubble (§7 bans chat bubbles: a bubble FAB reads as
+  "chat with an AI"). On phones it is a 46 px circle; from 720 px it is a pill with the word
+  `משוב` / `Feedback`, so it isn't a mystery button.
+- Hub accent, hub glow, 999 radius. It is the one fixed element on the page, so it must never
+  cover a control for good: content gets ≥ 96 px of bottom padding, and the hero's open-lesson
+  button sits at the panel's bottom-start where the FAB (end side) doesn't overlap it.
+- Labels are bilingual through `.t-he/.t-en`; `aria-label` through `data-label-he/en`.
 
 ---
 
@@ -711,9 +805,13 @@ Copy traps:
 - [ ] Only two font families load (Plex Sans Hebrew, Plex Mono); no Rubik on the hub.
 - [ ] Hebrew headings have `letter-spacing: 0`; no Hebrew uppercase; every number/code is an
       LTR island; sliders and gauges don't mirror; arrows do.
-- [ ] Hero handle: drag with mouse and touch, snaps to nodes, arrow keys work and are
-      mirrored in RTL, Enter opens the active live subject, screen reader announces the
-      subject name.
+- [ ] Hero handle: drag with mouse and touch, snaps to nodes, arrow keys follow the visual
+      direction (→ = next node to the right, in both languages), axis chips snap, Enter opens
+      the active live subject, screen reader announces the subject name. A vertical swipe
+      on the panel scrolls the page.
+- [ ] On a 390 px phone the handle panel starts within the first screen; axis chips don't
+      overlap each other at 360 px in either language; the EN headline is exactly two lines
+      at 390 and 1440.
 - [ ] Riemann demo estimate → 2.67 as n → 40; Nitrox demo reads 1.60 at 40 m and turns warn
       above 1.4; 1.4 is referenced to `limits.ts` in a code comment; no other limit numbers.
 - [ ] No personal origin story and no mention of Ilana anywhere on the hub or in Nitrox

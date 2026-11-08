@@ -138,9 +138,12 @@ Today every subject supports exactly `en` and `he`. To add a third language (say
 4. Give it its own logo mark — subject-specific is correct here (unlike the hub page, which
    must stay neutral since it spans every subject; see `docs/hub/logo.svg`'s neutral "Handle"
    mark vs. Math Academy's `∫`).
-5. Add it in **two places** on the hub (`docs/index.html`): a card in the subjects grid and a
-   node on the hero handle's curve (`SUBJECTS` array in `docs/hub/hub.js`) — replacing a
-   "coming soon" placeholder if one exists.
+5. Add it in **three places** on the hub: a card in the subjects grid (`docs/index.html`,
+   with its Hebrew *and* English name — the apps' own `<title>`s are the source), a node
+   `<g class="node">` + an `.axis-chip` button in the hero handle's SVG/axis (`docs/index.html`),
+   and an entry in the `SUBJECTS` array in `docs/hub/hub.js` (position on the curve, status,
+   URL) — replacing a "coming soon" placeholder if one exists. Also bump the count chip in the
+   subjects header.
 6. `cd apps/<subject> && npm install && npm run build` and commit the result under `docs/`.
 
 **Content organization within a subject (decided, not yet built):** once a subject has more

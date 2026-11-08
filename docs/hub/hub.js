@@ -60,13 +60,17 @@
     var statusDot = document.getElementById('hero-status-dot');
     var statusText = document.getElementById('hero-status-text');
     var openLink = document.getElementById('hero-open-link');
+    var axis = document.getElementById('hero-axis');
     var body = document.body;
+    var VIEW_W = 520; // must match the SVG's viewBox width
 
+    // Subjects sit on the curve at a target x (SVG units) rather than an arc-length fraction,
+    // so their axis chips are evenly spaced and never collide at phone width.
     var SUBJECTS = [
-      { key: 'nitrox', frac: 0.14, color: 'var(--teal)', live: true, url: '/academy/subjects/nitrox/', nameHe: 'נייטרוקס', nameEn: 'NITROX', statusHe: 'פעיל', statusEn: 'LIVE' },
-      { key: 'math', frac: 0.40, color: '#6250d6', live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'physics', frac: 0.64, color: '#3457d1', live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'chemistry', frac: 0.88, color: 'var(--amber)', live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
+      { key: 'nitrox', x: 74, live: true, url: '/academy/subjects/nitrox/', nameHe: 'נייטרוקס', nameEn: 'NITROX', statusHe: 'פעיל', statusEn: 'LIVE' },
+      { key: 'math', x: 200, live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
+      { key: 'physics', x: 322, live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
+      { key: 'chemistry', x: 446, live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
     ];
 
     var totalLength = curvePath.getTotalLength();
@@ -77,65 +81,81 @@
       samples.push({ x: pt.x, y: pt.y, frac: i / SAMPLE_N });
     }
 
-    function pointAtFraction(frac) {
-      return curvePath.getPointAtLength(frac * totalLength);
-    }
-    function nearestFraction(svgX) {
+    // The curve is monotonic in x, so "nearest sample to an x" is a binary search.
+    function sampleAtX(svgX) {
       var lo = 0, hi = samples.length - 1;
       while (lo < hi) {
         var mid = (lo + hi) >> 1;
         if (samples[mid].x < svgX) lo = mid + 1; else hi = mid;
       }
-      return samples[lo].frac;
+      return samples[lo];
+    }
+
+    // Nodes and the handle are drawn at unit size and counter-scaled by k = viewBox / rendered
+    // width, so they stay the same size on screen whether the panel is 300 or 440 px wide.
+    var k = 1;
+    function measureScale() {
+      var w = svg.getBoundingClientRect().width;
+      k = w > 0 ? Math.min(1.8, Math.max(1, VIEW_W / w)) : 1;
+    }
+    function placeGroup(el, x, y) {
+      el.setAttribute('transform', 'translate(' + x + ',' + y + ') scale(' + k + ')');
     }
 
     SUBJECTS.forEach(function (s) {
-      var pt = pointAtFraction(s.frac);
-      s.x = pt.x; s.y = pt.y;
-      var nodeEl = svg.querySelector('.node[data-subject="' + s.key + '"]');
-      if (nodeEl) {
-        nodeEl.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
-        s.el = nodeEl;
-      }
+      var pt = sampleAtX(s.x);
+      s.x = pt.x; s.y = pt.y; s.frac = pt.frac;
+      s.el = svg.querySelector('.node[data-subject="' + s.key + '"]');
+      s.chip = axis ? axis.querySelector('.axis-chip[data-subject="' + s.key + '"]') : null;
+      if (s.chip) s.chip.style.left = (pt.x / VIEW_W * 100) + '%';
     });
 
+    function layoutNodes() {
+      measureScale();
+      SUBJECTS.forEach(function (s) { if (s.el) placeGroup(s.el, s.x, s.y); });
+    }
+
     var activeIndex = 0;
+    var current = samples[0];
 
     function setReadout(index, dragging) {
       var s = SUBJECTS[index];
       statusDot.style.setProperty('--readout-color', s.live ? 'var(--good)' : 'var(--muted)');
-      var he = s.nameHe + ' · ' + s.statusHe;
-      var en = s.nameEn + ' · ' + s.statusEn;
-      statusText.innerHTML = '<span class="t-he">' + he + '</span><span class="t-en">' + en + '</span>';
+      statusText.innerHTML = '<span class="t-he">' + s.nameHe + ' · ' + s.statusHe + '</span>' +
+                             '<span class="t-en">' + s.nameEn + ' · ' + s.statusEn + '</span>';
       if (s.live && !dragging) {
         openLink.href = s.url;
         openLink.hidden = false;
       } else {
         openLink.hidden = true;
       }
+      SUBJECTS.forEach(function (o, i) {
+        var on = i === index;
+        if (o.chip) { o.chip.classList.toggle('is-active', on); o.chip.setAttribute('aria-pressed', String(on)); }
+        if (o.el) o.el.classList.toggle('is-active', on);
+      });
     }
 
-    function placeAt(frac) {
-      var x, y;
-      var nearest = samples[0];
-      var best = Infinity;
-      for (var i = 0; i < samples.length; i++) {
-        var d = Math.abs(samples[i].frac - frac);
-        if (d < best) { best = d; nearest = samples[i]; }
-      }
-      x = nearest.x; y = nearest.y;
-      group.setAttribute('transform', 'translate(' + x + ',' + y + ')');
-      hairline.setAttribute('x1', x); hairline.setAttribute('x2', x);
-      return nearest;
+    function placeAt(sample) {
+      current = sample;
+      placeGroup(group, sample.x, sample.y);
+      hairline.setAttribute('x1', sample.x); hairline.setAttribute('x2', sample.x);
     }
 
-    function nearestSubjectIndex(frac) {
+    function nearestSubjectIndex(x) {
       var bestI = 0, best = Infinity;
       SUBJECTS.forEach(function (s, i) {
-        var d = Math.abs(s.frac - frac);
+        var d = Math.abs(s.x - x);
         if (d < best) { best = d; bestI = i; }
       });
       return bestI;
+    }
+
+    function updateAriaValueText() {
+      var s = SUBJECTS[activeIndex];
+      var isHe = document.documentElement.lang === 'he';
+      group.setAttribute('aria-valuenow', String(activeIndex));
+      group.setAttribute('aria-valuetext', isHe ? s.nameHe + ' · ' + s.statusHe : s.nameEn + ' · ' + s.statusEn);
     }
 
     function snapTo(index, opts) {
@@ -143,49 +163,59 @@
       activeIndex = index;
       var s = SUBJECTS[index];
       group.style.transition = opts.animate === false ? 'none' : 'transform 260ms cubic-bezier(.2,.8,.2,1)';
-      placeAt(s.frac);
+      placeAt(sampleAtX(s.x));
       setReadout(index, false);
       body.dataset.active = s.key;
+      updateAriaValueText();
       requestAnimationFrame(function () { group.style.transition = ''; });
     }
 
     // init
-    placeAt(SUBJECTS[0].frac);
-    setReadout(0, false);
-    body.dataset.active = SUBJECTS[0].key;
+    layoutNodes();
+    snapTo(0, { animate: false });
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(function () {
+        layoutNodes();
+        group.style.transition = 'none';
+        placeAt(current);
+        requestAnimationFrame(function () { group.style.transition = ''; });
+      }).observe(svg);
+    }
 
     var dragging = false;
-    function svgPointFromClient(clientX) {
+    function svgXFromClient(clientX) {
       var pt = svg.createSVGPoint();
       pt.x = clientX; pt.y = 0;
       var ctm = svg.getScreenCTM();
       if (!ctm) return null;
-      return pt.matrixTransform(ctm.inverse());
+      return pt.matrixTransform(ctm.inverse()).x;
     }
 
     function onPointerDown(e) {
+      if (e.button !== undefined && e.button !== 0) return;
       dragging = true;
       group.classList.add('dragging');
+      svg.classList.add('dragging');
       try { svg.setPointerCapture(e.pointerId); } catch (err) {}
       onPointerMove(e);
     }
     function onPointerMove(e) {
       if (!dragging) return;
-      var p = svgPointFromClient(e.clientX);
-      if (!p) return;
-      var frac = nearestFraction(p.x);
+      var x = svgXFromClient(e.clientX);
+      if (x === null) return;
       group.style.transition = 'none';
-      placeAt(frac);
-      var idx = nearestSubjectIndex(frac);
-      setReadout(idx, true);
+      var sample = sampleAtX(x);
+      placeAt(sample);
+      setReadout(nearestSubjectIndex(sample.x), true);
     }
     function onPointerUp(e) {
       if (!dragging) return;
       dragging = false;
       group.classList.remove('dragging');
-      var p = svgPointFromClient(e.clientX);
-      var frac = p ? nearestFraction(p.x) : SUBJECTS[activeIndex].frac;
-      snapTo(nearestSubjectIndex(frac));
+      svg.classList.remove('dragging');
+      var x = e.clientX !== undefined ? svgXFromClient(e.clientX) : null;
+      snapTo(nearestSubjectIndex(x === null ? current.x : sampleAtX(x).x));
     }
 
     svg.addEventListener('pointerdown', onPointerDown);
@@ -198,47 +228,40 @@
     group.setAttribute('aria-valuemin', '0');
     group.setAttribute('aria-valuemax', String(SUBJECTS.length - 1));
     group.addEventListener('keydown', function (e) {
-      var isRtl = document.documentElement.dir === 'rtl';
+      // Arrow keys follow the visual direction: the curve never mirrors, so in RTL "right"
+      // still means "towards the next node on the right".
       var next = null;
-      if (e.key === 'ArrowRight') next = isRtl ? activeIndex - 1 : activeIndex + 1;
-      else if (e.key === 'ArrowLeft') next = isRtl ? activeIndex + 1 : activeIndex - 1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = activeIndex + 1;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = activeIndex - 1;
       else if (e.key === 'Home') next = 0;
       else if (e.key === 'End') next = SUBJECTS.length - 1;
       else if (e.key === 'Enter' || e.key === ' ') {
         var s = SUBJECTS[activeIndex];
         if (s.live && s.url) window.location.href = s.url;
+        e.preventDefault();
         return;
       }
       if (next === null) return;
       e.preventDefault();
-      next = Math.max(0, Math.min(SUBJECTS.length - 1, next));
-      snapTo(next);
+      snapTo(Math.max(0, Math.min(SUBJECTS.length - 1, next)));
     });
-
-    function updateAriaValueText() {
-      var s = SUBJECTS[activeIndex];
-      var isHe = document.documentElement.lang === 'he';
-      group.setAttribute('aria-valuenow', String(activeIndex));
-      group.setAttribute('aria-valuetext', (isHe ? s.nameHe + ' · ' + s.statusHe : s.nameEn + ' · ' + s.statusEn));
-    }
-    var origSnap = snapTo;
-    snapTo = function (index, opts) { origSnap(index, opts); updateAriaValueText(); };
-    updateAriaValueText();
     window.addEventListener('academy:langchange', updateAriaValueText);
 
-    // click a node directly
+    // click a node or its axis chip directly
+    var touched = false;
     SUBJECTS.forEach(function (s, i) {
-      if (!s.el) return;
-      s.el.style.cursor = 'pointer';
-      s.el.addEventListener('click', function () { snapTo(i); });
-      s.el.addEventListener('dblclick', function () {
-        if (s.live && s.url) window.location.href = s.url;
-      });
+      if (s.el) {
+        s.el.style.cursor = 'pointer';
+        s.el.addEventListener('click', function () { snapTo(i); });
+        s.el.addEventListener('dblclick', function () { if (s.live && s.url) window.location.href = s.url; });
+      }
+      if (s.chip) {
+        s.chip.addEventListener('click', function () { touched = true; snapTo(i); group.focus({ preventScroll: true }); });
+      }
     });
 
-    // idle advertisement pass
+    // idle advertisement pass: one slow trip to the next node and back, once, then still
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var touched = false;
     ['pointerdown', 'keydown'].forEach(function (ev) {
       svg.addEventListener(ev, function () { touched = true; }, { once: true });
       group.addEventListener(ev, function () { touched = true; }, { once: true });
@@ -246,11 +269,11 @@
     setTimeout(function () {
       if (touched) return;
       group.style.transition = 'transform 1500ms cubic-bezier(.2,.8,.2,1)';
-      placeAt(SUBJECTS[1].frac);
+      placeAt(sampleAtX(SUBJECTS[1].x));
       setTimeout(function () {
+        if (touched) return;
         group.style.transition = 'transform 1500ms cubic-bezier(.2,.8,.2,1)';
-        placeAt(SUBJECTS[0].frac);
-        setReadout(0, false);
+        placeAt(sampleAtX(SUBJECTS[0].x));
         setTimeout(function () { group.style.transition = ''; }, 1500);
       }, 1500);
     }, 2500);
@@ -273,6 +296,17 @@
     function f(x) { return x * x; }
     function xToPx(x) { return PAD_L + (x / b) * plotW; }
     function yToPx(y) { return PAD_T + plotH - (y / fMax) * plotH; }
+
+    // Draw f itself (a polyline of 48 points) so the curve the rectangles chase is exact.
+    var curveEl = document.getElementById('riemann-curve');
+    if (curveEl) {
+      var d = '';
+      for (var c = 0; c <= 48; c++) {
+        var cx = a + (b - a) * (c / 48);
+        d += (c === 0 ? 'M' : 'L') + xToPx(cx).toFixed(1) + ' ' + yToPx(f(cx)).toFixed(1) + ' ';
+      }
+      curveEl.setAttribute('d', d.trim());
+    }
 
     var MAX_N = 40;
     var rects = [];
