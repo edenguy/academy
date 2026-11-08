@@ -1,0 +1,112 @@
+# Lesson 2 — average velocity (secant slope) collapsing into instantaneous velocity (tangent
+# slope) as t2 → t1. Deliberately echoes Math Academy's derivative/slope language.
+id: velocity-slope
+order: 2
+
+title:
+  en: "Velocity: The Slope of the Curve"
+  he: "מהירות: השיפוע של העקומה"
+
+subtitle:
+  en: "Chapter 2 · from two points to one instant"
+  he: "פרק 2 · משתי נקודות לרגע אחד"
+
+intro:
+  - en: >-
+      Last lesson you read a position graph by eye: flat means still, rising means forward,
+      falling means backward. Today that reading becomes a number. If an object moves from
+      {{s(t₁)}} to {{s(t₂)}} between two times, its **average velocity** over that interval is
+      {{Δs/Δt}} — how much position changed, divided by how much time passed.
+    he: >-
+      בשיעור הקודם קראתם גרף מיקום בעין: שטוח אומר במנוחה, עולה אומר קדימה, יורד אומר אחורה. היום
+      הקריאה הזו הופכת למספר. אם גוף זז מ-{{s(t₁)}} ל-{{s(t₂)}} בין שני רגעים, **המהירות
+      הממוצעת** שלו באותו קטע היא {{Δs/Δt}} — כמה המיקום השתנה, חלקי כמה זמן עבר.
+  - en: >-
+      Geometrically, {{Δs/Δt}} is exactly the **slope of the secant line** — the straight line
+      connecting the two points {{(t₁, s(t₁))}} and {{(t₂, s(t₂))}} on the curve. This is the
+      same "rise over run" you already know from straight-line graphs; it just happens to sit on
+      top of a curve here.
+    he: >-
+      מבחינה גיאומטרית, {{Δs/Δt}} הוא בדיוק **שיפוע הקו החותך** — הקו הישר שמחבר בין שתי הנקודות
+      {{(t₁, s(t₁))}} ו-{{(t₂, s(t₂))}} על העקומה. זה בדיוק אותו "עלייה חלקי ריצה" שאתם כבר
+      מכירים מגרפים של קווים ישרים; הוא פשוט יושב הפעם מעל עקומה.
+  - en: >-
+      But an average blurs detail — it tells you nothing about what happened _between_ the two
+      points. To know the velocity at one exact instant {{t₁}}, shrink the gap: drag {{t₂}} closer
+      and closer to {{t₁}}. The secant line rotates as it goes, and in the limit it becomes the
+      **tangent line** — the line that just grazes the curve at {{t₁}} alone.
+    he: >-
+      אבל ממוצע מטשטש פרטים — הוא לא מספר כלום על מה שקרה _בין_ שתי הנקודות. כדי לדעת את המהירות
+      ברגע מדויק אחד {{t₁}}, מכווצים את הפער: גוררים את {{t₂}} קרוב ויותר קרוב ל-{{t₁}}. הקו
+      החותך מסתובב תוך כדי כך, ובגבול הוא הופך ל**משיק** — הקו שרק נוגע בעקומה בנקודה {{t₁}} לבדה.
+  - en: >-
+      That limit is the **instantaneous velocity**, written {{v(t) = ds/dt}}. If this feels
+      familiar, it should: this is exactly the slope-of-the-tangent idea from Math Academy's
+      integral lessons, just read in the other direction — there you built up area from a rate;
+      here you're pulling a rate out of a changing quantity.
+    he: >-
+      הגבול הזה הוא **המהירות הרגעית**, הנכתבת {{v(t) = ds/dt}}. אם זה מרגיש מוכר, זה לא במקרה:
+      זה בדיוק רעיון שיפוע-המשיק מהשיעורים על אינטגרלים באקדמיית המתמטיקה, רק קרוא בכיוון ההפוך —
+      שם בניתם שטח מתוך קצב שינוי; כאן אתם שולפים קצב שינוי מתוך גודל משתנה.
+  - en: >-
+      Drag {{t₁}} and {{t₂}} on the curve below. Watch the secant (dashed) line swing as the gap
+      changes, and watch the "average velocity" readout approach the "instantaneous velocity at
+      t₁" readout as the gap shrinks toward zero.
+    he: >-
+      גררו את {{t₁}} ואת {{t₂}} על העקומה למטה. שימו לב איך הקו החותך (המקווקו) מסתובב כשהפער
+      משתנה, ואיך הקריאה "מהירות ממוצעת" מתקרבת לקריאה "מהירות רגעית ב-t₁" ככל שהפער מתכווץ לאפס.
+
+explorers:
+  - kind: secant
+    scenario: quadratic
+    initialT1: 1
+    initialT2: 3
+    caption:
+      en: "Drag t1 and t2 — bring them together to watch the secant become the tangent"
+      he: "גררו את t1 ו-t2 — קרבו ביניהם וצפו בקו החותך הופך למשיק"
+
+keyPoints:
+  - en: Average velocity over an interval is Δs/Δt — the slope of the secant line between two points on the curve.
+    he: מהירות ממוצעת בקטע היא Δs/Δt — שיפוע הקו החותך בין שתי נקודות על העקומה.
+  - en: As the second point approaches the first, the secant line rotates into the tangent line.
+    he: ככל שהנקודה השנייה מתקרבת לראשונה, הקו החותך מסתובב ונהיה הקו המשיק.
+  - en: The slope of the tangent line at a point is the instantaneous velocity there, v(t) = ds/dt — the same "rate of change is a slope" idea from Math Academy.
+    he: שיפוע הקו המשיק בנקודה הוא המהירות הרגעית שם, v(t) = ds/dt — אותו רעיון "קצב שינוי הוא שיפוע" מאקדמיית המתמטיקה.
+
+quiz:
+  - type: numeric
+    id: q1-average-velocity
+    prompt:
+      en: "For s(t) = 0.5t², the position is s(1) = 0.5 and s(3) = 4.5. What is the average velocity between t = 1 and t = 3?"
+      he: "עבור s(t) = 0.5t², המיקום הוא s(1) = 0.5 ו-s(3) = 4.5. מה המהירות הממוצעת בין t = 1 ל-t = 3?"
+    correctValue: 2
+    tolerance: 0.1
+    explanation:
+      en: "Δs/Δt = (4.5 − 0.5) / (3 − 1) = 4 / 2 = 2 — the slope of the secant line through those two points."
+      he: "Δs/Δt = (4.5 − 0.5) / (3 − 1) = 4 / 2 = 2 — שיפוע הקו החותך דרך שתי הנקודות האלה."
+  - type: mcq
+    id: q2-shrinking-gap
+    prompt:
+      en: "As you drag t2 toward t1 in the explorer above, what happens to the secant line?"
+      he: "כשגוררים את t2 לכיוון t1 במדמה למעלה, מה קורה לקו החותך?"
+    choices:
+      - en: It rotates and approaches the tangent line at t1
+        he: הוא מסתובב ומתקרב לקו המשיק ב-t1
+      - en: It stays exactly the same
+        he: הוא נשאר בדיוק אותו דבר
+      - en: It becomes a flat, horizontal line
+        he: הוא הופך לקו אופקי שטוח
+    correctIndex: 0
+    explanation:
+      en: Shrinking the gap between the two points is exactly the process that turns a secant (two-point average) into a tangent (one-point, instantaneous) — the "average velocity" readout converges to the "instantaneous velocity at t1" readout.
+      he: כיווץ הפער בין שתי הנקודות הוא בדיוק התהליך שהופך קו חותך (ממוצע של שתי נקודות) לקו משיק (רגעי, של נקודה אחת) — הקריאה "מהירות ממוצעת" מתכנסת לקריאה "מהירות רגעית ב-t1".
+  - type: numeric
+    id: q3-instantaneous-at-2
+    prompt:
+      en: "For s(t) = 0.5t², the instantaneous velocity is v(t) = t. What is the instantaneous velocity at t = 2?"
+      he: "עבור s(t) = 0.5t², המהירות הרגעית היא v(t) = t. מה המהירות הרגעית ב-t = 2?"
+    correctValue: 2
+    tolerance: 0.1
+    explanation:
+      en: "v(t) = t, so v(2) = 2 — and you can check this in the explorer by dragging t1 and t2 both very close to 2 and watching the average velocity readout approach exactly 2."
+      he: "v(t) = t, ולכן v(2) = 2 — ואפשר לבדוק זאת במדמה על ידי גרירת t1 ו-t2 שניהם קרוב מאוד ל-2 ולצפות בקריאת המהירות הממוצעת מתקרבת בדיוק ל-2."

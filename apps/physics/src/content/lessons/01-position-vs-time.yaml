@@ -1,0 +1,117 @@
+# Lesson 1 — purely graphical: read a position-vs-time graph (sign = direction, slope = rest
+# vs. moving forward/backward), before any formula shows up. Sets up lesson 2's "slope = velocity".
+id: position-vs-time
+order: 1
+
+title:
+  en: "Motion on a Line: Position vs. Time"
+  he: "תנועה על ציר: מיקום בזמן"
+
+subtitle:
+  en: "Chapter 1 · read the graph before you calculate"
+  he: "פרק 1 · קוראים את הגרף לפני שמחשבים"
+
+intro:
+  - en: >-
+      Every motion problem starts with one picture: **position vs. time**. Not speed, not
+      acceleration — just _where_ something is, at each moment. Everything else in this unit is
+      built by reading that one graph more carefully.
+    he: >-
+      כל בעיית תנועה מתחילה מתמונה אחת: **מיקום מול זמן**. לא מהירות, לא תאוצה — רק _איפה_ משהו
+      נמצא, בכל רגע. כל השאר ביחידה הזו נבנה מקריאה מדויקת יותר של אותו גרף.
+  - en: >-
+      Position on a line is **signed**, not just a distance. Pick a direction to call positive —
+      say, to the right — and everything to the left of your starting point is negative. {{s(t)}}
+      is the object's position at time {{t}}; it can be [[0]], positive, or negative, and that
+      sign is information, not a mistake.
+    he: >-
+      מיקום על ציר הוא **מספר עם סימן**, לא רק מרחק. בוחרים כיוון שייקרא חיובי — נגיד, ימינה — וכל
+      מה שמשמאל לנקודת ההתחלה הוא שלילי. {{s(t)}} הוא מיקום הגוף בזמן {{t}}; הוא יכול להיות [[0]],
+      חיובי או שלילי, והסימן הזה הוא מידע, לא טעות.
+  - en: >-
+      Now read the _shape_ of the curve, no arithmetic required. Where the curve is **flat**, the
+      object isn't moving — it's momentarily at rest. Where it **rises**, the object moves in the
+      positive direction. Where it **falls**, it moves in the negative direction. The steeper the
+      curve, the faster it's moving.
+    he: >-
+      עכשיו קוראים את ה_צורה_ של העקומה, בלי שום חישוב. במקום שבו העקומה **שטוחה**, הגוף לא זז —
+      הוא במנוחה רגעית. במקום שבו היא **עולה**, הגוף נע בכיוון החיובי. במקום שבו היא **יורדת**, הוא
+      נע בכיוון השלילי. ככל שהעקומה תלולה יותר, התנועה מהירה יותר.
+  - en: >-
+      Drag the handle below along three different stories: a steady walk at **constant velocity**,
+      a car that **speeds up and then brakes to a stop**, and something that **reverses direction**
+      partway through. Watch how each one's shape tells its story before you read a single number.
+    he: >-
+      גררו את הידית למטה דרך שלושה סיפורים שונים: הליכה קבועה ב**מהירות קבועה**, מכונית
+      ש**מאיצה ואז בולמת עד עצירה**, ומשהו ש**הופך כיוון** באמצע הדרך. שימו לב איך הצורה של כל אחד
+      מספרת את הסיפור שלו עוד לפני שקראתם מספר בודד.
+
+explorers:
+  - kind: scrubber
+    scenarios: [constant, easeInOut, oscillate]
+    initialScenario: constant
+    caption:
+      en: "Drag the handle — or use the slider below the graph — and watch the readout follow"
+      he: "גררו את הידית — או השתמשו במחוון מתחת לגרף — ועקבו אחרי הקריאה"
+
+keyPoints:
+  - en: Position on a line is signed — positive and negative mean opposite directions, not "more" and "less".
+    he: מיקום על ציר הוא מספר עם סימן — חיובי ושלילי הם כיוונים הפוכים, לא "יותר" ו"פחות".
+  - en: A flat part of the position-time graph means the object is momentarily at rest.
+    he: קטע שטוח בגרף מיקום-זמן אומר שהגוף במנוחה רגעית.
+  - en: A rising part means motion in the positive direction; a falling part means motion in the negative direction.
+    he: קטע עולה אומר תנועה בכיוון החיובי; קטע יורד אומר תנועה בכיוון השלילי.
+
+quiz:
+  - type: mcq
+    id: q1-flat-means-rest
+    prompt:
+      en: "On a position-vs-time graph, what does a flat (horizontal) section mean?"
+      he: "בגרף מיקום-זמן, מה המשמעות של קטע שטוח (אופקי)?"
+    choices:
+      - en: The object is momentarily at rest
+        he: הגוף נמצא במנוחה רגעית
+      - en: The object is moving at its fastest
+        he: הגוף נע במהירותו הגבוהה ביותר
+      - en: The object has returned to position zero
+        he: הגוף חזר למיקום אפס
+    correctIndex: 0
+    explanation:
+      en: Position isn't changing while the curve is flat, so the object isn't moving — slope zero means velocity zero, which is exactly what lesson 2 makes precise.
+      he: המיקום לא משתנה כשהעקומה שטוחה, כלומר הגוף לא זז — שיפוע אפס פירושו מהירות אפס, בדיוק מה ששיעור 2 יהפוך למדויק.
+  - type: mcq
+    id: q2-constant-velocity-shape
+    prompt:
+      en: "Switch to the “Constant velocity” scenario above. Why is its graph a straight line?"
+      he: "עברו לתרחיש “מהירות קבועה” למעלה. למה הגרף שלו הוא קו ישר?"
+    choices:
+      - en: Because the object covers equal distance in every equal time interval
+        he: כי הגוף עובר מרחק שווה בכל פרק זמן שווה
+      - en: Because the object isn't moving at all
+        he: כי הגוף לא זז בכלל
+      - en: Because the object is at position zero the whole time
+        he: כי הגוף נמצא במיקום אפס לאורך כל הזמן
+    correctIndex: 0
+    explanation:
+      en: A straight line has the same steepness everywhere — equal rise for equal run — which is exactly what "constant speed in the same direction" looks like.
+      he: לקו ישר יש אותה תלילות בכל מקום — עלייה שווה לכל מרווח שווה — וזה בדיוק מה ש"מהירות קבועה באותו כיוון" נראית כמוהו.
+  - type: numeric
+    id: q3-read-position
+    prompt:
+      en: "Switch to “Constant velocity” and scrub to t = 4s. What position does the readout show?"
+      he: "עברו לתרחיש “מהירות קבועה” וגררו עד t = 4 שניות. איזה מיקום הקריאה מראה?"
+    correctValue: 4
+    tolerance: 0.3
+    explanation:
+      en: "The straight line starts at −2 and climbs steadily; by t = 4s it has reached 4 — you can read this straight off the graph, no formula needed yet."
+      he: "הקו הישר מתחיל ב-−2 ועולה בהתמדה; עד t = 4 שניות הוא מגיע ל-4 — אפשר לקרוא את זה ישירות מהגרף, בלי צורך בנוסחה עדיין."
+  - type: numeric
+    id: q4-reverses-turning-point
+    prompt:
+      en: "Switch to “Reverses direction” and find the first time the curve goes flat — where the object turns around. Roughly what time is that?"
+      he: "עברו לתרחיש “הופך כיוון” ומצאו את הרגע הראשון שבו העקומה משתטחת — שבו הגוף פונה אחורה. בערך איזה זמן זה?"
+    correctValue: 2
+    tolerance: 0.4
+    explanation:
+      en: "The curve peaks and flattens at t = 2s — that's the turning point, the instant the object stops moving forward and starts moving back. Lesson 2 gives this moment an exact definition: velocity zero."
+      he: "העקומה מגיעה לשיא ומשתטחת ב-t = 2 שניות — זו נקודת ההיפוך, הרגע שבו הגוף מפסיק לנוע קדימה ומתחיל לנוע אחורה. שיעור 2 ייתן לרגע הזה הגדרה מדויקת: מהירות אפס."

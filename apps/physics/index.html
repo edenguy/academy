@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0c1733" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f7ff" media="(prefers-color-scheme: light)" />
+    <meta name="description" content="אקדמיית הפיזיקה: להבין תנועה, מהירות ותאוצה דרך שיעורים משחקיים וסימולציה חיה. כלי לימודי בלתי רשמי." />
+    <meta name="author" content="Guy Eden" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <title>אקדמיית הפיזיקה · Physics Academy</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="אקדמיית הפיזיקה" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:url" content="https://edenguy.github.io/academy/subjects/physics/" />
+    <meta property="og:title" content="אקדמיית הפיזיקה · Physics Academy" />
+    <meta property="og:description" content="גררו ידית על גרף תנועה וראו מהירות ותאוצה מגיבות. שיעורים משחקיים עם סימולציה חיה." />
+    <script>
+      // Apply the stored theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('academy-physics:theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
+          var l = localStorage.getItem('academy-physics:locale');
+          if (l === 'en') {
+            document.documentElement.lang = 'en';
+            document.documentElement.dir = 'ltr';
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

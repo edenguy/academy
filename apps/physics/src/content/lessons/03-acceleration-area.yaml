@@ -1,0 +1,138 @@
+# Lesson 3 — acceleration as the slope of v(t) (same slope idea as lesson 2, one level up), AND
+# the area under v(t) as displacement — a direct callback to Math Academy's Riemann-sum lesson,
+# landing on the standard constant-acceleration formulas as the exact-value "shortcut".
+id: acceleration-area
+order: 3
+
+title:
+  en: "Acceleration, and How It All Adds Up"
+  he: "תאוצה, ואיך הכל מצטבר"
+
+subtitle:
+  en: "Chapter 3 · one more slope, one more area"
+  he: "פרק 3 · עוד שיפוע, עוד שטח"
+
+intro:
+  - en: >-
+      You already have the pattern: a rate of change is a slope. Apply it one more time, to
+      velocity itself. **Acceleration** is how fast velocity is changing — the slope of the
+      velocity-time graph, {{a(t) = dv/dt}}. The exact same secant-to-tangent idea from last
+      lesson applies here; it's just one derivative further down the chain.
+    he: >-
+      כבר יש לכם את התבנית: קצב שינוי הוא שיפוע. מיישמים אותה עוד פעם אחת, על המהירות עצמה.
+      **תאוצה** היא הקצב שבו המהירות משתנה — שיפוע הגרף מהירות-זמן, {{a(t) = dv/dt}}. בדיוק אותו
+      רעיון של קו חותך שהופך למשיק מהשיעור הקודם חל גם כאן; זה פשוט עוד נגזרת אחת בשרשרת.
+  - en: >-
+      Now flip direction, the way Math Academy's integral lessons did. If the slope of position
+      gives velocity, then **the area under the velocity-time graph gives displacement** — exactly
+      the rectangles-under-a-curve idea from the Riemann sum lessons, just with {{v(t)}} playing
+      the role {{f(x)}} played there.
+    he: >-
+      עכשיו הופכים כיוון, בדיוק כמו שהשיעורים על אינטגרלים באקדמיית המתמטיקה עשו. אם שיפוע המיקום
+      נותן מהירות, אז **השטח מתחת לגרף מהירות-זמן נותן תזוזה** — בדיוק רעיון המלבנים מתחת לעקומה
+      מהשיעורים על סכומי רימן, רק ש-{{v(t)}} ממלא כאן את התפקיד ש-{{f(x)}} מילא שם.
+  - en: >-
+      For the common case of **constant acceleration** {{a}} starting from rest, {{v(t)}} is a
+      straight line — {{v(t) = a·t}} — so the rectangles under it build up toward a clean, exact
+      shape: a triangle. That triangle's area is {{½at²}}, and it's the same "shortcut" move as
+      the power rule: instead of summing ever-thinner rectangles by hand, you get the exact value
+      from a formula.
+    he: >-
+      עבור המקרה הנפוץ של **תאוצה קבועה** {{a}}, כשמתחילים ממנוחה, {{v(t)}} הוא קו ישר —
+      {{v(t) = a·t}} — כך שהמלבנים מתחתיו מצטברים לכיוון צורה נקייה ומדויקת: משולש. שטח המשולש
+      הזה הוא {{½at²}}, וזה אותו מהלך "קיצור דרך" כמו כלל החזקה: במקום לסכם מלבנים דקים יותר ויותר
+      ביד, מקבלים את הערך המדויק מנוסחה.
+  - en: >-
+      Put together, constant acceleration from an initial position {{s₀}} and initial velocity
+      {{v₀}} gives three standard formulas: {{v = v₀ + at}}, {{s = s₀ + v₀t + ½at²}}, and
+      {{v² = v₀² + 2a(s − s₀)}}. All three say the same physics in different combinations of
+      known and unknown quantities — pick whichever one already has the variables you were given.
+    he: >-
+      יחד, תאוצה קבועה ממיקום התחלתי {{s₀}} ומהירות התחלתית {{v₀}} נותנות שלוש נוסחאות סטנדרטיות:
+      {{v = v₀ + at}}, {{s = s₀ + v₀t + ½at²}}, ו-{{v² = v₀² + 2a(s − s₀)}}. שלושתן אומרות את אותה
+      פיזיקה בצירופים שונים של גדלים ידועים ולא ידועים — בוחרים את זו שכבר מכילה את המשתנים שנתנו
+      לכם.
+  - en: >-
+      One more thing the sign of {{a}} tells you: when acceleration points the **same** direction
+      as velocity, the object speeds up; when it points the **opposite** direction, the object
+      slows down — braking is just acceleration working against your current motion, not an
+      absence of acceleration.
+    he: >-
+      עוד דבר שהסימן של {{a}} אומר לכם: כשהתאוצה מצביעה ב**אותו** כיוון כמו המהירות, הגוף מאיץ;
+      כשהיא מצביעה בכיוון ה**הפוך**, הגוף מאט — בלימה היא פשוט תאוצה שפועלת נגד התנועה הנוכחית
+      שלכם, לא היעדר תאוצה.
+
+explorers:
+  - kind: accelArea
+    minA: 0.5
+    maxA: 3
+    initialA: 1.5
+    duration: 6
+    initialN: 6
+    caption:
+      en: "Drag the acceleration — and the rectangle count — and watch the estimate close in on the exact ½at²"
+      he: "גררו את התאוצה — ואת מספר המלבנים — וצפו בהערכה מתקרבת לערך המדויק ½at²"
+
+keyPoints:
+  - en: Acceleration is the slope of the velocity-time graph, a(t) = dv/dt — the same slope idea one level up from velocity.
+    he: תאוצה היא שיפוע הגרף מהירות-זמן, a(t) = dv/dt — אותו רעיון שיפוע, רמה אחת מעל המהירות.
+  - en: The area under a velocity-time graph is displacement — rectangles under v(t), exactly like the Riemann sums under f(x) in Math Academy.
+    he: השטח מתחת לגרף מהירות-זמן הוא תזוזה — מלבנים מתחת ל-v(t), בדיוק כמו סכומי רימן מתחת ל-f(x) באקדמיית המתמטיקה.
+  - en: "For constant acceleration from rest, that area is exactly ½at² — the shortcut formula replacing the rectangle sum, same move as the power rule."
+    he: "עבור תאוצה קבועה ממנוחה, השטח הזה הוא בדיוק ½at² — נוסחת קיצור הדרך שמחליפה את סכום המלבנים, אותו מהלך כמו כלל החזקה."
+  - en: Acceleration in the same direction as velocity speeds an object up; acceleration opposing velocity slows it down.
+    he: תאוצה באותו כיוון כמו המהירות מאיצה את הגוף; תאוצה מנוגדת למהירות מאטה אותו.
+
+quiz:
+  - type: numeric
+    id: q1-velocity-from-accel
+    prompt:
+      en: "A cyclist starts from rest and pedals with a constant acceleration of 2 m/s² for 5 seconds. Using v = v₀ + at, what is her velocity at the end?"
+      he: "רוכבת אופניים מתחילה ממנוחה ומאיצה בתאוצה קבועה של 2 מ'/ש² במשך 5 שניות. בעזרת v = v₀ + at, מה מהירותה בסוף?"
+    correctValue: 10
+    tolerance: 0.5
+    explanation:
+      en: "v = v₀ + at = 0 + 2 × 5 = 10 m/s."
+      he: "v = v₀ + at = 0 + 2 × 5 = 10 מ'/ש."
+  - type: numeric
+    id: q2-displacement-shortcut
+    prompt:
+      en: "Same cyclist (starts from rest, a = 2 m/s², t = 5s). Using the shortcut s = ½at², how far did she travel?"
+      he: "אותה רוכבת (מתחילה ממנוחה, a = 2 מ'/ש², t = 5 שניות). בעזרת קיצור הדרך s = ½at², כמה מרחק עברה?"
+    correctValue: 25
+    tolerance: 1
+    explanation:
+      en: "s = ½at² = 0.5 × 2 × 5² = 0.5 × 2 × 25 = 25 m — the exact triangle area under her v(t) line, the same number the explorer's rectangles converge toward."
+      he: "s = ½at² = 0.5 × 2 × 5² = 0.5 × 2 × 25 = 25 מ' — שטח המשולש המדויק מתחת לקו ה-v(t) שלה, אותו מספר שהמלבנים במדמה מתכנסים אליו."
+  - type: mcq
+    id: q3-area-meaning
+    prompt:
+      en: "What does the area under a velocity-time graph represent?"
+      he: "מה מייצג השטח מתחת לגרף מהירות-זמן?"
+    choices:
+      - en: Displacement
+        he: תזוזה
+      - en: Acceleration
+        he: תאוצה
+      - en: Average speed
+        he: מהירות ממוצעת
+    correctIndex: 0
+    explanation:
+      en: Summing v(t)·Δt over tiny time slices and letting them shrink to zero is exactly the Riemann-sum process from Math Academy — and the quantity it builds up is displacement, Δs.
+      he: סיכום v(t)·Δt על פני פרוסות זמן זעירות וכיווצן לאפס הוא בדיוק תהליך סכום רימן מאקדמיית המתמטיקה — והגודל שהוא בונה הוא תזוזה, Δs.
+  - type: mcq
+    id: q4-braking-is-acceleration
+    prompt:
+      en: "A car is moving forward and the driver brakes, slowing down while still moving forward. What does this tell you about the acceleration?"
+      he: "מכונית נעה קדימה והנהג בולם, כך שהיא מאטה בעודה נעה קדימה. מה זה אומר על התאוצה?"
+    choices:
+      - en: The acceleration points opposite to the velocity (even though there's still acceleration)
+        he: התאוצה מצביעה בכיוון הפוך למהירות (למרות שעדיין יש תאוצה)
+      - en: There is no acceleration while braking
+        he: אין תאוצה בזמן בלימה
+      - en: The acceleration points in the same direction as the velocity
+        he: התאוצה מצביעה באותו כיוון כמו המהירות
+    correctIndex: 0
+    explanation:
+      en: Slowing down is still a change in velocity, so it's still acceleration — just pointing against the direction of motion. "No acceleration" would mean constant speed, not braking.
+      he: האטה היא עדיין שינוי במהירות, אז זו עדיין תאוצה — רק מצביעה נגד כיוון התנועה. "אין תאוצה" הייתה אומרת מהירות קבועה, לא בלימה.
