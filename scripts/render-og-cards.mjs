@@ -9,7 +9,7 @@ import { chromium } from 'playwright';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatePath = join(__dirname, 'og-card.html');
-const outDir = join(__dirname, '..', 'docs', 'social');
+const outDir = join(__dirname, '..', 'docs', 'hub', 'social');
 
 // A simple four-point "spark" — discovery/insight, deliberately not tied to any one subject.
 const SPARK_SVG = `<svg viewBox="0 0 100 100" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">

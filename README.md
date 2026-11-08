@@ -18,7 +18,7 @@ academy/                              (this repo)
 │   └── <subject>/                       future subjects follow the same shape
 └── docs/                              SERVED by GitHub Pages — the whole site lives here
     ├── index.html                      landing page, listing every subject
-    ├── favicon.svg, social/             the hub's own neutral "spark" logo + share cards
+    ├── hub/                             the hub's OWN assets only (favicon.svg, social/) — nothing a subject owns
     └── subjects/
         ├── nitrox/                       built output of apps/nitrox, at /academy/subjects/nitrox/
         ├── math/                         built output of apps/math, at /academy/subjects/math/
