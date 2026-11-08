@@ -9,10 +9,21 @@ import { parse } from 'yaml';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const LESSONS_DIR = join(__dirname, '..', '..', 'src', 'content', 'lessons');
 
+// Keep in sync with src/content/topics.ts's TOPIC_ORDER (plain JS here — this script runs
+// outside Vite/TS, straight from disk).
+const TOPIC_ORDER = ['derivatives', 'integrals'];
+const TOPIC_TITLE = {
+  he: { derivatives: 'נגזרות', integrals: 'אינטגרלים' },
+  en: { derivatives: 'Derivatives', integrals: 'Integrals' },
+};
+
 export function loadLessons() {
   const files = readdirSync(LESSONS_DIR).filter((f) => f.endsWith('.yaml'));
   const lessons = files.map((f) => parse(readFileSync(join(LESSONS_DIR, f), 'utf8')));
-  lessons.sort((a, b) => a.order - b.order);
+  lessons.sort((a, b) => {
+    const topicDiff = TOPIC_ORDER.indexOf(a.topic) - TOPIC_ORDER.indexOf(b.topic);
+    return topicDiff !== 0 ? topicDiff : a.order - b.order;
+  });
   return lessons;
 }
 
@@ -44,10 +55,22 @@ function renderQuestion(q, locale, index) {
 }
 
 const EXPLORER_LABEL = { line: 'f(x) = x', parabola: 'f(x) = x²', cubic: 'f(x) = x³' };
+const CURVE_LABEL = { quadratic: 'f(x) = 0.5x²', cubicWave: 'f(x) = x³ − 3x' };
 
 function renderExplorer(e, locale) {
   const caption = e.caption ? ` — ${toMarkdownInline(pick(e.caption, locale))}` : '';
-  return `> 🖩 *Interactive explorer:* \`${EXPLORER_LABEL[e.fn] ?? e.fn}\` on [${e.a}, ${e.b}]${caption}`;
+  switch (e.kind ?? (e.fn ? 'integral' : undefined)) {
+    case 'integral':
+      return `> 🖩 *Interactive explorer:* \`${EXPLORER_LABEL[e.fn] ?? e.fn}\` on [${e.a}, ${e.b}]${caption}`;
+    case 'secant':
+      return `> 🖩 *Interactive explorer:* secant → tangent on \`${CURVE_LABEL[e.curve] ?? e.curve}\`${caption}`;
+    case 'powerRule':
+      return `> 🖩 *Interactive explorer:* power-rule derivative builder${caption}`;
+    case 'extremum':
+      return `> 🖩 *Interactive explorer:* sign of f' / extremum points on \`${CURVE_LABEL[e.curve] ?? e.curve}\`${caption}`;
+    default:
+      return `> 🖩 *Interactive explorer*${caption}`;
+  }
 }
 
 export function renderLessonMarkdown(lesson, locale, index) {
@@ -72,10 +95,20 @@ export function renderLessonMarkdown(lesson, locale, index) {
 }
 
 export function renderDocumentMarkdown(lessons, locale) {
-  const title = locale === 'he' ? 'אקדמיית המתמטיקה — אינטגרלים (עותק לבדיקה)' : 'Math Academy — Integrals (review copy)';
+  const title = locale === 'he' ? 'אקדמיית המתמטיקה (עותק לבדיקה)' : 'Math Academy (review copy)';
   const note =
     locale === 'he'
       ? '_מסמך זה נוצר אוטומטית מתוכן ה-YAML של האתר, לבדיקת מומחה. כל תיקון שמוחזר ייושם בחזרה בקבצי ה-YAML (`src/content/lessons/*.yaml`), ולא ישירות במסמך הזה._'
       : '_This document is generated automatically from the site\'s YAML content, for specialist review. Any correction you send back gets applied to the YAML files (`src/content/lessons/*.yaml`), not to this document directly._';
-  return [`# ${title}`, note, ...lessons.map((l, i) => renderLessonMarkdown(l, locale, i))].join('\n\n---\n\n');
+
+  const parts = [`# ${title}`, note];
+  let currentTopic;
+  lessons.forEach((l, i) => {
+    if (l.topic !== currentTopic) {
+      currentTopic = l.topic;
+      parts.push(`# ${TOPIC_TITLE[locale]?.[l.topic] ?? l.topic}`);
+    }
+    parts.push(renderLessonMarkdown(l, locale, i));
+  });
+  return parts.join('\n\n---\n\n');
 }

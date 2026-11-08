@@ -1,6 +1,7 @@
 # Lesson 3 — the payoff: a closed-form shortcut (the power rule for integrals) that matches
 # the numeric estimates from lessons 1–2 exactly, then a new function to prove it generalizes.
 id: antiderivative
+topic: integrals
 order: 3
 
 title:
@@ -57,7 +58,8 @@ intro:
       מגיעה לשם.
 
 explorers:
-  - fn: cubic
+  - kind: integral
+    fn: cubic
     a: 0
     b: 2
     initialN: 6

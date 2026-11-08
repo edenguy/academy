@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import { motion } from 'motion/react';
 import { FUNCTIONS, rectangles, riemannSum, type SumMode } from '@/math/integral';
 import { pick, type Locale } from '@/content/localize';
-import type { ExplorerConfig } from '@/content/schema';
+import type { IntegralExplorerConfig } from '@/content/schema';
 
 const VB_W = 640;
 const VB_H = 320;
@@ -17,7 +17,7 @@ const PLOT_H = VB_H - PAD_T - PAD_B;
 const CURVE_SAMPLES = 90;
 const MAX_RECTANGLES = 60;
 
-export function IntegralExplorer({ config, locale }: { config: ExplorerConfig; locale: Locale }) {
+export function IntegralExplorer({ config, locale }: { config: IntegralExplorerConfig; locale: Locale }) {
   const { t } = useTranslation();
   const { fn, a, b, initialN, modes } = config;
   const spec = FUNCTIONS[fn];

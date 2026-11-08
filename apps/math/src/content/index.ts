@@ -21,7 +21,15 @@ export function getLesson(id: string): LessonT | undefined {
   return LESSONS.find((l) => l.id === id);
 }
 
+/** Prev/next within the SAME topic only — a lesson never hands off into a different topic. */
 export function lessonNeighbors(id: string): { prev: LessonT | undefined; next: LessonT | undefined } {
-  const i = LESSONS.findIndex((l) => l.id === id);
-  return { prev: i > 0 ? LESSONS[i - 1] : undefined, next: i >= 0 && i < LESSONS.length - 1 ? LESSONS[i + 1] : undefined };
+  const lesson = LESSONS.find((l) => l.id === id);
+  if (!lesson) return { prev: undefined, next: undefined };
+  const siblings = LESSONS.filter((l) => l.topic === lesson.topic);
+  const i = siblings.findIndex((l) => l.id === id);
+  return { prev: i > 0 ? siblings[i - 1] : undefined, next: i >= 0 && i < siblings.length - 1 ? siblings[i + 1] : undefined };
+}
+
+export function lessonsByTopic(topic: LessonT['topic']): LessonT[] {
+  return LESSONS.filter((l) => l.topic === topic);
 }

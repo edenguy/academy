@@ -1,4 +1,4 @@
-# Math Academy — Integrals (review copy)
+# Math Academy (review copy)
 
 ---
 
@@ -6,7 +6,167 @@ _This document is generated automatically from the site's YAML content, for spec
 
 ---
 
-## Lesson 1 — How Much Area Is Under the Curve?
+# Derivatives
+
+---
+
+## Lesson 1 — Rate of Change: From Average Slope to the Derivative
+
+*Chapter 1 · how fast, right now?*
+
+
+
+A runner's speed over a `200`m race isn't one number. Over the whole race it might average out to 8 m/s — but at the start, right off the blocks, they're much slower; mid-race, at full sprint, much faster. "Average speed" and "speed right now" are genuinely different questions, and this chapter is about the second one.
+
+Start with the question you already know how to answer: the **average** rate of change. For any function `f`, between two points `x₁` and `x₂`, it's just `Δy/Δx` — the same slope formula from a straight line, `m = [f(x₂) − f(x₁)] / (x₂ − x₁)`. It's the slope of the **secant line** connecting the two points on the graph.
+
+Now shrink the gap. Slide `x₂` closer and closer to `x₁` — the secant line pivots, and in the limit, as `Δx → 0`, it settles into the **tangent line** at `x₁`: the line that just grazes the curve at a single point. Its slope is the **instantaneous** rate of change — the **derivative** — written `f′(x₁)` or `dy/dx`:
+
+`f′(x₁) = lim(Δx→0) [f(x₁+Δx) − f(x₁)] / Δx`. That's the whole definition — the same secant slope as before, just pushed to its limit.
+
+You may already recognize this gesture: it's exactly the one Math Academy's sibling, **Physics Academy**, uses to get from average velocity to instantaneous velocity on a position-vs-time graph — grab two points, watch the secant collapse into a tangent. The idea is identical; only the letters change. Here `f(x) = 0.5x²` is just a shape, not a position in time — but "how fast is it changing, right now" means the same thing either way.
+
+Try it below on `f(x) = 0.5x²`: drag `x₁` to 1 and `x₂` to 3 — the average rate is `(4.5 − 0.5) / 2 = 2`. Now drag `x₂` back toward `x₁`: the average rate slides toward **1**, the exact instantaneous rate at `x = 1`.
+
+
+
+> 🖩 *Interactive explorer:* secant → tangent on `f(x) = 0.5x²` — f(x) = 0.5x² — drag x1 and x2, watch the secant become a tangent
+
+
+
+**Key points**
+
+- Average rate of change between x1 and x2: m = [f(x2) − f(x1)] / (x2 − x1) — the secant slope.
+
+- The derivative f′(x) is the instantaneous rate of change: the limit of the average rate as x2 → x1, i.e. the tangent line's slope.
+
+- Same gesture, different subject: this is exactly Physics Academy's average-to-instantaneous velocity construction, applied to any function instead of just position.
+
+
+
+**Practice questions (with correct answers and explanations, for review)**
+
+1. **For f(x) = 0.5x², what is the average rate of change between x = 2 and x = 4?**
+   - Correct value: **3** (± 0.1)
+   - _Explanation:_ f(2) = 2, f(4) = 8. Average rate = (8 − 2) / (4 − 2) = 6 / 2 = 3.
+
+2. **As x2 slides closer and closer to x1, what does the secant line's slope approach?**
+   - (a) Zero, always
+   - (b) The instantaneous rate of change at x1 — the derivative, f′(x1) ✅
+   - (c) It doesn't approach anything in particular
+   - _Explanation:_ This is the definition of the derivative: f′(x1) = lim(Δx→0) [f(x1+Δx) − f(x1)] / Δx. The secant becomes the tangent exactly at that limit.
+
+3. **For f(x) = 0.5x², what is the exact instantaneous rate of change (the derivative) at x = 5?**
+   - Correct value: **5** (± 0.1)
+   - _Explanation:_ For f(x) = 0.5x², the derivative is f′(x) = x (you'll see why in the next lesson's power rule). So f′(5) = 5.
+
+---
+
+## Lesson 2 — Derivative Rules: Skipping the Limit Every Time
+
+*Chapter 2 · the pattern behind the limit*
+
+
+
+Computing a limit by hand every time you need a derivative would get old fast. Instead, mathematicians found that the limit definition always simplifies to the **same pattern** for a power of x — so once you know the pattern, you never need the limit again.
+
+**The power rule:** for `f(x) = xⁿ`, the derivative is `f′(x) = n·xⁿ⁻¹` — bring the power down as a multiplier, then reduce the power by one. Try it on `f(x) = x³`: `f′(x) = 3x²`.
+
+The rule isn't just for whole-number powers. A square root is a power in disguise: `√x = x^(1/2)`. The same rule applies: `f′(x) = (1/2)·x^(-1/2) = 1 / (2√x)`. Same pattern, fractional exponent.
+
+Two more rules make everything easier: a **constant multiplier** rides along unchanged — `d/dx[c·f(x)] = c·f′(x)` — and derivatives of a **sum** add term by term — `d/dx[f(x) + g(x)] = f′(x) + g′(x)`. Together, these three rules let you differentiate any polynomial or root function term by term, with no limit in sight.
+
+Play with the explorer: pick a power (`√x, x, x², x³`), adjust the coefficient, and watch `f(x)` (blue) and `f′(x)` (orange, dashed) respond together. Notice that raising the power makes the derivative graph steeper and more curved — the pattern scales exactly as the rule predicts.
+
+
+
+> 🖩 *Interactive explorer:* power-rule derivative builder — Adjust the power and coefficient — f and f' respond live
+
+
+
+**Key points**
+
+- Power rule: d/dx[xⁿ] = n·xⁿ⁻¹ — works for whole-number and fractional powers alike (a root is a fractional power).
+
+- Constant-multiple rule: d/dx[c·f(x)] = c·f′(x).
+
+- Sum rule: d/dx[f(x) + g(x)] = f′(x) + g′(x) — differentiate a polynomial term by term.
+
+
+
+**Practice questions (with correct answers and explanations, for review)**
+
+1. **Using the power rule, what is the derivative of f(x) = x⁴ at x = 2?**
+   - Correct value: **32** (± 0.1)
+   - _Explanation:_ f′(x) = 4x³. At x = 2: 4 × 8 = 32.
+
+2. **What is the derivative of f(x) = 3x² at x = 1?**
+   - Correct value: **6** (± 0.1)
+   - _Explanation:_ f′(x) = 3 · 2x = 6x (constant-multiple rule + power rule). At x = 1: 6 × 1 = 6.
+
+3. **Why does the power rule work on f(x) = √x?**
+   - (a) It doesn't — roots need a completely different rule.
+   - (b) Because √x is x raised to the power 1/2, so it's still a power function. ✅
+   - (c) Because √x happens to have the same derivative as x².
+   - _Explanation:_ √x = x^(1/2) is a power function with a fractional exponent, so the same rule (bring the power down, reduce it by one) applies directly: d/dx[x^(1/2)] = (1/2)x^(-1/2).
+
+---
+
+## Lesson 3 — Where a Function Rises, Falls, and Stops
+
+*Chapter 3 · reading the graph from the derivative*
+
+
+
+The derivative isn't just a number at one point — its **sign** tells you the whole shape of the graph around it. Where `f′(x) > 0`, the function is climbing. Where `f′(x) < 0`, it's falling. This single idea is the most common full-function-behavior question on the exam, and it comes entirely from the sign, not the formula.
+
+Somewhere between "climbing" and "falling," the function has to **stop**, even if only for an instant — and at that instant, the tangent line is flat: `f′(x) = 0`. A point where the derivative is zero **and** the sign flips around it is called a **local extremum**: a local maximum if `f′` goes from `+` to `−`, a local minimum if it goes from `−` to `+`.
+
+Take `f(x) = x³ − 3x`. Its derivative is `f′(x) = 3x² − 3`, which is zero exactly when `x = ±1`. Checking the sign on either side: `f′` is positive for `x < -1`, negative between `-1` and `1`, and positive again for `x > 1`. So `x = -1` is a local **maximum** (`f(-1) = 2`) and `x = 1` is a local **minimum** (`f(1) = -2`).
+
+Drag along the curve below and watch the readout: green while `f′ > 0` (rising), the other color while `f′ < 0` (falling), and purple right at the two marked extremum points — where the sign you're watching actually flips.
+
+
+
+> 🖩 *Interactive explorer:* sign of f' / extremum points on `f(x) = x³ − 3x` — f(x) = x³ − 3x — drag along the curve, watch the sign of f' flip
+
+
+
+**Key points**
+
+- f'(x) > 0 means f is increasing there; f'(x) < 0 means f is decreasing there.
+
+- A local extremum requires f'(x) = 0 AND a sign change around that point — f'(x) = 0 alone isn't enough (the sign could stay the same on both sides).
+
+- Local max: f' goes from + to −. Local min: f' goes from − to +.
+
+
+
+**Practice questions (with correct answers and explanations, for review)**
+
+1. **For f(x) = x² − 4x, at what x-value is f'(x) = 0?**
+   - Correct value: **2** (± 0.1)
+   - _Explanation:_ f′(x) = 2x − 4. Setting 2x − 4 = 0 gives x = 2.
+
+2. **If f'(5) = -3, what does that tell you about f near x = 5?**
+   - (a) f is increasing near x = 5
+   - (b) f is decreasing near x = 5 ✅
+   - (c) x = 5 must be a local extremum
+   - _Explanation:_ A negative derivative means the function is falling there. (And since f'(5) ≠ 0, x = 5 can't be an extremum at all.)
+
+3. **f'(3) = 0. Is x = 3 necessarily a local extremum?**
+   - (a) Yes — f'(x) = 0 is always enough on its own.
+   - (b) Not necessarily — only if the sign of f' actually flips around x = 3. ✅
+   - (c) No — f'(x) = 0 never indicates an extremum.
+   - _Explanation:_ f'(x) = 0 only marks a candidate point. It's a genuine local extremum only when the sign of f' actually changes on either side — otherwise the graph just flattens for an instant and keeps going the same direction.
+
+---
+
+# Integrals
+
+---
+
+## Lesson 4 — How Much Area Is Under the Curve?
 
 *Chapter 1 · building trust with rectangles*
 
@@ -62,7 +222,7 @@ Push the rectangle count as high as it goes and note the number you land on — 
 
 ---
 
-## Lesson 2 — Riemann Sums: More Rectangles, Better Guess
+## Lesson 5 — Riemann Sums: More Rectangles, Better Guess
 
 *Chapter 2 · from guess to definition*
 
@@ -114,7 +274,7 @@ Read that notation as: "the exact area under `f(x) = x²`, between 0 and 4." The
 
 ---
 
-## Lesson 3 — The Magic Shortcut: The Antiderivative
+## Lesson 6 — The Magic Shortcut: The Antiderivative
 
 *Chapter 3 · the formula reveals itself*
 
