@@ -7,7 +7,7 @@ import { Button } from './ui/Button';
 // Get a free key at web3forms.com (enter edenguy+academy-math@gmail.com, they email the key
 // back instantly — no account needed) and paste it here. The key is a public identifier, safe
 // to ship client-side; it only lets someone submit *to* this inbox, not read it.
-const WEB3FORMS_ACCESS_KEY = 'REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-math';
+const WEB3FORMS_ACCESS_KEY = '0105ebe0-a915-4076-a225-180d7aa580ee';
 
 type FeedbackType = 'Question' | 'Idea' | 'Feature request' | 'Bug report';
 
