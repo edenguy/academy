@@ -6,12 +6,17 @@ organized, and the rules that are easy to get wrong — the kind of thing a new 
 
 ## What this is
 
-A growing set of free, independent, playful lessons — one subject at a time — built because
-someone wanted to truly understand a topic, not earn a certificate. Every lesson pairs a live
+A growing set of independent, playful lessons — one subject at a time — built because someone
+wanted to truly understand a topic, not earn a certificate. Every lesson pairs a live
 interactive simulation with the idea it teaches, instead of asking the learner to memorize it.
 Bilingual (Hebrew first, English second) from day one, for every piece of learner-facing
 content, in every subject — never an afterthought bolted on later. See `docs/index.html` for
 the mission statement as actually shown to visitors.
+
+Currently free, as a pilot — that is not a permanent commitment. Don't state or imply
+anywhere that it's free *forever*; tie "free" to the pilot phase wherever it's mentioned (see
+`docs/index.html`'s own phrasing), and don't add a pricing/payment claim of any kind without
+being asked.
 
 Current subjects: **Nitrox Academy** (`apps/nitrox`), enriched-air diving theory — the
 original, most mature app, migrated in from its own repo, with real offline/PWA support and
