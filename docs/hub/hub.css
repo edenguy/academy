@@ -98,9 +98,8 @@ h1, h2, h3, p { margin: 0; }
   background: var(--accent); border-radius: 999px;
   transition: transform 200ms cubic-bezier(.2,.8,.2,1);
 }
-[data-lang="en"] .lang-switch .indicator { transform: translateX(0); }
-[data-lang="he"] .lang-switch .indicator { transform: translateX(calc(-100% - 2px)); }
-[dir="ltr"][data-lang="he"] .lang-switch .indicator { transform: translateX(100%); }
+[data-lang="he"] .lang-switch .indicator { transform: translateX(0); }
+[data-lang="en"] .lang-switch .indicator { transform: translateX(calc(100% + 2px)); }
 .lang-switch button {
   position: relative; z-index: 1; appearance: none; border: none; background: none; cursor: pointer;
   font: inherit; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
