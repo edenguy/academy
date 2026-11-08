@@ -2,32 +2,33 @@
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 1200px; height: 1200px; }
   body {
-    font-family: 'Rubik', 'Segoe UI', sans-serif;
+    font-family: 'IBM Plex Sans Hebrew', 'Segoe UI', sans-serif;
     background:
-      radial-gradient(900px 700px at 15% -5%, rgba(98,80,214,0.16), transparent 60%),
-      radial-gradient(800px 700px at 100% 10%, rgba(232,123,164,0.16), transparent 55%),
-      radial-gradient(900px 800px at 50% 115%, rgba(42,120,214,0.12), transparent 60%),
-      linear-gradient(180deg, #fdf6ff 0%, #f4ecff 100%);
+      radial-gradient(900px 600px at 0% 0%, rgba(124,92,255,0.22), transparent 65%),
+      linear-gradient(180deg, #0a0718, #0f0b24);
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .card { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .badge {
-    width: 260px; height: 260px; border-radius: 64px;
-    background: linear-gradient(145deg, #6250d6, #e87ba4);
-    box-shadow: 0 30px 70px -20px rgba(98,80,214,0.45);
+    width: 220px; height: 220px; border-radius: 52px;
+    background: #120b2e;
+    box-shadow: 0 30px 70px -20px rgba(124,92,255,0.5);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 56px;
   }
-  .badge svg { width: 54%; height: 54%; }
-  .title { font-size: 76px; font-weight: 700; color: #241233; line-height: 1.15; }
-  .subtitle { font-size: 40px; font-weight: 600; color: #7c6a95; margin-top: 14px; }
-  .tagline { font-size: 32px; color: #4a3a63; margin-top: 36px; max-width: 920px; line-height: 1.5; }
+  .badge svg { width: 66%; height: 66%; }
+  .title { font-size: 76px; font-weight: 700; color: #f4f1ff; line-height: 1.15; }
+  .subtitle { font-size: 40px; font-weight: 500; color: #857aad; margin-top: 14px; font-family: 'IBM Plex Mono', monospace; }
+  .tagline { font-size: 30px; color: #c6bdea; margin-top: 36px; max-width: 940px; line-height: 1.55; }
   [dir="rtl"] { direction: rtl; }
 </style>
 </head>
