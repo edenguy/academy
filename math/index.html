@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#1b1033" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fdf6ff" media="(prefers-color-scheme: light)" />
+    <meta name="description" content="אקדמיית המתמטיקה: להבין אינטגרלים דרך שיעורים משחקיים, אנימציה ותרגול. כלי לימודי בלתי רשמי." />
+    <meta name="author" content="Guy Eden" />
+    <title>אקדמיית המתמטיקה · Math Academy</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="אקדמיית המתמטיקה" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:url" content="https://edenguy.github.io/academy/math/" />
+    <meta property="og:title" content="אקדמיית המתמטיקה · Math Academy" />
+    <meta property="og:description" content="גלו כמה שטח יש מתחת לעקומה, ולמה זה נקרא אינטגרל. שיעורים משחקיים עם סימולציה חיה." />
+    <script>
+      // Apply the stored theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('academy-math:theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
+          var l = localStorage.getItem('academy-math:locale');
+          if (l === 'en') {
+            document.documentElement.lang = 'en';
+            document.documentElement.dir = 'ltr';
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/academy/math/assets/index-CiwWg44z.js"></script>
+    <link rel="stylesheet" crossorigin href="/academy/math/assets/index-CkyCMTw4.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+# Lesson 2 — formalize left/right/midpoint sums, show how they bracket the true area for an
+# increasing function, and land on the ∫ notation as shorthand for "the limit as n → ∞".
+id: riemann-sums
+order: 2
+
+title:
+  en: "Riemann Sums: More Rectangles, Better Guess"
+  he: "סכומי רימן: יותר מלבנים, ניחוש טוב יותר"
+
+subtitle:
+  en: "Chapter 2 · from guess to definition"
+  he: "פרק 2 · מהניחוש להגדרה"
+
+intro:
+  - en: >-
+      Last lesson you pushed the rectangle count as high as it goes for {{f(x) = x²}} on
+      [[0]]–[[4]], and watched the estimate settle somewhere around **[[21.3]]**. Today we
+      give that number — and the method that found it — an actual name.
+    he: >-
+      בשיעור הקודם דחפתם את מספר המלבנים עד הסוף עבור {{f(x) = x²}} בין [[0]] ל-[[4]], וראיתם
+      את ההערכה מתייצבת בסביבות **[[21.3]]**. היום ניתן למספר הזה — ולשיטה שהגיעה אליו — שם
+      אמיתי.
+  - en: >-
+      There's more than one way to build a rectangle out of a slice of the x-axis, and the
+      choice matters. A **left-endpoint** sum uses the height of the curve at the _left_ edge
+      of each slice. A **right-endpoint** sum uses the _right_ edge. A **midpoint** sum uses
+      the point in between.
+    he: >-
+      יש יותר מדרך אחת לבנות מלבן מתוך פרוסה של ציר ה-x, ולבחירה יש משמעות. סכום **קצה-שמאלי**
+      משתמש בגובה העקומה בקצה ה_שמאלי_ של כל פרוסה. סכום **קצה-ימני** משתמש בקצה ה_ימני_. סכום
+      **אמצע** משתמש בנקודה שבין שני הקצוות.
+  - en: >-
+      Flip between the three modes below, on the same curve. Because {{f(x) = x²}} is
+      increasing, the left-endpoint sum always lands **under** the curve, the right-endpoint
+      sum always overshoots **above** it — and the midpoint sum, splitting the difference,
+      usually lands closest.
+    he: >-
+      החליפו בין שלושת המצבים למטה, על אותה עקומה. מכיוון ש-{{f(x) = x²}} עולה, סכום הקצה
+      השמאלי נופל **מתחת** לעקומה, סכום הקצה הימני **עולה מעליה** — וסכום האמצע, שמחלק את ההפרש,
+      בדרך כלל הכי קרוב.
+  - en: >-
+      No matter which mode you pick, something remarkable happens as you drag toward more
+      rectangles: all three numbers converge to the **same** value. That shared limit — the
+      exact area, once the rectangles become infinitely thin — is what mathematicians call
+      the **definite integral**, written {{∫₀⁴ x² dx}}.
+    he: >-
+      לא משנה באיזה מצב תבחרו, קורה דבר מעניין כשגוררים לכיוון יותר מלבנים: שלושת המספרים
+      מתכנסים ל**אותו** ערך. הגבול המשותף הזה — השטח המדויק, כשהמלבנים הופכים דקים אינסופית —
+      הוא מה שקרוי **אינטגרל מסוים**, ונכתב {{∫₀⁴ x² dx}}.
+  - en: >-
+      Read that notation as: "the exact area under {{f(x) = x²}}, between [[0]] and [[4]]."
+      The elongated **∫** symbol is literally a stretched **S** — short for _sum_ — because
+      that's exactly what it is: the limit of a sum of rectangles.
+    he: >-
+      קראו את הסימון הזה כ: "השטח המדויק מתחת ל-{{f(x) = x²}}, בין [[0]] ל-[[4]]." הסימן
+      המאורך **∫** הוא בעצם אות **S** מתוארכת — קיצור של _סכום_ (sum) — מכיוון שזה בדיוק מה
+      שהוא: הגבול של סכום מלבנים.
+
+explorers:
+  - fn: parabola
+    a: 0
+    b: 4
+    initialN: 6
+    modes: [left, right, midpoint]
+    caption:
+      en: "Compare left, right and midpoint sums on the same curve"
+      he: "השוו בין סכומי קצה-שמאלי, קצה-ימני ואמצע על אותה עקומה"
+
+keyPoints:
+  - en: For an increasing curve, the left-endpoint sum underestimates the true area and the right-endpoint sum overestimates it.
+    he: לעקומה עולה, סכום הקצה השמאלי מעריך בחסר את השטח האמיתי, וסכום הקצה הימני מעריך בעודף.
+  - en: The midpoint sum splits the difference and is usually the closest of the three.
+    he: סכום האמצע מחלק את ההפרש, ובדרך כלל הכי קרוב משלושתם.
+  - en: As the number of rectangles grows without bound, all three sums converge to the same number — the definite integral, written ∫ₐᵇ f(x) dx.
+    he: כשמספר המלבנים גדל בלי גבול, שלושת הסכומים מתכנסים לאותו מספר — האינטגרל המסוים, הנכתב ∫ₐᵇ f(x) dx.
+
+quiz:
+  - type: mcq
+    id: q1-right-sum
+    prompt:
+      en: "For an increasing function like f(x) = x², which sum always overestimates the true area?"
+      he: "לפונקציה עולה כמו f(x) = x², איזה סכום מעריך תמיד בעודף את השטח האמיתי?"
+    choices:
+      - en: The left-endpoint sum
+        he: סכום הקצה השמאלי
+      - en: The right-endpoint sum
+        he: סכום הקצה הימני
+      - en: The midpoint sum
+        he: סכום האמצע
+    correctIndex: 1
+    explanation:
+      en: Each rectangle's height comes from the curve's highest point in that slice (the right edge, since the function is increasing), so every rectangle sits a little above the curve — the total always overshoots.
+      he: הגובה של כל מלבן נלקח מהנקודה הגבוהה ביותר של העקומה באותה פרוסה (הקצה הימני, כי הפונקציה עולה), כך שכל מלבן נמצא קצת מעל העקומה — הסכום הכולל תמיד חורג למעלה.
+  - type: mcq
+    id: q2-notation-meaning
+    prompt:
+      en: "What does the notation ∫₀⁴ f(x) dx actually mean?"
+      he: "מה המשמעות האמיתית של הסימון ∫₀⁴ f(x) dx?"
+    choices:
+      - en: The slope of f(x) at x = 4
+        he: השיפוע של f(x) בנקודה x = 4
+      - en: The exact area under f(x) between x = 0 and x = 4 — the limit of the rectangle sums as they get infinitely thin
+        he: השטח המדויק מתחת ל-f(x) בין x = 0 ל-x = 4 — הגבול של סכומי המלבנים כשהם הופכים דקים אינסופית
+      - en: The single highest value f(x) reaches between 0 and 4
+        he: הערך הגבוה ביותר שמגיע אליו f(x) בין 0 ל-4
+    correctIndex: 1
+    explanation:
+      en: The ∫ symbol is shorthand for exactly the process you just watched converge — stack infinitely many, infinitely thin rectangles between the two bounds, and add them up.
+      he: הסימן ∫ הוא קיצור בדיוק לתהליך שראיתם מתכנס לפני רגע — מערימים אינסוף מלבנים דקים אינסופית בין שתי הגבולות, ומסכמים אותם.
+  - type: numeric
+    id: q3-midpoint-by-hand
+    prompt:
+      en: "Using n = 4 midpoint rectangles for f(x) = x² on [0, 4] (each 1 wide, midpoints at x = 0.5, 1.5, 2.5, 3.5), what is the midpoint sum?"
+      he: "בעזרת 4 מלבני-אמצע עבור f(x) = x² על [0, 4] (כל אחד ברוחב 1, אמצעים ב-x = 0.5, 1.5, 2.5, 3.5), מה סכום האמצע?"
+    correctValue: 21
+    tolerance: 0.5
+    explanation:
+      en: "f(0.5)² + f(1.5)² + f(2.5)² + f(3.5)² = 0.25 + 2.25 + 6.25 + 12.25 = 21, each times a width of 1 — already close to the exact 21.33."
+      he: "f(0.5)² + f(1.5)² + f(2.5)² + f(3.5)² = 0.25 + 2.25 + 6.25 + 12.25 = 21, כל אחד כפול רוחב 1 — כבר קרוב לערך המדויק 21.33."

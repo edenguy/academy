@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "Math Academy",
+    "unofficial": "An independent, unofficial study tool",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "music": "Calm background music"
+  },
+  "home": {
+    "eyebrowNew": "New pilot",
+    "heroTitle": "Come discover",
+    "heroTitle2": "what's hiding under the curve",
+    "heroBody": "Playful lessons with a live simulation: instead of memorizing a formula, watch an integral get born — from plain rectangles, to a magic shortcut.",
+    "lessonsTitle": "Lessons",
+    "lessonLabel": "Lesson {{n}}",
+    "start": "Start",
+    "continue": "Continue",
+    "review": "Review lesson",
+    "done": "Done",
+    "questionsCount": "{{count}} practice questions"
+  },
+  "lesson": {
+    "backHome": "All lessons",
+    "explorerIntro": "Play with the slider",
+    "rectangleCount": "Number of rectangles",
+    "mode": { "left": "Left endpoint", "right": "Right endpoint", "midpoint": "Midpoint" },
+    "estimate": "Current estimate",
+    "keyPointsTitle": "Key points",
+    "quizTitle": "Time to practice",
+    "prevLesson": "Previous lesson",
+    "nextLesson": "Next lesson",
+    "backToLessons": "Back to all lessons"
+  },
+  "quiz": {
+    "check": "Check answer",
+    "tryAgain": "Try again",
+    "correct": "Correct!",
+    "incorrect": "Not quite",
+    "explanation": "Why",
+    "numericPlaceholder": "Your answer",
+    "progress": "Question {{current}} of {{total}}",
+    "finished": "Nice work! You've finished this lesson's practice questions.",
+    "retake": "Retake",
+    "next": "Next question"
+  },
+  "footer": {
+    "disclaimer": "Math Academy is an independent, unofficial study tool, not a substitute for classroom instruction. Content is automatically checked against known mathematical values.",
+    "credit": "Created by Guy Eden"
+  }
+}

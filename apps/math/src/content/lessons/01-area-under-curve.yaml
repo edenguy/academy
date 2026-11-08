@@ -1,0 +1,131 @@
+# Lesson 1 — the big idea: approximate any area with rectangles, and check it against a
+# shape we can already verify by hand (a triangle), before trying one we can't.
+id: area-under-curve
+order: 1
+
+title:
+  en: How Much Area Is Under the Curve?
+  he: כמה שטח יש מתחת לעקומה?
+
+subtitle:
+  en: "Chapter 1 · building trust with rectangles"
+  he: "פרק 1 · בונים אמון באמצעות מלבנים"
+
+intro:
+  - en: >-
+      Imagine a world where you can measure **any** area, even a curvy one with no simple
+      formula. Sounds like magic — but it's really just one clever trick, and you're about
+      to discover it yourself.
+    he: >-
+      דמיינו עולם שבו אפשר למדוד שטח **כלשהו** — גם שטח עקום, בלי שום נוסחה פשוטה. נשמע קסום,
+      אבל זה בעצם טריק אחד חכם, ואתם עומדים לגלות אותו בעצמכם.
+  - en: >-
+      Let's start with something you already know. Here's the graph of {{f(x) = x}} from
+      [[0]] to [[6]]. It's a straight line, so the area underneath it is just a triangle —
+      and you already know that formula: area = ½ × base × height = ½ × [[6]] × [[6]] =
+      **[[18]]**.
+    he: >-
+      נתחיל ממשהו שאתם כבר יודעים. הנה הגרף של {{f(x) = x}} בין [[0]] ל-[[6]]. זה קו ישר, אז
+      השטח מתחתיו הוא פשוט משולש — ואת הנוסחה הזו אתם כבר מכירים: שטח = ½ × בסיס × גובה = ½ ×
+      [[6]] × [[6]] = **[[18]]**.
+  - en: >-
+      Now for the big idea: cover that same area with **rectangles** — lots of thin ones,
+      standing side by side. Play with the slider below and watch what happens as you add
+      more of them.
+    he: >-
+      ועכשיו לרעיון המרכזי: מכסים את אותו שטח ב**מלבנים** — הרבה מלבנים צרים, זה לצד זה. שחקו
+      עם המחוון שלמטה ותראו מה קורה כשמוסיפים עוד ועוד מלבנים.
+  - en: >-
+      Watch the estimate at the top of the chart. With just a few rectangles it's rough — but
+      as you drag the slider toward more rectangles, it creeps closer and closer to the
+      **[[18]]** you already calculated by hand. That's not a coincidence: it's the whole idea
+      behind an **integral**.
+    he: >-
+      שימו לב להערכה שמוצגת מעל הגרף. עם מעט מלבנים ההערכה גסה — אבל כשאתם גוררים את המחוון
+      לכיוון יותר מלבנים, היא מתקרבת ומתקרבת ל-**[[18]]** שחשבתם כבר בעצמכם. זו לא מקריות: זה כל
+      הרעיון שמסתתר מאחורי **אינטגרל**.
+  - en: >-
+      So here's the real challenge. What if the curve **isn't** a straight line — what if
+      it's a parabola, with no triangle formula to fall back on? Let's try {{f(x) = x²}} from
+      [[0]] to [[4]]. The exact same rectangle trick still works — except this time, we have
+      no shortcut to check the answer against. _Yet._
+    he: >-
+      והנה האתגר האמיתי: מה אם העקומה **לא** קו ישר — מה אם זו פרבולה, בלי נוסחת משולש שאפשר
+      להישען עליה? ננסה את {{f(x) = x²}} בין [[0]] ל-[[4]]. אותו טריק המלבנים בדיוק עדיין עובד
+      — רק שהפעם אין לנו קיצור דרך לבדוק את התשובה כנגדו. _עדיין._
+  - en: >-
+      Push the rectangle count as high as it goes and note the number you land on — you'll
+      need it in the next lesson, when we give that shortcut a name.
+    he: >-
+      דחפו את מספר המלבנים עד הסוף ושמרו בראש את המספר שאליו הגעתם — תזדקקו לו בשיעור הבא, כשניתן
+      לקיצור הדרך הזה שם.
+
+explorers:
+  - fn: line
+    a: 0
+    b: 6
+    initialN: 4
+    modes: [left, right, midpoint]
+    caption:
+      en: "Check it: a straight line, area already known (18)"
+      he: "בדיקה: קו ישר, שטח ידוע מראש (18)"
+  - fn: parabola
+    a: 0
+    b: 4
+    initialN: 4
+    modes: [left, right, midpoint]
+    caption:
+      en: "The challenge: a curve with no simple formula"
+      he: "האתגר: עקומה בלי נוסחה פשוטה"
+
+keyPoints:
+  - en: The area under a curve can be estimated by covering it with thin rectangles.
+    he: אפשר להעריך את השטח מתחת לעקומה על ידי כיסויו במלבנים דקים.
+  - en: More (and thinner) rectangles make the estimate more accurate.
+    he: יותר מלבנים (ודקים יותר) נותנים הערכה מדויקת יותר.
+  - en: A straight line has a simple area formula (a triangle); most curves don't — but the rectangle trick works on both.
+    he: לקו ישר יש נוסחת שטח פשוטה (משולש); לרוב העקומות אין — אבל טריק המלבנים עובד על שניהם.
+
+quiz:
+  - type: mcq
+    id: q1-why-rectangles
+    prompt:
+      en: Why do we use rectangles to estimate the area under a curve, instead of a triangle formula?
+      he: למה משתמשים במלבנים כדי להעריך את השטח מתחת לעקומה, במקום בנוסחת משולש?
+    choices:
+      - en: Because rectangles are easier to draw.
+        he: כי מלבנים קל יותר לשרטט.
+      - en: Because most curves aren't straight lines, so there's no simple shape formula for them — but rectangles can approximate any shape.
+        he: כי רוב העקומות אינן קווים ישרים, ואין להן נוסחת שטח פשוטה — אבל מלבנים יכולים להעריך כל צורה.
+      - en: Because triangles only work for small areas.
+        he: כי משולשים עובדים רק עבור שטחים קטנים.
+    correctIndex: 1
+    explanation:
+      en: A triangle (or any simple shape formula) only works when the boundary is straight. Rectangles don't care about the shape of the curve — stack enough thin ones and they approximate any area, which is exactly why this trick generalizes.
+      he: נוסחת משולש (או כל נוסחת שטח פשוטה אחרת) עובדת רק כשהגבול ישר. למלבנים לא משנה מה צורת העקומה — מערימים מספיק מלבנים דקים והם מעריכים כל שטח, וזו הסיבה שהטריק הזה כללי.
+  - type: mcq
+    id: q2-more-rectangles
+    prompt:
+      en: What happens to the estimate as you use more (thinner) rectangles?
+      he: מה קורה להערכה כשמשתמשים ביותר מלבנים (דקים יותר)?
+    choices:
+      - en: It gets less accurate.
+        he: היא נהיית פחות מדויקת.
+      - en: It stays exactly the same.
+        he: היא נשארת זהה בדיוק.
+      - en: It gets closer to the true area.
+        he: היא מתקרבת לשטח האמיתי.
+    correctIndex: 2
+    explanation:
+      en: Thinner rectangles leave less of a gap between the rectangle tops and the actual curve, so the total estimate converges toward the true area.
+      he: מלבנים דקים יותר משאירים פער קטן יותר בין החלק העליון של המלבן לעקומה בפועל, כך שההערכה הכוללת מתכנסת לשטח האמיתי.
+  - type: numeric
+    id: q3-triangle-check
+    prompt:
+      en: "Using the triangle formula, what is the exact area under f(x) = x from 0 to 6?"
+      he: "בעזרת נוסחת המשולש, מה השטח המדויק מתחת ל-f(x) = x בין 0 ל-6?"
+    correctValue: 18
+    tolerance: 0.1
+    explanation:
+      en: "Area = ½ × base × height = ½ × 6 × 6 = 18 — the same number the rectangles should have converged to."
+      he: "שטח = ½ × בסיס × גובה = ½ × 6 × 6 = 18 — אותו מספר שאליו היו המלבנים צריכים להתכנס."

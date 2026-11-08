@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "אקדמיית המתמטיקה",
+    "unofficial": "כלי לימוד עצמאי ובלתי רשמי",
+    "skipToContent": "מעבר לתוכן"
+  },
+  "nav": {
+    "home": "בית"
+  },
+  "settings": {
+    "language": "שפה",
+    "theme": "מצב תצוגה",
+    "music": "מוזיקת רקע רגועה"
+  },
+  "home": {
+    "eyebrowNew": "פיילוט חדש",
+    "heroTitle": "בואו לגלות",
+    "heroTitle2": "מה מסתתר מתחת לעקומה",
+    "heroBody": "שיעורים משחקיים עם סימולציה חיה: בלי לשנן נוסחה, תראו בעצמכם איך נולד אינטגרל — ממלבנים פשוטים, עד קיצור דרך קסום.",
+    "lessonsTitle": "השיעורים",
+    "lessonLabel": "שיעור {{n}}",
+    "start": "התחלה",
+    "continue": "המשך",
+    "review": "חזרה על השיעור",
+    "done": "הושלם",
+    "questionsCount": "{{count}} שאלות תרגול"
+  },
+  "lesson": {
+    "backHome": "כל השיעורים",
+    "explorerIntro": "שחקו עם המחוון",
+    "rectangleCount": "מספר מלבנים",
+    "mode": { "left": "קצה שמאלי", "right": "קצה ימני", "midpoint": "אמצע" },
+    "estimate": "הערכה נוכחית",
+    "keyPointsTitle": "נקודות מפתח",
+    "quizTitle": "זמן לתרגל",
+    "prevLesson": "השיעור הקודם",
+    "nextLesson": "השיעור הבא",
+    "backToLessons": "חזרה לכל השיעורים"
+  },
+  "quiz": {
+    "check": "בדיקת תשובה",
+    "tryAgain": "ניסיון נוסף",
+    "correct": "נכון!",
+    "incorrect": "לא בדיוק",
+    "explanation": "הסבר",
+    "numericPlaceholder": "התשובה שלכם",
+    "progress": "שאלה {{current}} מ-{{total}}",
+    "finished": "כל הכבוד! סיימתם את שאלות התרגול של השיעור.",
+    "retake": "תרגול חוזר",
+    "next": "השאלה הבאה"
+  },
+  "footer": {
+    "disclaimer": "אקדמיית המתמטיקה היא כלי לימוד עצמאי ובלתי רשמי, ואינה תחליף להוראה בכיתה. התוכן נבדק אוטומטית מול ערכים מתמטיים ידועים.",
+    "credit": "נוצר על ידי גיא עדן"
+  }
+}

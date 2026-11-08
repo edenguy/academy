@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="שיעורים משחקיים ובלתי רשמיים במתמטיקה ומדעים, בעברית ובאנגלית.">
+<title>האקדמיה · Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf6ff; --bg-2: #f4ecff; --surface: #ffffff; --line: rgba(98,42,182,0.14);
+    --ink: #241233; --ink-2: #4a3a63; --muted: #7c6a95;
+    --accent: #6250d6; --accent-ink: #ffffff; --accent-2: #e87ba4;
+    --shadow: 0 10px 30px -12px rgba(36,18,51,0.22);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #140a28; --bg-2: #1b1033; --surface: #1f1440; --line: rgba(173,150,255,0.18);
+      --ink: #f3ecff; --ink-2: #cdbdee; --muted: #9586c0;
+      --accent: #9085e9; --accent-ink: #1b1033; --accent-2: #d55181;
+      --shadow: 0 16px 40px -16px rgba(0,0,0,0.55);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0; min-height: 100dvh; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    color: var(--ink); font-family: 'Rubik', ui-sans-serif, system-ui, sans-serif;
+    padding: clamp(28px,6vw,72px) clamp(18px,5vw,56px);
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--accent-2);
+  }
+  h1 {
+    font-size: clamp(36px,7vw,56px); font-weight: 700; margin: 10px 0 8px; line-height: 1.1;
+  }
+  p.lede { max-width: 56ch; color: var(--ink-2); font-size: 1.05rem; margin: 0 0 40px; line-height: 1.6; }
+  .subjects { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .subject {
+    display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: 22px 22px; text-decoration: none; color: inherit; box-shadow: var(--shadow);
+    transition: transform 150ms ease;
+  }
+  a.subject:hover { transform: translateY(-2px); }
+  .subject.soon { opacity: 0.55; box-shadow: none; }
+  .subject h2 { font-size: 20px; font-weight: 700; margin: 0 0 6px; }
+  .subject p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .badge {
+    display: inline-block; margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent);
+    padding: 3px 10px; border-radius: 999px;
+  }
+  footer { margin-top: 56px; font-size: 12px; color: var(--muted); }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="eyebrow">גיא עדן · Guy Eden</span>
+    <h1>האקדמיה</h1>
+    <p class="lede">
+      שיעורים משחקיים ובלתי רשמיים, בעברית ובאנגלית — בכל פעם נושא אחד, עם סימולציות חיות במקום שינון.
+      <br>
+      Playful, unofficial lessons in Hebrew and English — one subject at a time, with live
+      simulations instead of memorization.
+    </p>
+
+    <div class="subjects">
+      <a class="subject" href="/academy/math/">
+        <h2>Math Academy</h2>
+        <p>אינטגרלים: מתחילים במלבנים, מגיעים לקיצור דרך. Integrals: start with rectangles, arrive at a shortcut.</p>
+        <span class="badge">פיילוט · pilot</span>
+      </a>
+      <div class="subject soon">
+        <h2>Physics Academy</h2>
+        <p>בקרוב. Coming soon.</p>
+      </div>
+    </div>
+
+    <footer>edenguy/academy &middot; <a href="https://edenguy.github.io">edenguy.github.io</a></footer>
+  </div>
+</body>
+</html>

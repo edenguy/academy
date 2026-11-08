@@ -1,0 +1,3 @@
+node_modules/
+apps/*/docs/review/*.pdf
+.DS_Store

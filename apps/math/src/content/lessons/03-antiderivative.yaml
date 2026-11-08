@@ -1,0 +1,113 @@
+# Lesson 3 — the payoff: a closed-form shortcut (the power rule for integrals) that matches
+# the numeric estimates from lessons 1–2 exactly, then a new function to prove it generalizes.
+id: antiderivative
+order: 3
+
+title:
+  en: "The Magic Shortcut: The Antiderivative"
+  he: "הקיצור הקסום: הפונקציה הקדומה"
+
+subtitle:
+  en: "Chapter 3 · the formula reveals itself"
+  he: "פרק 3 · הנוסחה מתגלה"
+
+intro:
+  - en: >-
+      Dragging a slider toward infinitely many rectangles works, but it's slow — and it only
+      gives you a decimal, never an exact fraction. Mathematicians found a shortcut: a single
+      formula that jumps straight to the answer, with no slider required.
+    he: >-
+      גרירת מחוון לכיוון אינסוף מלבנים עובדת, אבל זה איטי — והיא נותנת רק מספר עשרוני, לא
+      שבר מדויק. מתמטיקאים מצאו קיצור דרך: נוסחה אחת שמגיעה ישר לתשובה, בלי צורך במחוון.
+  - en: >-
+      Here's the pattern, for any power {{xⁿ}}: {{∫₀ᵇ xⁿ dx = bⁿ⁺¹ / (n+1)}}. Raise the power
+      by one, divide by the new power. That's it — that's the whole trick.
+    he: >-
+      הנה התבנית, לכל חזקה {{xⁿ}}: {{∫₀ᵇ xⁿ dx = bⁿ⁺¹ / (n+1)}}. מעלים את החזקה באחת, מחלקים
+      בחזקה החדשה. זהו — זה כל הטריק.
+  - en: >-
+      Don't believe a formula until it agrees with something you already trust. Lesson 1:
+      {{n = 1, b = 6}}, so the shortcut gives {{6² / 2 = [[18]]}} — exactly the triangle area
+      you calculated by hand. Lesson 2: {{n = 2, b = 4}}, so the shortcut gives
+      {{4³ / 3 ≈ [[21.33]]}} — exactly where your rectangles were heading. The shortcut isn't
+      a new answer. It's the same answer, instantly.
+    he: >-
+      אל תאמינו לנוסחה לפני שהיא מתאימה למשהו שאתם כבר בוטחים בו. שיעור 1: {{n = 1, b = 6}},
+      אז הקיצור נותן {{6² / 2 = [[18]]}} — בדיוק שטח המשולש שחשבתם בעצמכם. שיעור 2:
+      {{n = 2, b = 4}}, אז הקיצור נותן {{4³ / 3 ≈ [[21.33]]}} — בדיוק לאן שהמלבנים שלכם נעו.
+      הקיצור הוא לא תשובה חדשה. זו אותה תשובה, באופן מיידי.
+  - en: >-
+      When the area starts at some point {{a}} other than [[0]], just subtract: {{∫ₐᵇ xⁿ dx =
+      bⁿ⁺¹/(n+1) − aⁿ⁺¹/(n+1)}}. (Advanced note, safe to skip: this shortcut works because
+      {{F(x) = xⁿ⁺¹/(n+1)}} is an **antiderivative** of {{xⁿ}} — a function that "undoes" into
+      {{xⁿ}} — and any two antiderivatives of the same function only ever differ by a
+      constant, which cancels out the moment you subtract one bound from the other.)
+    he: >-
+      כשהשטח מתחיל מנקודה {{a}} אחרת מ-[[0]], פשוט מחסרים: {{∫ₐᵇ xⁿ dx = bⁿ⁺¹/(n+1) −
+      aⁿ⁺¹/(n+1)}}. (הערה למתקדמים, אפשר לדלג: הקיצור הזה עובד כי {{F(x) = xⁿ⁺¹/(n+1)}} היא
+      **פונקציה קדומה** של {{xⁿ}} — פונקציה ש"חוזרת" ל-{{xⁿ}} — ושתי פונקציות קדומות של אותה
+      פונקציה נבדלות זו מזו רק בקבוע, שמתבטל ברגע שמחסירים גבול אחד מהשני.)
+  - en: >-
+      Time to test it on a function you haven't seen yet: {{f(x) = x³}} from [[0]] to [[2]].
+      The shortcut predicts {{2⁴ / 4 = [[4]]}}. Drag the explorer below toward more rectangles
+      and see for yourself whether it lands there.
+    he: >-
+      הגיע הזמן לבדוק אותה על פונקציה שלא ראיתם עדיין: {{f(x) = x³}} בין [[0]] ל-[[2]]. הקיצור
+      מנבא {{2⁴ / 4 = [[4]]}}. גררו את הסימולטור שלמטה לכיוון יותר מלבנים ובדקו בעצמכם אם היא
+      מגיעה לשם.
+
+explorers:
+  - fn: cubic
+    a: 0
+    b: 2
+    initialN: 6
+    modes: [left, right, midpoint]
+    caption:
+      en: "Put the shortcut to the test on a brand-new curve"
+      he: "בדקו את הקיצור על עקומה חדשה לגמרי"
+
+keyPoints:
+  - en: "The power-rule shortcut: ∫₀ᵇ xⁿ dx = bⁿ⁺¹ / (n+1). For a lower bound a ≠ 0, subtract the formula evaluated at a."
+    he: "קיצור חזקת-הנוסחה: ∫₀ᵇ xⁿ dx = bⁿ⁺¹ / (n+1). לגבול תחתון a ≠ 0, מחסרים את הנוסחה המחושבת ב-a."
+  - en: The shortcut gives the exact same value the rectangles were converging toward — it's a formula for the limit, not a different number.
+    he: הקיצור נותן בדיוק את אותו ערך שאליו המלבנים התכנסו — זו נוסחה לגבול, לא מספר אחר.
+  - en: "A function whose derivative is f is called an antiderivative of f; the Fundamental Theorem of Calculus is what connects antiderivatives back to the area-under-the-curve problem."
+    he: "פונקציה שהנגזרת שלה היא f נקראת פונקציה קדומה של f; המשפט היסודי של החשבון הדיפרנציאלי והאינטגרלי הוא זה שמקשר בין פונקציות קדומות לבעיית השטח מתחת לעקומה."
+
+quiz:
+  - type: numeric
+    id: q1-power-rule-basic
+    prompt:
+      en: "Using the shortcut, what is ∫₀³ x² dx?"
+      he: "בעזרת הקיצור, מה שווה ∫₀³ x² dx?"
+    correctValue: 9
+    tolerance: 0.05
+    explanation:
+      en: "n = 2, b = 3: 3³ / 3 = 27 / 3 = 9."
+      he: "n = 2, b = 3: 3³ / 3 = 27 / 3 = 9."
+  - type: numeric
+    id: q2-power-rule-with-lower-bound
+    prompt:
+      en: "Using the shortcut, what is ∫₁² x³ dx?"
+      he: "בעזרת הקיצור, מה שווה ∫₁² x³ dx?"
+    correctValue: 3.75
+    tolerance: 0.05
+    explanation:
+      en: "n = 3: 2⁴/4 − 1⁴/4 = 16/4 − 1/4 = 4 − 0.25 = 3.75."
+      he: "n = 3: 2⁴/4 − 1⁴/4 = 16/4 − 1/4 = 4 − 0.25 = 3.75."
+  - type: mcq
+    id: q3-antiderivative-meaning
+    prompt:
+      en: What is an antiderivative of f, in plain words?
+      he: מה זו פונקציה קדומה של f, במילים פשוטות?
+    choices:
+      - en: A function that, when you take its derivative, gives you back f
+        he: פונקציה שכאשר גוזרים אותה, מקבלים בחזרה את f
+      - en: A function that is always smaller than f
+        he: פונקציה שקטנה מ-f בכל מקום
+      - en: The graph of f flipped upside down
+        he: הגרף של f, הפוך
+    correctIndex: 0
+    explanation:
+      en: "\"Anti\"-derivative literally means the reverse of a derivative: F is an antiderivative of f when F′ = f. That reversal is exactly what links the power-rule shortcut back to the rectangle-sum area problem."
+      he: "\"פונקציה קדומה\" היא ממש ההיפך מנגזרת: F היא פונקציה קדומה של f כאשר F′ = f. ההיפוך הזה הוא מה שמקשר בין קיצור הנוסחה לבעיית שטח המלבנים."
