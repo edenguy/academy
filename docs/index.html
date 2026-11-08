@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<meta name="description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
+<meta name="description" content="כלי לימוד חינמי ועצמאי: ללמוד דרך סקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
 <title>האקדמיה · Academy</title>
@@ -13,114 +13,286 @@
 <meta property="og:locale" content="he_IL">
 <meta property="og:url" content="https://edenguy.github.io/academy/">
 <meta property="og:title" content="האקדמיה · Academy">
-<meta property="og:description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
+<meta property="og:description" content="כלי לימוד חינמי ועצמאי: ללמוד דרך סקרנות, לא לשנן. נושא אחד בכל פעם, בעברית ובאנגלית.">
 <meta property="og:image" content="https://edenguy.github.io/academy/social/preview-square.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="1200">
 <meta property="og:image:alt" content="האקדמיה · Academy">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="האקדמיה · Academy">
-<meta name="twitter:description" content="כלי לימוד חינמי ועצמאי: להבין דרך סימולציה וסקרנות, לא לשנן.">
+<meta name="twitter:description" content="כלי לימוד חינמי ועצמאי: ללמוד דרך סקרנות, לא לשנן.">
 <meta name="twitter:image" content="https://edenguy.github.io/academy/social/preview-square.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script>
+  // Apply the stored language/theme before first paint, so there is no flash of the wrong
+  // direction or a flip right after load (same pattern each subject app uses).
+  (function () {
+    try {
+      var lang = localStorage.getItem('academy:lang');
+      if (lang !== 'en' && lang !== 'he') lang = 'he';
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+      document.documentElement.dataset.lang = lang;
+      var t = localStorage.getItem('academy:theme');
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  })();
+</script>
 <style>
   :root {
-    --bg: #fdf6ff; --bg-2: #f4ecff; --surface: #ffffff; --line: rgba(98,42,182,0.14);
-    --ink: #241233; --ink-2: #4a3a63; --muted: #7c6a95;
-    --accent: #6250d6; --accent-ink: #ffffff; --accent-2: #e87ba4;
-    --shadow: 0 10px 30px -12px rgba(36,18,51,0.22);
+    --bg: #f7f5ff; --bg-2: #eef0ff; --surface: rgba(255,255,255,0.72); --surface-solid: #ffffff;
+    --line: rgba(80,60,160,0.14); --line-strong: rgba(80,60,160,0.26);
+    --ink: #17102b; --ink-2: #463a64; --muted: #7b729a;
+    --accent: #6a4ff2; --accent-ink: #ffffff; --accent-2: #ef5fa7;
+    --blue: #2a8fe0; --amber: #f0a500;
+    --grid-line: rgba(106,79,242,0.07);
+    --shadow: 0 10px 30px -14px rgba(23,16,43,0.18);
+    --hero-shadow: 0 30px 70px -28px rgba(80,50,200,0.35);
+    --glow-ring: 0 0 0 1px rgba(255,255,255,0.4) inset;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #140a28; --bg-2: #1b1033; --surface: #1f1440; --line: rgba(173,150,255,0.18);
-      --ink: #f3ecff; --ink-2: #cdbdee; --muted: #9586c0;
-      --accent: #9085e9; --accent-ink: #1b1033; --accent-2: #d55181;
-      --shadow: 0 16px 40px -16px rgba(0,0,0,0.55);
-    }
+  :root[data-theme="dark"] {
+    --bg: #07040f; --bg-2: #0c0820; --surface: rgba(28,20,56,0.55); --surface-solid: #140e2c;
+    --line: rgba(160,140,255,0.16); --line-strong: rgba(160,140,255,0.32);
+    --ink: #f3efff; --ink-2: #c9bfec; --muted: #8b7fb8;
+    --accent: #9b7bff; --accent-ink: #110a28; --accent-2: #ff7ec4;
+    --blue: #5bb0ff; --amber: #ffc24d;
+    --grid-line: rgba(155,123,255,0.09);
+    --shadow: 0 16px 40px -18px rgba(0,0,0,0.6);
+    --hero-shadow: 0 30px 80px -24px rgba(100,60,255,0.45);
+    --glow-ring: 0 0 0 1px rgba(255,255,255,0.06) inset;
   }
   * { box-sizing: border-box; }
   html { color-scheme: light dark; }
   body {
-    margin: 0; min-height: 100dvh; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-    color: var(--ink); font-family: 'Rubik', ui-sans-serif, system-ui, sans-serif;
-    padding: clamp(28px,6vw,72px) clamp(18px,5vw,56px);
+    margin: 0; min-height: 100dvh; color: var(--ink);
+    font-family: 'Rubik', ui-sans-serif, system-ui, sans-serif;
+    padding: clamp(20px,5vw,56px) clamp(16px,5vw,48px);
+    background:
+      radial-gradient(1100px 650px at 85% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+      radial-gradient(900px 620px at -10% 30%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    position: relative;
   }
-  .wrap { max-width: 760px; margin: 0 auto; }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(900px 600px at 70% 0%, black, transparent 75%);
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  [data-lang="he"] .t-en, [data-lang="en"] .t-he { display: none; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* ---------- Top bar ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; color: var(--ink-2); }
+  .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px 2px color-mix(in srgb, var(--accent) 70%, transparent); }
+  .controls { display: flex; align-items: center; gap: 8px; }
+  .pill-btn {
+    appearance: none; border: 1px solid var(--line-strong); background: var(--surface);
+    backdrop-filter: blur(10px); color: var(--ink-2); font: inherit; font-weight: 700; font-size: 13px;
+    padding: 7px 14px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+  .pill-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; overflow: hidden; border-radius: 28px;
+    background: var(--surface); backdrop-filter: blur(16px);
+    box-shadow: var(--hero-shadow), var(--glow-ring);
+    border: 1px solid var(--line);
+    padding: clamp(28px,5vw,48px);
+    margin-bottom: 22px;
+    display: grid; grid-template-columns: 1fr auto; gap: clamp(20px,4vw,40px); align-items: center;
+  }
+  @media (max-width: 620px) { .hero { grid-template-columns: 1fr; text-align: center; } .orbit-wrap { margin: 0 auto; } }
+
   .eyebrow {
-    font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--accent-2);
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    padding: 5px 12px; border-radius: 999px; width: fit-content; margin-bottom: 16px;
   }
+  @media (max-width: 620px) { .eyebrow { margin-inline: auto; } }
+
   h1 {
-    font-size: clamp(36px,7vw,56px); font-weight: 700; margin: 10px 0 8px; line-height: 1.1;
+    font-size: clamp(32px,5.4vw,50px); font-weight: 800; margin: 0 0 14px; line-height: 1.1; letter-spacing: -0.01em;
   }
-  p.lede { max-width: 56ch; color: var(--ink-2); font-size: 1.05rem; margin: 0 0 40px; line-height: 1.6; }
-  .subjects { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  h1 .line2 {
+    display: block;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  p.lede { max-width: 50ch; color: var(--ink-2); font-size: 1.02rem; margin: 0; line-height: 1.6; }
+  @media (max-width: 620px) { p.lede { margin-inline: auto; } }
+
+  /* ---------- Orbit infographic ---------- */
+  .orbit-wrap { position: relative; width: clamp(180px,24vw,240px); aspect-ratio: 1; flex-shrink: 0; }
+  .orbit-wrap svg { width: 100%; height: 100%; overflow: visible; }
+  .orbit-line { stroke: url(#lineGrad); stroke-width: 1.6; fill: none; stroke-dasharray: 5 7; animation: flow 2.4s linear infinite; opacity: 0.8; }
+  @keyframes flow { to { stroke-dashoffset: -24; } }
+  .orbit-core { transform-box: fill-box; transform-origin: center; animation: pulse 3.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+  .orbit-node { transform-box: fill-box; transform-origin: center; animation: nodepulse 3.4s ease-in-out infinite; }
+  .orbit-node.n1 { animation-delay: 0.2s; }
+  .orbit-node.n2 { animation-delay: 0.9s; }
+  .orbit-node.n3 { animation-delay: 1.6s; }
+  @keyframes nodepulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  @media (prefers-reduced-motion: reduce) {
+    .orbit-line, .orbit-core, .orbit-node { animation: none !important; }
+  }
+
+  /* ---------- Subject cards ---------- */
+  .subjects-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted);
+    margin: 8px 0 12px; text-transform: uppercase;
+  }
+  .subjects { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
   .subject {
-    display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-    padding: 22px 22px; text-decoration: none; color: inherit; box-shadow: var(--shadow);
-    transition: transform 150ms ease;
+    display: block; position: relative; background: var(--surface); backdrop-filter: blur(14px);
+    border: 1px solid var(--line); border-radius: 20px; padding: 22px; text-decoration: none; color: inherit;
+    box-shadow: var(--shadow);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    opacity: 0; animation: rise 520ms ease forwards;
   }
-  a.subject:hover { transform: translateY(-2px); }
-  .subject.soon { opacity: 0.55; box-shadow: none; }
-  .subject h2 { font-size: 20px; font-weight: 700; margin: 0 0 6px; }
+  .subject:nth-child(1) { animation-delay: 60ms; }
+  .subject:nth-child(2) { animation-delay: 150ms; }
+  .subject:nth-child(3) { animation-delay: 240ms; }
+  .subject:nth-child(4) { animation-delay: 330ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  a.subject:hover { transform: translateY(-4px); border-color: var(--glow-color, var(--accent)); box-shadow: var(--shadow), 0 0 0 1px var(--glow-color, var(--accent)), 0 0 28px -4px var(--glow-color, var(--accent)); }
+  a.subject:hover .subject-icon { transform: scale(1.08) rotate(-4deg); }
+  .subject.soon { opacity: 0.55; }
+  .subject.soon:hover { transform: none; box-shadow: var(--shadow); border-color: var(--line); }
+  .subject h2 { font-size: 19px; font-weight: 700; margin: 0 0 6px; }
   .subject p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
   .subject-icon {
-    width: 40px; height: 40px; border-radius: 12px; margin-bottom: 12px;
-    background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    width: 42px; height: 42px; border-radius: 13px; margin-bottom: 12px;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: transform 200ms ease;
   }
-  .subject.soon .subject-icon { background: var(--line); }
+  .subject-icon.nitrox { background: linear-gradient(145deg, #0e9f94, #2fd4c6); }
+  .subject-icon.math { background: linear-gradient(145deg, var(--accent), var(--accent-2)); }
+  .subject-icon.physics { background: linear-gradient(145deg, var(--blue), var(--accent)); }
+  .subject-icon.chemistry { background: linear-gradient(145deg, var(--amber), var(--accent-2)); }
   .subject-icon svg { width: 58%; height: 58%; }
-  .logo {
-    width: 56px; height: 56px; border-radius: 16px; margin-bottom: 14px;
-    background: linear-gradient(145deg, var(--accent), var(--accent-2));
-    box-shadow: 0 8px 20px -8px rgba(98,42,182,0.4);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .logo svg { width: 56%; height: 56%; }
-  .badge {
-    display: inline-block; margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-    color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent);
+  .pilot-badge {
+    display: inline-block; margin-top: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--badge-color, var(--accent)); background: color-mix(in srgb, var(--badge-color, var(--accent)) 16%, transparent);
     padding: 3px 10px; border-radius: 999px;
   }
-  footer { margin-top: 56px; font-size: 12px; color: var(--muted); }
+
+  footer { margin-top: 40px; font-size: 12px; color: var(--muted); text-align: center; }
   footer a { color: inherit; }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="logo" aria-hidden="true">
-      <svg viewBox="0 0 100 100" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 4 C53 30 70 47 96 50 C70 53 53 70 50 96 C47 70 30 53 4 50 C30 47 47 30 50 4 Z"/>
-      </svg>
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span> <span class="t-he">האקדמיה</span><span class="t-en">Academy</span></div>
+      <div class="controls">
+        <button class="pill-btn" id="lang-toggle" type="button" aria-label="Switch language">
+          🌐 <span id="lang-toggle-label"></span>
+        </button>
+        <button class="pill-btn" id="theme-toggle" type="button" aria-label="Switch theme">
+          <span id="theme-toggle-icon"></span>
+        </button>
+      </div>
     </div>
-    <span class="eyebrow">גיא עדן · Guy Eden</span>
-    <h1>האקדמיה</h1>
-    <p class="lede">
-      האקדמיה היא אוסף שיעורים חינמיים ועצמאיים, שנבנים כי מישהו רצה להבין נושא לעומק — לא
-      כדי להשיג תעודה. כל שיעור משלב סימולציה חיה במקום שינון, ונכתב מההתחלה בעברית ובאנגלית.
-      גדלים נושא אחד בכל פעם.
-      <br><br>
-      Academy is a growing set of free, independent lessons built because someone wanted to
-      truly understand a subject — not to earn a certificate. Every lesson pairs a live
-      simulation with the idea it teaches, instead of asking you to memorize it, and is
-      written in Hebrew and English from day one. We add one subject at a time.
-    </p>
 
+    <div class="hero">
+      <div>
+        <span class="eyebrow">✦ <span class="t-he">פיילוט חדש</span><span class="t-en">New pilot</span></span>
+        <h1>
+          <span class="t-he">ללמוד דרך סקרנות.</span><span class="t-en">Learn through curiosity.</span>
+          <span class="line2"><span class="t-he">לא רק לשנן.</span><span class="t-en">Not just memorize.</span></span>
+        </h1>
+        <p class="lede">
+          <span class="t-he">כלי לימוד חינמי ועצמאי — נושא אחד בכל פעם, עם סימולציה חיה במקום שינון. נבנה על ידי גיא עדן.</span>
+          <span class="t-en">A free, independent study tool — one subject at a time, with a live simulation instead of memorization. Built by Guy Eden.</span>
+        </p>
+      </div>
+
+      <div class="orbit-wrap" aria-hidden="true">
+        <svg viewBox="0 0 240 240">
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/>
+              <stop offset="1" stop-color="var(--accent-2)"/>
+            </linearGradient>
+            <linearGradient id="gCore" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/>
+              <stop offset="1" stop-color="var(--accent-2)"/>
+            </linearGradient>
+            <linearGradient id="gPhysics" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--blue)"/>
+              <stop offset="1" stop-color="var(--accent)"/>
+            </linearGradient>
+            <linearGradient id="gChem" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--amber)"/>
+              <stop offset="1" stop-color="var(--accent-2)"/>
+            </linearGradient>
+          </defs>
+          <line class="orbit-line" x1="120" y1="120" x2="30" y2="120"/>
+          <line class="orbit-line" x1="120" y1="120" x2="165" y2="42"/>
+          <line class="orbit-line" x1="120" y1="120" x2="165" y2="198"/>
+
+          <circle class="orbit-node n1" cx="30" cy="120" r="19" fill="url(#gCore)"/>
+          <path d="M26 110c3.5 0 1.2 7-1.1 10s-2.4 7 1.1 10M34 110c-3.5 0-1.2 7 1.1 10s2.4 7-1.1 10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" transform="translate(-2 0)"/>
+
+          <circle class="orbit-node n2" cx="165" cy="42" r="15" fill="url(#gPhysics)"/>
+          <circle cx="165" cy="42" r="1.6" fill="#fff"/>
+          <ellipse cx="165" cy="42" rx="11" ry="4.4" stroke="#fff" stroke-width="1.5" fill="none"/>
+          <ellipse cx="165" cy="42" rx="11" ry="4.4" stroke="#fff" stroke-width="1.5" fill="none" transform="rotate(60 165 42)"/>
+          <ellipse cx="165" cy="42" rx="11" ry="4.4" stroke="#fff" stroke-width="1.5" fill="none" transform="rotate(120 165 42)"/>
+
+          <circle class="orbit-node n3" cx="165" cy="198" r="15" fill="url(#gChem)"/>
+          <path d="M161 191h8M163 191v5l-5 8.5a1.6 1.6 0 0 0 1.4 2.4h9.2a1.6 1.6 0 0 0 1.4-2.4L170 196v-5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <circle class="orbit-core" cx="120" cy="120" r="32" fill="url(#gCore)"/>
+          <path d="M120 102c1.8 13.4 9.7 21.3 23.1 23.1-13.4 1.8-21.3 9.7-23.1 23.1-1.8-13.4-9.7-21.3-23.1-23.1C110.3 123.3 118.2 115.4 120 102Z" fill="#fff"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="subjects-title"><span class="t-he">נושאים</span><span class="t-en">Subjects</span></div>
     <div class="subjects">
-      <a class="subject" href="/academy/math/">
-        <div class="subject-icon" aria-hidden="true">
+      <a class="subject" href="/academy/subjects/nitrox/" style="--glow-color: #2fd4c6;">
+        <div class="subject-icon nitrox" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2h6v3H9zM8 5h8a2 2 0 0 1 2 2v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7a2 2 0 0 1 2-2Zm0 5h8"/>
+          </svg>
+        </div>
+        <h2>Nitrox Academy</h2>
+        <p>
+          <span class="t-he">אוויר מועשר: לחץ חלקי, MOD וגבולות חמצן — דרך סימולציה, לא שינון.</span>
+          <span class="t-en">Enriched air: partial pressure, MOD and oxygen limits — through simulation, not memorization.</span>
+        </p>
+        <span class="pilot-badge" style="--badge-color: #0e9f94;">● <span class="t-he">פעיל</span><span class="t-en">Live</span></span>
+      </a>
+      <a class="subject" href="/academy/subjects/math/" style="--glow-color: var(--accent);">
+        <div class="subject-icon math" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 3c3 0 1 7-1 9s-3 9 0 9M15 3c-3 0-1 7 1 9s3 9 0 9"/>
           </svg>
         </div>
         <h2>Math Academy</h2>
-        <p>אינטגרלים: מתחילים במלבנים, מגיעים לקיצור דרך. Integrals: start with rectangles, arrive at a shortcut.</p>
-        <span class="badge">פיילוט · pilot</span>
+        <p>
+          <span class="t-he">אינטגרלים: מתחילים במלבנים, מגיעים לקיצור דרך.</span>
+          <span class="t-en">Integrals: start with rectangles, arrive at a shortcut.</span>
+        </p>
+        <span class="pilot-badge">✦ <span class="t-he">פיילוט</span><span class="t-en">Pilot</span></span>
       </a>
       <div class="subject soon">
-        <div class="subject-icon" aria-hidden="true">
+        <div class="subject-icon physics" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="1.6" fill="#ffffff" stroke="none"/>
             <ellipse cx="12" cy="12" rx="9" ry="3.6"/>
@@ -129,20 +301,43 @@
           </svg>
         </div>
         <h2>Physics Academy</h2>
-        <p>בקרוב. Coming soon.</p>
+        <p><span class="t-he">בקרוב.</span><span class="t-en">Coming soon.</span></p>
       </div>
       <div class="subject soon">
-        <div class="subject-icon" aria-hidden="true">
+        <div class="subject-icon chemistry" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9V3M7.5 15h9"/>
           </svg>
         </div>
         <h2>Chemistry Academy</h2>
-        <p>בקרוב. Coming soon.</p>
+        <p><span class="t-he">בקרוב.</span><span class="t-en">Coming soon.</span></p>
       </div>
     </div>
 
     <footer>edenguy/academy &middot; <a href="https://edenguy.github.io">edenguy.github.io</a></footer>
   </div>
+
+  <script>
+    function applyLang(lang) {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+      document.documentElement.dataset.lang = lang;
+      document.getElementById('lang-toggle-label').textContent = lang === 'he' ? 'EN' : 'עב';
+      try { localStorage.setItem('academy:lang', lang); } catch (e) {}
+    }
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      document.getElementById('theme-toggle-icon').textContent = theme === 'light' ? '🌙' : '☀️';
+      try { localStorage.setItem('academy:theme', theme); } catch (e) {}
+    }
+    applyLang(document.documentElement.lang);
+    applyTheme(document.documentElement.dataset.theme);
+    document.getElementById('lang-toggle').addEventListener('click', function () {
+      applyLang(document.documentElement.lang === 'he' ? 'en' : 'he');
+    });
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+    });
+  </script>
 </body>
 </html>

@@ -13,8 +13,13 @@ Bilingual (Hebrew first, English second) from day one, for every piece of learne
 content, in every subject — never an afterthought bolted on later. See `docs/index.html` for
 the mission statement as actually shown to visitors.
 
-First (and currently only) subject: **Math Academy** (`apps/math`), a pilot on the definite
-integral — rectangles → Riemann sums → the power-rule shortcut.
+Current subjects: **Nitrox Academy** (`apps/nitrox`), enriched-air diving theory — the
+original, most mature app, migrated in from its own repo, with real offline/PWA support and
+an established set of conventions (see `apps/nitrox/CLAUDE.md`). **Math Academy** (`apps/math`),
+a newer, leaner pilot on the definite integral — rectangles → Riemann sums → the power-rule
+shortcut. Treat Math as the template for a *new* subject's content model (YAML + Zod); treat
+Nitrox as the reference for what a subject looks like once it's grown large, not as something
+to imitate on day one.
 
 ## Non-negotiable rules
 
@@ -51,21 +56,31 @@ academy/                       (this repo)
 ├── CLAUDE.md                   this file
 ├── README.md                   setup, Pages config, "adding a subject" walkthrough
 ├── apps/                       SOURCE — never served, never deployed directly
+│   ├── nitrox/                  Nitrox Academy's app (see apps/nitrox/CLAUDE.md)
 │   ├── math/                    Math Academy's app (see apps/math/README.md)
 │   └── <subject>/                future subjects follow the same shape
 └── docs/                       SERVED by GitHub Pages — the entire public site lives here
     ├── index.html                landing page, lists every subject
     ├── favicon.svg, social/       the hub's own neutral "spark" logo + share cards
-    ├── math/                      built output of apps/math, served at /academy/math/
-    └── <subject>/                  built output of a future apps/<subject>
+    └── subjects/
+        ├── nitrox/                 built output of apps/nitrox, at /academy/subjects/nitrox/
+        ├── math/                   built output of apps/math, at /academy/subjects/math/
+        └── <subject>/               built output of a future apps/<subject>
 ```
 
 Each subject is a fully independent app — own `package.json`, own build, own content, own
-`vite.config.ts` (`base: '/academy/<subject>/'`, `outDir: '../../docs/<subject>'`). A subject
-never imports another subject's code. What's genuinely shared (a UI primitive, the
+`vite.config.ts` (`base: '/academy/subjects/<subject>/'`, `outDir: '../../docs/subjects/<subject>'`).
+A subject never imports another subject's code. What's genuinely shared (a UI primitive, the
 Riemann-sum-style visualization pattern, the YAML→Markdown/PDF review-export scripts) gets
 pulled into a common package only once it's actually duplicated across two subjects — not
 speculatively, before there's a second subject to prove it's really shared.
+
+**Retiring a subject's URL is not just deleting its folder.** If the subject registered a
+service worker (any PWA-enabled app — Nitrox does, via `vite-plugin-pwa`), a returning
+visitor's browser may still be actively serving it from an offline cache, which never even
+attempts the network request that would show them something new. See `README.md`'s
+"Retiring a URL" section for the self-unregistering service worker pattern this repo already
+used once, migrating Nitrox Academy off `edenguy.github.io/nitrox-academy/`.
 
 `scripts/` at the repo root holds hub-level tooling that isn't any one subject's (e.g.
 `render-og-cards.mjs` for `docs/`'s own share card). It has no `package.json` of its own —
@@ -106,8 +121,8 @@ Today every subject supports exactly `en` and `he`. To add a third language (say
    if the new subject needs a different interactive-explorer shape than Math's
    `IntegralExplorer`, and update `src/i18n/locales/{en,he}.json` for that subject's own UI
    copy (app name, etc.).
-3. Update `vite.config.ts`: `base: '/academy/<subject>/'`,
-   `outDir: '../../docs/<subject>'`.
+3. Update `vite.config.ts`: `base: '/academy/subjects/<subject>/'`,
+   `outDir: '../../docs/subjects/<subject>'`.
 4. Give it its own logo mark — subject-specific is correct here (unlike the hub page, which
    must stay neutral since it spans every subject; see `docs/index.html`'s "spark" mark vs.
    Math Academy's `∫`).
@@ -125,6 +140,19 @@ differently across the Israeli 3/4/5-יחידות tracks), and gating by grade w
 project's own explore-anything spirit. Math Academy's current schema is still flat (a single
 implicit topic, "integrals") — this structure applies once there's a second topic to actually
 navigate between; don't build the nested picker UI before that's true.
+
+## The hub page (`docs/index.html`)
+
+Plain static HTML (no framework, no build step) with a real language toggle — never show both
+languages inline in the same block of text. Every bilingual string is two elements,
+`<span class="t-he">...</span><span class="t-en">...</span>`, and CSS
+(`[data-lang="he"] .t-en, [data-lang="en"] .t-he { display: none; }`) shows only one; a small
+inline script flips `data-lang`/`dir`/`lang` on `<html>`, persists the choice to
+`localStorage`, and runs once, synchronously, in `<head>` before first paint (same pattern
+each subject app's own pre-paint theme script uses) so there's no flash of the wrong language
+or direction. The hub keeps its own neutral "spark" mark and its own orbit-diagram hero visual
+— subject-specific icon colors show up only on the subject cards, never on the hub's own
+chrome (see "What this is" above on why the hub can't wear any one subject's icon).
 
 ## Working with a collaborator
 
@@ -148,7 +176,7 @@ npm install
 npm run dev          # local dev server
 npm run typecheck
 npm test
-npm run build        # writes ../../docs/<subject> (commit it)
+npm run build        # writes ../../docs/subjects/<subject> (commit it)
 npm run check         # typecheck + test + build, in one shot
 npm run export:md     # YAML -> bilingual Markdown, for specialist review
 npm run export:pdf    # same content as a printable PDF
@@ -156,12 +184,15 @@ npm run export:pdf    # same content as a printable PDF
 
 ## Current status
 
-- **Done:** Math Academy pilot — 3 lessons on the definite integral, each with a live
-  `IntegralExplorer` (Riemann-sum visualization) and a short quiz, bilingual throughout. The
-  Academy hub landing page (`docs/index.html`) with its own logo, mission statement, and
-  WhatsApp/Open-Graph share cards (Hebrew live, English ready as an asset — see rule-adjacent
-  note in `README.md` about why a static page can only carry one locale's meta tags).
+- **Done:** Nitrox Academy, migrated in whole from its own repo — the mature, full-featured
+  subject (chapters, assessment engine, PWA/offline support). Math Academy pilot — 3 lessons
+  on the definite integral, each with a live `IntegralExplorer` (Riemann-sum visualization)
+  and a short quiz, bilingual throughout. The Academy hub landing page (`docs/index.html`)
+  with its own neutral logo, mission statement, real EN/HE toggle, an animated orbit-diagram
+  hero visual, and WhatsApp/Open-Graph share cards (Hebrew live, English ready as an asset —
+  see "Content review round trip" above on why a static page can only carry one locale's meta
+  tags at a time).
 - **Decided, not yet built:** the topic-first content structure described above, for whenever
   Math Academy (or a future subject) grows past one topic.
-- **Not started:** a second subject (Physics Academy is a placeholder card on the hub page,
-  no app yet).
+- **Not started:** a third subject (Physics Academy and Chemistry Academy are placeholder
+  cards on the hub page, no app yet for either).

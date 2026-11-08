@@ -3,7 +3,7 @@
 Playful, bilingual (Hebrew/English) interactive lessons for middle/high-school students.
 This pilot covers three lessons building up to the definite integral, each with a live
 Riemann-sum visualization (drag a slider, watch rectangles converge on the true area) and a
-short practice quiz. Published at <https://edenguy.github.io/academy/math/>.
+short practice quiz. Published at <https://edenguy.github.io/academy/subjects/math/>.
 
 No prior calculus is assumed — only algebra with powers and fractions.
 
@@ -12,7 +12,7 @@ No prior calculus is assumed — only algebra with powers and fractions.
 ```bash
 cd apps/math
 npm install
-npm run dev          # http://localhost:5173/academy/math/
+npm run dev          # http://localhost:5173/academy/subjects/math/
 npm run typecheck
 npm test
 npm run build        # writes ../../docs/math (commit it)
