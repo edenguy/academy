@@ -344,10 +344,10 @@
     slider.addEventListener('input', function () { render(parseInt(slider.value, 10)); });
   }
 
-  // ---------- reveal on scroll + timeline draw + method strip + hero spotlight ----------
+  // ---------- reveal on scroll + method strip + hero spotlight ----------
   function reveal() {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var targets = document.querySelectorAll('.reveal, .subject, .timeline-item, .method-row');
+    var targets = document.querySelectorAll('.reveal, .subject, .method-row');
     if (reduced || !('IntersectionObserver' in window)) {
       targets.forEach(function (el) { el.classList.add('in-view'); });
     } else {
@@ -374,27 +374,6 @@
         row.classList.add('in-view');
       });
     });
-
-    // timeline self-draw
-    var timelinePath = document.getElementById('timeline-path');
-    if (timelinePath) {
-      var len = timelinePath.getTotalLength();
-      timelinePath.style.strokeDasharray = len;
-      timelinePath.style.strokeDashoffset = reduced ? 0 : len;
-      if (!reduced && 'IntersectionObserver' in window) {
-        var panel = document.querySelector('.timeline-panel');
-        var tio = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              timelinePath.style.transition = 'stroke-dashoffset 900ms cubic-bezier(.2,.8,.2,1)';
-              timelinePath.style.strokeDashoffset = 0;
-              tio.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.3 });
-        if (panel) tio.observe(panel);
-      }
-    }
 
     // hero spotlight (pointer devices only, via CSS hover:hover)
     var heroPanel = document.querySelector('.hero-panel');

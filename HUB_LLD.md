@@ -149,8 +149,8 @@ fallback needed.
 
 ## 2. Mission statement (final copy)
 
-Written from the real story. First person where it quotes Guy (the timeline), third person in
-the lede (the page is about him; he didn't write the page). Teen register in Hebrew: short
+Third person throughout (the page is about the method, not a personal narrative — the
+original personal-story framing was removed, see §5.5). Teen register in Hebrew: short
 sentences, plural-present verbs ("משננים", "תופסים"), no "למידה מבוססת חקר".
 
 ### 2.1 Headline (h1, two lines)
@@ -169,11 +169,15 @@ Do not fall back to "understand / learn / discover".
 
 ### 2.2 Supporting line (lede, under the h1)
 
+Superseded: the original lede told the personal origin story (the Addis Ababa Nitrox course).
+That story — and any mention of Ilana — was removed by a later decision (see §4's note); the
+lede ships as:
+
 HE:
-> זה התחיל בקורס נייטרוקס בעשר בלילה, בשדה התעופה של אדיס אבבה, בין שתי טיסות. גיא היה עייף מדי בשביל לשנן, אז הוא בנה סימולציה כדי להבין. מאז זו השיטה בכל נושא: בכל שיעור יש משהו שמזיזים, ורואים מה קורה.
+> בכל שיעור כאן יש משהו שמזיזים ביד, ורואים מה קורה. לא נוסחה לשנן — רעיון שמרגישים. זו השיטה בכל נושא, מהיום הראשון.
 
 EN:
-> It started with a Nitrox course at 10pm in Addis Ababa airport, between two flights. Guy was too tired to memorize, so he built a simulation to understand instead. That's been the method for every subject since: every lesson has something you move, and you watch what happens.
+> Every lesson here has something you move with your hand, and you watch what happens. Not a formula to memorize — an idea you feel. That's the method for every subject, from day one.
 
 ### 2.3 Eyebrow badge (above the h1)
 
@@ -244,7 +248,7 @@ What reads as premium/modern to a 15-year-old in 2026 is the look of a **well-li
    lighter top edge (inset highlight) + backdrop blur. They feel machined, not "floaty".
 3. **Mostly monochrome; color means something.** Ink is near-white; the hub accent (electric
    violet) is for interactive elements only; the spectrum gradient appears only as a thin
-   line (the mark, the hero card's top edge, the timeline path); subject colors appear only on
+   line (the mark, the hero card's top edge); subject colors appear only on
    subject cards and inside their own demo.
 4. **Mono readouts.** Numbers, chips and labels are set in a real monospace (IBM Plex Mono),
    tabular, LTR-isolated: `22:00 · ADD`, `n = 24`, `pO₂ 1.28`. This is the single strongest
@@ -366,7 +370,6 @@ Radii: panels 24, inner cards 18, chips/buttons 999. Light theme shadows at 0.18
   card's `--c2`), 180 ms. No scale, no 3D tilt.
 - Handles (hero, sliders): thumb `scale(1.08)` on `:active`, halo opacity .35 → .6.
 - The mark breathes (5 s) and slides on brand hover (§1.5).
-- Timeline path draws itself when scrolled into view (`stroke-dashoffset`, 900 ms).
 - Pointer spotlight on the hero panel: a radial highlight (`--mx/--my` CSS vars set on
   `pointermove`, 320 px radius, `--panel-edge` color at 0.12) — pointer devices only
   (`@media (hover: hover)`), and only on the hero panel.
@@ -410,9 +413,13 @@ Top to bottom:
 2. Hero — headline, lede, CTAs, **the live Handle** (draggable subject scrubber)
 3. Method strip — "Why not just memorize?" (infographic: memorize vs move)
 4. Live preview — "This is what a lesson looks like" (two real mini-simulations)
-5. Origin timeline — "How it started" (infographic: the true story, in Guy's voice)
-6. Subjects — the cards
-7. Footer
+5. Subjects — the cards
+6. Footer
+
+(An "Origin timeline" section was specified and briefly shipped here — see the superseded §5.5
+below — then removed by a later decision to drop the personal origin story and any mention of
+Ilana from the project entirely, including from Nitrox Academy's own first-run notice and
+dashboard. Don't reintroduce it.)
 
 ---
 
@@ -541,33 +548,17 @@ Both demos are keyboard-operable (native range inputs), both sliders use the pro
 thumb style (28 px, `--glow` halo), and both are `dir="ltr"` islands inside the RTL page
 (numeric scales never mirror — same rule as the apps).
 
-### 5.5 Origin timeline — "איך זה התחיל" (infographic 3)
+### 5.5 Origin timeline — removed
 
-A horizontal timeline (vertical below 720 px) whose connector is **the spectrum curve**
-(a shallow version of the mark's curve stretched across the panel), with six nodes. Node 2
-(Addis Ababa) carries the handle — the moment the method was born. The connector draws
-itself on reveal; nodes pop in on the draw's progress (staggered 120 ms).
-
-Each node: a mono chip above (`SEZ`, `ADD · 22:00`, `HOME`, `V1`, `V2`, `···`), a title, and
-one or two short lines **in Guy's own voice, paraphrased from his published "Why this
-website exists" page**. Don't add facts that aren't on that page (no third airport, no
-dates, no agency names).
-
-| # | chip | HE | EN |
-|---|---|---|---|
-| 1 | `SEZ` | **סיישל** — אילנה, המדריכה שלי, שואלת: "רוצה הסמכת נייטרוקס?" לא היה לי מושג מה זה. | **Seychelles** — Ilana, my instructor, asks: "Want to get Nitrox certified?" I had no idea what that was. |
-| 2 | `ADD · 22:00` | **אדיס אבבה** — הקורס, בין שתי טיסות. עייף, בלי שינה, בקושי מתרכז. | **Addis Ababa** — The course, between two flights. Exhausted, no sleep, barely focusing. |
-| 3 | `HOME` | **בבית** — לא רציתי לאכזב את אילנה, ולא לשכוח. אז בניתי אתר כדי להבין באמת. | **Home** — I didn't want to let Ilana down, or forget it all. So I built a site to actually understand. |
-| 4 | `V1` | **Nitrox Academy** — הנושא הראשון. סימולציה במקום שינון. | **Nitrox Academy** — The first subject. Simulation instead of memorization. |
-| 5 | `V2` | **Math Academy** — אותה שיטה, נושא אחר: אינטגרלים. | **Math Academy** — Same method, different subject: integrals. |
-| 6 | `···` | **הבאים בתור** — פיזיקה, כימיה. | **Next up** — Physics, chemistry. |
-
-`SEZ` and `ADD` are the real IATA codes for Seychelles International and Addis Ababa Bole;
-the departure-board chips are the one "travel" cue, set in mono — they read as instrument
-labels, not as an airline ad. `HOME` is deliberately not an airport code (the story doesn't
-name the third leg). Chips are LTR islands.
-
-Node 4 and 5 are links to their subjects (hover → that subject's color ring).
+This section originally specified a horizontal timeline telling the personal origin story
+(Seychelles → Addis Ababa → home), sourced from Nitrox Academy's own "Why this website
+exists" first-run story and dashboard callout, and quoting Ilana (Guy's dive instructor) by
+name. It shipped briefly, then was removed by a later decision to drop the personal story and
+every reference to Ilana from the project — both here on the hub and from Nitrox Academy
+itself (`apps/nitrox/src/app/FirstRunNotice.tsx` now shows only the legal/responsibility step;
+`DashboardPage.tsx` no longer has the story `Callout`; the `storyTitle`/`storyBody` i18n keys
+are gone from both locales). Don't re-add any of it. The hub's "Subjects" section (below)
+simply follows the method strip and live preview now.
 
 ### 5.6 Subjects
 
@@ -613,11 +604,10 @@ Single line, `--muted`, 13 px: `footer` copy (§2.6) · `logo-mono.svg` at 16 px
 | 3 | Riemann demo | range input → rebuild ≤ 40 rects, readout pop | a real lesson in one slider |
 | 4 | Nitrox demo | range input → gauge fill + readout, warn state past the sourced limit | a real lesson in one slider |
 | 5 | Method strip animation | CSS keyframes on reveal, replay on hover | explains the handle by moving one |
-| 6 | Timeline self-draws | `stroke-dashoffset` + IntersectionObserver, staggered node pop | the story arrives as you scroll |
-| 7 | Card signature lines | `stroke-dasharray` draw on hover | each card is a doorway, not a brochure |
-| 8 | Hero spotlight | `--mx/--my` from `pointermove`, radial highlight, pointer devices only | the panel is lit by your hand |
-| 9 | Reveal-on-scroll | IntersectionObserver, once | pacing |
-| 10 | Lang/theme | existing pre-paint script + segmented control | unchanged contract |
+| 6 | Card signature lines | `stroke-dasharray` draw on hover | each card is a doorway, not a brochure |
+| 7 | Hero spotlight | `--mx/--my` from `pointermove`, radial highlight, pointer devices only | the panel is lit by your hand |
+| 8 | Reveal-on-scroll | IntersectionObserver, once | pacing |
+| 9 | Lang/theme | existing pre-paint script + segmented control | unchanged contract |
 
 Everything degrades: without JS the page is fully readable, the demos show their initial
 state, the hero shows the handle at node 0, both languages still toggle (no — the toggle
@@ -627,7 +617,7 @@ needs JS, as today; the HE default renders correctly server-side).
 
 Six IIFEs sharing nothing but DOM: `prefs()` (lang/theme, migrated from today's inline
 script body), `heroHandle()`, `riemannDemo()`, `nitroxDemo()`, `methodStrip()`, `reveal()`
-(also drives the timeline draw and spotlight). Each guards on `document.querySelector`
+(also drives the spotlight). Each guards on `document.querySelector`
 returning null so a section can be removed without breaking the others. No globals, no
 `setInterval`, `requestAnimationFrame` only inside drag/animation handlers. Target ≤ 12 KB
 unminified.
@@ -638,8 +628,8 @@ unminified.
 - Numeric scales, sliders, gauges, the two demos' SVGs, chips with codes/numbers: `dir="ltr"`
   islands with `unicode-bidi: isolate`.
 - SVG arrows and the "open" chevron: `[dir="rtl"] .icon-dir { transform: scaleX(-1); }`.
-- The hero curve, the timeline connector and the logo do **not** mirror; the hero scrubber's
-  keyboard mapping does (§5.2 step 4).
+- The hero curve and the logo do **not** mirror; the hero scrubber's keyboard mapping does
+  (§5.2 step 4).
 - The spectrum gradient angle flips (90deg ↔ 270deg) so teal is always at the start edge.
 - `.t-he` / `.t-en` only — never both languages in one block, never a Hebrew sentence with an
   English clause inside it except for proper nouns (`Nitrox Academy`, `EAN32`, airport codes).
@@ -693,7 +683,7 @@ Copy traps:
   → "neutral 'Handle' mark (a handle on a spectrum curve, `docs/hub/logo.svg`) and a
   draggable hero handle that scrubs between subjects". Also step 4 of "How to add a new
   academy topic" references the spark mark — update. Add: a new subject must be added in
-  three places on the hub — the subject card, the hero curve's node list, and timeline node 6.
+  two places on the hub — the subject card and the hero curve's node list.
 - `README.md` step 3 of "Adding a subject": same note.
 
 ---
@@ -707,7 +697,7 @@ Copy traps:
 3. Subjects section (cards with signature lines, status chips).
 4. Hero handle (§5.2) — drag, snap, keyboard, card glow.
 5. Live preview (§5.4) — Riemann first, Nitrox second.
-6. Method strip (§5.3) and timeline (§5.5).
+6. Method strip (§5.3).
 7. Reveal, spotlight, reduced-motion pass.
 8. Share cards + CLAUDE.md/README updates.
 
@@ -726,9 +716,9 @@ Copy traps:
       subject name.
 - [ ] Riemann demo estimate → 2.67 as n → 40; Nitrox demo reads 1.60 at 40 m and turns warn
       above 1.4; 1.4 is referenced to `limits.ts` in a code comment; no other limit numbers.
-- [ ] Timeline contains only facts from the Nitrox about page; "free" always qualified by
-      pilot/for now; no AI claims; no emoji; no gradient text; no sparkle anywhere, including
-      the share cards.
+- [ ] No personal origin story and no mention of Ilana anywhere on the hub or in Nitrox
+      Academy; "free" always qualified by pilot/for now; no AI claims; no emoji; no gradient
+      text; no sparkle anywhere, including the share cards.
 - [ ] `prefers-reduced-motion`: no idle animation, drags still work.
 - [ ] Lighthouse (mobile): Performance ≥ 95, Accessibility 100; page weight < 80 KB
       excluding fonts.

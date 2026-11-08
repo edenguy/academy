@@ -258,19 +258,6 @@ input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border-radius
 .open-lesson:hover { text-decoration: underline; }
 
 /* ---------- Timeline ---------- */
-.timeline-panel { padding: clamp(20px, 3vw, 32px); overflow: hidden; }
-.timeline-svg { width: 100%; height: auto; display: block; }
-.timeline-path { fill: none; stroke: url(#timelineGrad); stroke-width: 3; stroke-linecap: round; }
-.timeline-node circle { fill: var(--panel-solid); stroke: var(--accent); stroke-width: 2; }
-.timeline-node.handle circle.dot { fill: #fff; }
-.timeline-list { display: grid; gap: 22px; margin-top: 28px; grid-template-columns: 1fr; }
-@media (min-width: 720px) { .timeline-list { grid-template-columns: repeat(3, 1fr); } }
-.timeline-item { opacity: 0; transform: translateY(14px); transition: opacity 360ms cubic-bezier(.2,.8,.2,1), transform 360ms cubic-bezier(.2,.8,.2,1); }
-.timeline-item.in-view { opacity: 1; transform: translateY(0); }
-.timeline-item h3 { font-size: 15px; font-weight: 600; margin: 8px 0 4px; }
-.timeline-item p { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
-.timeline-item a.timeline-link { text-decoration: none; color: inherit; display: block; border-radius: 14px; padding: 10px; margin: -10px; transition: background 160ms ease; }
-.timeline-item a.timeline-link:hover { background: var(--accent-soft); }
 
 /* ---------- Subjects ---------- */
 .subjects-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
@@ -323,7 +310,7 @@ footer.hub-footer .sep { opacity: 0.5; }
 
 @media (prefers-reduced-motion: reduce) {
   .mark .handle { animation: none !important; }
-  .reveal, .subject, .timeline-item { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .reveal, .subject { transition: none !important; opacity: 1 !important; transform: none !important; }
   .mini-slider .thumb, .mini-chart .bar { transition: none !important; }
 }
 
