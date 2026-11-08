@@ -1,0 +1,89 @@
+{
+  "app": {
+    "name": "אקדמיית הפיזיקה",
+    "unofficial": "כלי לימוד עצמאי ובלתי רשמי",
+    "skipToContent": "מעבר לתוכן"
+  },
+  "nav": {
+    "home": "בית"
+  },
+  "settings": {
+    "language": "שפה",
+    "theme": "מצב תצוגה",
+    "music": "מוזיקת רקע רגועה"
+  },
+  "home": {
+    "eyebrowNew": "פיילוט חדש",
+    "heroTitle": "בואו לגלות",
+    "heroTitle2": "למה דברים נעים בדיוק ככה",
+    "heroBody": "שיעורים משחקיים עם סימולציה חיה: גוררים ידית על גרף תנועה ורואים מהירות ותאוצה מגיבות — במקום לשנן נוסחה.",
+    "lessonsTitle": "השיעורים",
+    "lessonLabel": "שיעור {{n}}",
+    "start": "התחלה",
+    "continue": "המשך",
+    "review": "חזרה על השיעור",
+    "done": "הושלם",
+    "questionsCount": "{{count}} שאלות תרגול"
+  },
+  "lesson": {
+    "backHome": "כל השיעורים",
+    "explorerIntro": "שחקו עם המחוון",
+    "rectangleCount": "מספר מלבנים",
+    "mode": { "left": "קצה שמאלי", "right": "קצה ימני", "midpoint": "אמצע" },
+    "estimate": "הערכה נוכחית",
+    "keyPointsTitle": "נקודות מפתח",
+    "quizTitle": "זמן לתרגל",
+    "prevLesson": "השיעור הקודם",
+    "nextLesson": "השיעור הבא",
+    "backToLessons": "חזרה לכל השיעורים",
+    "positionAt": "מיקום ב-t = {{t}} שניות",
+    "positionGraph": "גרף מיקום מול זמן",
+    "scrubHandle": "גררו כדי לנוע בזמן",
+    "time": "זמן",
+    "scenario": {
+      "constant": "מהירות קבועה",
+      "easeInOut": "מאיץ, ואז עוצר",
+      "oscillate": "הופך כיוון"
+    },
+    "averageVelocity": "מהירות ממוצעת (t1 עד t2)",
+    "instantaneousAtT1": "מהירות רגעית ב-t1 = {{t}}",
+    "secantGraph": "גרף מיקום עם קו חותך בין שתי נקודות ניתנות לגרירה",
+    "estimatedDisplacement": "תזוזה משוערת",
+    "exactDisplacement": "תזוזה מדויקת",
+    "velocityGraph": "גרף מהירות מול זמן",
+    "acceleration": "תאוצה"
+  },
+  "quiz": {
+    "check": "בדיקת תשובה",
+    "tryAgain": "ניסיון נוסף",
+    "correct": "נכון!",
+    "incorrect": "לא בדיוק",
+    "explanation": "הסבר",
+    "numericPlaceholder": "התשובה שלכם",
+    "progress": "שאלה {{current}} מ-{{total}}",
+    "finished": "כל הכבוד! סיימתם את שאלות התרגול של השיעור.",
+    "retake": "תרגול חוזר",
+    "next": "השאלה הבאה"
+  },
+  "footer": {
+    "disclaimer": "אקדמיית הפיזיקה היא כלי לימוד עצמאי ובלתי רשמי, ואינה תחליף להוראה בכיתה. התוכן נבדק אוטומטית מול ערכים פיזיקליים ידועים.",
+    "credit": "נוצר על ידי גיא עדן"
+  },
+  "feedback": {
+    "open": "משוב",
+    "title": "שאלה, רעיון או באג?",
+    "subtitle": "נשמח לשמוע. אפשר גם לצרף תמונת מסך.",
+    "typeQuestion": "שאלה",
+    "typeIdea": "רעיון",
+    "typeFeature": "בקשת שיפור",
+    "typeBug": "דיווח על באג",
+    "messageLabel": "מה תרצו לספר לנו?",
+    "fileLabel": "תמונת מסך (רשות)",
+    "fileChoose": "בחירת קובץ…",
+    "emailLabel": "אימייל לחזרה אליכם (רשות)",
+    "send": "שליחה",
+    "sending": "שולח…",
+    "success": "תודה! קיבלנו את ההודעה שלכם.",
+    "error": "משהו השתבש. נסו שוב, או כתבו ישירות."
+  }
+}

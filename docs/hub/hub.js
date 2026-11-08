@@ -65,7 +65,7 @@
     var SUBJECTS = [
       { key: 'nitrox', frac: 0.14, color: 'var(--teal)', live: true, url: '/academy/subjects/nitrox/', nameHe: 'נייטרוקס', nameEn: 'NITROX', statusHe: 'פעיל', statusEn: 'LIVE' },
       { key: 'math', frac: 0.40, color: '#6250d6', live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'physics', frac: 0.64, color: 'var(--blue)', live: false, url: null, nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'בקרוב', statusEn: 'SOON' },
+      { key: 'physics', frac: 0.64, color: '#3457d1', live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
       { key: 'chemistry', frac: 0.88, color: 'var(--amber)', live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
     ];
 
