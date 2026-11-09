@@ -113,9 +113,11 @@ function ProgressSection() {
               <div className="text-sm text-ink-2 flex-1 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
                 {pick(next.lesson.title, locale)}
               </div>
-              <LinkButton to={`/lesson/${next.lesson.id}`} size="sm" className="self-start mt-1">
-                <Icon name="play" size={15} /> {started ? t('home.continueCta') : t('home.startCta')}
-              </LinkButton>
+              <div className="self-start mt-1" data-fab-avoid>
+                <LinkButton to={`/lesson/${next.lesson.id}`} size="sm">
+                  <Icon name="play" size={15} /> {started ? t('home.continueCta') : t('home.startCta')}
+                </LinkButton>
+              </div>
             </>
           ) : (
             <p className="text-sm text-ink-2">{t('home.allDoneBody')}</p>

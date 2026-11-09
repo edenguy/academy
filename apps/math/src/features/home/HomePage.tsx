@@ -89,9 +89,11 @@ function ProgressSection() {
             <div className="font-display font-bold text-ink text-[19px] leading-snug">{pick(next.lesson.title, locale)}</div>
             <div className="text-sm text-ink-2 mt-0.5">{pick(TOPICS[next.lesson.topic].title, locale)}</div>
           </div>
-          <LinkButton to={`/lesson/${next.lesson.id}`} size="lg" className="shrink-0">
-            <Icon name="play" size={18} /> {next.resumed ? t('dashboard.continueCta') : t('dashboard.startCta')}
-          </LinkButton>
+          <div className="shrink-0" data-fab-avoid>
+            <LinkButton to={`/lesson/${next.lesson.id}`} size="lg">
+              <Icon name="play" size={18} /> {next.resumed ? t('dashboard.continueCta') : t('dashboard.startCta')}
+            </LinkButton>
+          </div>
         </Card>
       ) : (
         <Card variant="bench" className="flex items-center gap-3">
