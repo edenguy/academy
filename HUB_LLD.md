@@ -43,6 +43,15 @@ stroke weights on the hero curve and the card signature lines were thickened sli
 presence. Mobile phone rhythm (already tuned by the mobile-rebalance revision above) and
 every section's content/copy/order were left untouched.
 
+**Revision (inviting landing — restructure; spec only, see §11).** After the warmth pass the
+repo owner still found the hub "not very inviting" next to Nitrox Academy's dashboard. The
+warmth pass changed surfaces; §11 changes *structure*: the three live subjects become large,
+tinted, progress-aware tiles directly under the hero, the "why not memorize" and "how a lesson
+looks" sections move below them, the hero loses its two CTA buttons, and the rule that subject
+colour may appear only on subject cards is relaxed. §11 is the single implementation-ready
+spec for that work; the sections it contradicts were amended in place and marked
+*superseded by §11* so this document stays internally consistent. Nothing in §11 is built yet.
+
 ---
 
 ## 0. The one idea the whole page is built on
@@ -150,9 +159,12 @@ Notes for whoever draws it:
 | Tile | 64, rx 16, `#120b2e` | 64, rx 16, teal→blue | 64, rx 16, violet→pink | 64, rx 16, own gradient |
 | Glyph | white handle on spectrum curve | its own | its own | its own |
 
-Rule kept: subject colors appear on the hub **only on that subject's card**. The hub's own
-chrome (top bar, buttons, headings, hero) uses the hub palette in §3.2, never teal or
-Math-pink.
+*Superseded by §11.3.* The original rule was "subject colors appear on the hub **only on that
+subject's card**". It is now: the hub's own *chrome* (top bar, language/theme controls,
+headings, hero copy, footer, the feedback button, the method strip) stays on the hub palette in
+§3.2; subject colour may appear anywhere a subject itself is represented — its tile (tinted
+surface, badge, status, ring, continue pill), its hero node and axis chip, and its own live
+demo — within the tint caps in §11.4 so the page reads as one system, not four.
 
 Optional, out of scope for this pass: Nitrox's icon (`apps/nitrox/public/icons/icon.svg`)
 has a dark outer border and an inner inset tile that the other two don't. If the family is
@@ -216,10 +228,13 @@ EN:
 HE: `פיילוט · חינם בינתיים` EN: `Pilot · free for now`
 ("בינתיים" / "for now" is the honest phrasing: free during the pilot, no forever promise.)
 
-### 2.4 Calls to action (hero)
+### 2.4 Calls to action (hero) — superseded by §11
 
-Primary (scrolls to §5.4): HE `לנסות סימולציה` · EN `Try a simulation`
-Secondary (scrolls to §5.6): HE `לכל הנושאים` · EN `All subjects`
+Shipped as: primary (scrolls to §5.4) HE `לנסות סימולציה` · EN `Try a simulation`; secondary
+(scrolls to §5.6) HE `לכל הנושאים` · EN `All subjects`. §11 removes both buttons: the subject
+tiles sit directly under the hero and *are* the calls to action, and scrolling past three
+tiles to reach a "try a simulation" demo made the hero's primary button point at the fourth
+screen of the page. The hero panel's own "Open the full lesson" link (§5.2) stays.
 
 ### 2.5 Meta / share copy
 
@@ -265,6 +280,9 @@ English asset card (`preview-square-en.jpg`) tagline:
 | status.soon | בקרוב | Soon |
 | footer | נבנה על ידי גיא עדן · כלי לימוד עצמאי · חינם בזמן הפיילוט · בעברית ובאנגלית | Built by Guy Eden · an independent study tool · free during the pilot · in Hebrew and English |
 
+`subjects.count` is superseded by §11 (no count chip on the tiles section). Every string the
+tiles need — names, promises, meta lines, continue/start labels, the greeting — is in §11.6.
+
 Arrows in the method strip are SVG, not the → character, so they can mirror under RTL (§6.3).
 
 ---
@@ -283,8 +301,10 @@ What reads as premium/modern to a 15-year-old in 2026 is the look of a **well-li
    lighter top edge (inset highlight) + backdrop blur. They feel machined, not "floaty".
 3. **Mostly monochrome; color means something.** Ink is near-white; the hub accent (electric
    violet) is for interactive elements only; the spectrum gradient appears only as a thin
-   line (the mark, the hero card's top edge); subject colors appear only on
-   subject cards and inside their own demo.
+   line (the mark, the hero card's top edge). *Amended by §11.3:* subject colour appears
+   wherever a subject is represented (its tile — surface tint, badge, status, ring — its hero
+   node/chip, its demo), never on hub chrome; the tiles are the one deliberately colourful
+   band on the page, and their tints are capped (§11.4) so they read as one family.
 4. **Mono readouts.** Numbers, chips and labels are set in a real monospace (IBM Plex Mono),
    tabular, LTR-isolated: `22:00 · ADD`, `n = 24`, `pO₂ 1.28`. This is the single strongest
    "instrument" cue and it costs nothing.
@@ -335,10 +355,12 @@ electric (`#7c5cff` vs Math's `#6250d6`) so the two read as relatives, not twins
 raised in both themes — crisper edges, a less see-through surface — see the revision note
 above.)
 
-Subject card colors are **not** hub tokens; each card sets its own `--c1/--c2` inline:
-Nitrox `#0e9f94 → #2fd4c6`, Math `#6250d6 → #e87ba4`, Physics `var(--blue) → var(--violet)`,
-Chemistry `var(--amber) → var(--pink)` (the last two are placeholders until those apps exist
-and define their own).
+Subject colours are **not** `:root` hub tokens. *Amended by §11.4:* each subject's `--c1/--c2`
+(gradient pair, from its own app's favicon) and `--ct` (a text-safe variant, per theme) are
+declared in `hub.css` on `[data-subject="…"]` selectors — not inline — so dark mode can
+override them: Nitrox `#0e9f94 → #2fd4c6`, Math `#6250d6 → #e87ba4`, Physics `#3457d1 →
+#17a3e8` (`apps/physics/public/favicon.svg`), Chemistry `var(--amber)` (placeholder until the
+app exists). The hero nodes keep their inline fills (they are SVG attributes).
 
 Spectrum line (the only multi-hue gradient on the page), reused as a CSS value:
 `--spectrum: linear-gradient(90deg, var(--teal), var(--violet) 38%, var(--pink) 70%, var(--amber));`
@@ -478,13 +500,16 @@ pushed the handle below the fold). Side gutters `clamp(16px, 5vw, 48px)`.
 Everything uses logical properties (`margin-inline-start`, `inset-inline-end`, `text-align:
 start`) so RTL/LTR is a free flip.
 
-Top to bottom:
+Top to bottom (*order revised by §11*; the original order — hero, method strip, live preview,
+subjects, footer — buried the only things a visitor can open under two sections of
+explanation):
 
 1. Top bar — brand + controls
-2. Hero — headline, lede, CTAs, **the live Handle** (draggable subject scrubber)
-3. Method strip — "Why not just memorize?" (infographic: memorize vs move)
+2. Hero — headline, **the live Handle** (draggable subject scrubber), one-sentence lede
+   (no CTA buttons — §2.4 superseded)
+3. Subjects — the tiles (§11): Nitrox, Math, Physics + a compact Chemistry "soon" strip
 4. Live preview — "This is what a lesson looks like" (two real mini-simulations)
-5. Subjects — the cards
+5. Method strip — "Why not just memorize?" (two columns on desktop, §11.2)
 6. Footer
 
 (An "Origin timeline" section was specified and briefly shipped here — see the superseded §5.5
@@ -519,7 +544,8 @@ on phones — a drift from this spec that the mobile review caught.)
 
 Copy: eyebrow (§2.3), h1 (§2.1; line 2 is `--ink` with a 4 px `--spectrum` underline drawn as
 a `::after`, **not** gradient-filled text), lede (§2.2, max 52ch), CTAs (§2.4; primary =
-filled `--accent`, secondary = hairline outline).
+filled `--accent`, secondary = hairline outline). *§11 revision:* `.hero-more` holds only the
+shortened lede (§11.6 `hero.lede`); the `.hero-ctas` block is removed.
 
 Panel: a `.panel.panel--spectrum-edge.hero-panel` containing **the hero handle** — a large,
 draggable version of the mark that doubles as a subject scrubber:
@@ -568,8 +594,11 @@ Behavior (vanilla, `hub.js`):
    → map `clientX` to SVG x via `getScreenCTM().inverse()`, place the handle on the nearest
    sample and move the hairline; the readout and the active axis chip update live to the
    *nearest* node's subject (so it changes mid-drag — it responds while you move).
-3. `pointerup`/`pointercancel` → snap to the nearest node with a 260 ms transition; set
-   `data-active` on `<body>`, which the matching subject card (§5.6) uses for its glow.
+3. `pointerup`/`pointercancel` → snap to the nearest node with a 260 ms transition.
+   *Superseded by §11.8:* the original step also set `data-active` on `<body>` for a matching
+   subject-card glow; no CSS ever consumed `body[data-active]` (the card rule was written as
+   `.subject.active-glow`, a class nothing toggles), so both halves are dead code and §11.8
+   removes them rather than reviving them — the tiles are plain links.
 4. Keyboard: arrow keys follow the **visual** direction — the curve never mirrors, so → is
    always "the next node to the right", in both languages (the earlier "mirror under RTL"
    rule was wrong for an unmirrored drawing: pressing → moved the handle left). Home/End,
@@ -663,9 +692,10 @@ itself (`apps/nitrox/src/app/FirstRunNotice.tsx` now shows only the legal/respon
 are gone from both locales). Don't re-add any of it. The hub's "Subjects" section (below)
 simply follows the method strip and live preview now.
 
-### 5.6 Subjects
+### 5.6 Subjects — superseded by §11 (kept for the reasoning)
 
-Title `נושאים` / `Subjects` with a count chip (`3 LIVE · 1 SOON` EN in mono / `3 פעילים · 1
+Everything below describes the card grid that shipped and that §11 replaces with the tiles
+section (`#subjects`, §11.5). Title `נושאים` / `Subjects` with a count chip (`3 LIVE · 1 SOON` EN in mono / `3 פעילים · 1
 בקרוב` HE in Plex Sans — update it when a subject lights up). Grid: one column on phones,
 **two columns from 640 px** (`repeat(2, minmax(0,1fr))`), gap 14–16. *Superseded:*
 `auto-fit, minmax(240px, 1fr)` — with four subjects at 1080 px that produced 3 + 1 and left
@@ -702,8 +732,8 @@ Card anatomy (`.subject`, `data-subject="nitrox|math|physics|chemistry"`, inline
 6. "Soon" cards: 60 % opacity, dashed `--line-strong` border, no hover lift, no link, the
    signature line static. No "notify me" (no backend; don't fake one).
 
-Cards get `[data-active=…]` glow from the hero scrubber (§5.2 step 3); clicking a card never
-moves the hero handle (one-way, so the cards stay plain links).
+Cards were meant to get a glow from the hero scrubber (§5.2 step 3) — never wired up, see
+§11.8; clicking a card never moves the hero handle (one-way, so the cards stay plain links).
 
 ### 5.7 Footer
 
@@ -743,6 +773,8 @@ exists so a learner can report something without a GitHub account. Rules for it 
 | 7 | Hero spotlight | `--mx/--my` from `pointermove`, radial highlight, pointer devices only | the panel is lit by your hand |
 | 8 | Reveal-on-scroll | IntersectionObserver, once | pacing |
 | 9 | Lang/theme | existing pre-paint script + segmented control | unchanged contract |
+| 10 | Subject tiles' progress state (§11.7) | read-only IndexedDB read of each app's own persisted record, same origin; ring + "continue" pill | the hub remembers *your* stuff, like the apps do |
+| 11 | Tile preview handle slides (§11.5) | CSS `offset-path` on the preview's dot, hover/focus-within | every tile is a doorway with a handle on it |
 
 Everything degrades: without JS the page is fully readable, the demos show their initial
 state, the hero shows the handle at node 0, both languages still toggle (no — the toggle
@@ -752,7 +784,8 @@ needs JS, as today; the HE default renders correctly server-side).
 
 Six IIFEs sharing nothing but DOM: `prefs()` (lang/theme, migrated from today's inline
 script body), `heroHandle()`, `riemannDemo()`, `nitroxDemo()`, `methodStrip()`, `reveal()`
-(also drives the spotlight). Each guards on `document.querySelector`
+(also drives the spotlight). *§11 adds* `tileProgress()` (§11.7) — read-only, asynchronous,
+guarded, never blocks first paint. Each guards on `document.querySelector`
 returning null so a section can be removed without breaking the others. No globals, no
 `setInterval`, `requestAnimationFrame` only inside drag/animation handlers. Target ≤ 12 KB
 unminified.
@@ -863,3 +896,722 @@ Copy traps:
       excluding fonts.
 - [ ] `docs/hub/social/*.jpg` re-rendered with the Handle mark; CLAUDE.md/README no longer
       mention the "spark" mark or the orbit diagram.
+
+For the tiles restructure, run §11.9 as well — it supersedes the subject-card items above.
+
+---
+
+## 11. Revision — "Inviting landing": restructure around subject tiles (spec, not yet built)
+
+Scope: `docs/index.html`, `docs/hub/hub.css`, `docs/hub/hub.js` only. Nothing under `apps/`
+or `docs/subjects/` changes. No new network dependency, no framework, no raster image; every
+new graphic is inline SVG. Everything the earlier sections say still holds unless a passage
+is marked *superseded by §11* above. Where this section says "do X", do X.
+
+### 11.1 Diagnosis — why the hub still isn't inviting after the warmth pass
+
+Evidence: a Playwright sweep of the live `docs/` build on 2026-11-09 — hub, Nitrox Academy's
+dashboard and Math Academy's home, at 390×844 and 1440×900, HE and EN, dark and light — plus
+`getBoundingClientRect` measurements on the hub (HE, light). Numbers are from that run.
+
+1. **The things you can open are two screens down.** On a 390 px phone the first subject
+   card starts at **y = 1818 px** (viewport 844 → 2.15 screens of scrolling); at 1440×900 it
+   starts at **1696 px** (1.9 screens). Above it sit the hero (90–727), the method strip
+   (783–1175) and the live demo (~1175–1700). A first-time visitor reads two explanations of
+   the method before seeing a single subject. Nitrox's dashboard, by contrast, has a CTA
+   button at ~310 px and its first progress ring at ~430 px; Math's home has "Start learning"
+   at ~690 px with the lesson grid right after.
+2. **Nothing on the first screen says "this is yours".** Nitrox greets ("ברוכים הבאים"),
+   shows *your* course progress (`0 מתוך 11 שיעורים` in a ring), *your* next lesson ("הבא
+   בתור: פרק 1 · מהו נייטרוקס?"), *your* achievements. Math and Physics now do the same
+   (rings, "ready to start?" card, continue CTA). The hub shows the same page to everyone,
+   always — it is a brochure in a family of dashboards.
+3. **Monochrome where the apps are colourful.** Across the hub's 2,779 px (phone) the only
+   colour is the hero curve and four 42 px icon tiles; every surface is the same
+   white/lavender panel. Nitrox's dashboard has a teal CTA, an orange ring, teal and orange
+   56 px icon tiles on tinted squares, and per-chapter progress bars — colour is how it says
+   "here is a thing you can do". The hub's own rule (§1.4, "subject colours only on the
+   subject's card") capped it at exactly the thing that reads as warm.
+4. **The hero spends 140 px on buttons that point down the page.** The lede + two CTAs
+   occupy 587–727 px on the phone; the primary button ("Try a simulation") scrolls to the
+   demo at ~1175 px — the fourth screen. A button whose target is below the thing it is
+   competing with (the subjects) is noise.
+5. **The subject cards are small and mostly text.** ~150 px tall on a phone and 147 px on
+   desktop, a 42 px tile, two lines of description, a 22 px signature line. They look like
+   list items, not doors. Nitrox's chapter tiles are smaller still but they sit *below* a
+   dense, personal dashboard — the hub has no such dashboard above its cards.
+
+What is already right and stays: the headline and its double meaning, the Plex/mono
+instrument register, the dark-first lighting, the draggable hero handle (first screen, works
+on touch), both live demos, the method strip's real formula, the feedback widget, the
+footer, and every RTL/LTR-island rule.
+
+### 11.2 New page order and wireframes
+
+Order (both widths): **top bar → hero (headline + handle panel + one-sentence lede) →
+subject tiles → live preview → method strip → footer.** The hero's two CTA buttons are
+removed (§2.4). The live demo comes before the method strip because it is proof, and the
+method strip explains the proof; on desktop the method strip collapses to two columns.
+
+Measured budget for the phone (390×844, HE, from the sweep above, after the changes): top
+bar 58 → hero copy 90–226 (eyebrow + two-line h1, unchanged) → handle panel 248–565
+(unchanged) → lede ≈ 587–640 (one sentence, two lines) → tiles section starts ≈ 666 →
+first tile's header row (badge + name + status) fully visible by ≈ 740 px, i.e. **inside the
+first screen**, with the tile's promise line and preview arriving at the first flick.
+
+```
+390 px (phone), HE, dark                         1440 px, HE
+┌──────────────────────────────┐                ┌─────────────────────────────────────────────────────────┐
+│ ☾  [EN|עב]          האקדמיה ▣│ top bar        │ ☾ [EN|עב]                                    האקדמיה ▣ │
+│                               │                │                                                           │
+│           ● פיילוט · חינם בינתיים │            │ ┌───────────────────┐         ● פיילוט · חינם בינתיים   │
+│                  לא משננים.   │ h1             │ │   hero handle     │                    לא משננים.     │
+│                  תופסים.      │                │ │   (unchanged)     │                    תופסים.        │
+│ ┌───────────────────────────┐ │                │ │                   │   בכל שיעור יש משהו שמזיזים ביד — │
+│ │     hero handle panel     │ │ unchanged      │ │ chips · readout   │   ורואים מה קורה. זו השיטה, בכל   │
+│ │  curve · nodes · chips    │ │                │ └───────────────────┘   נושא.                            │
+│ │  ● נייטרוקס · פעיל  [לשיעור]│ │                │                                                           │
+│ └───────────────────────────┘ │                │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐      │
+│ בכל שיעור יש משהו שמזיזים ביד │ lede (1 sent.) │ │[◉] פיזיקה    │ │[◉] מתמטיקה   │ │[◉] נייטרוקס  │ tiles│
+│ — ורואים מה קורה. זו השיטה,   │                │ │ ● פיילוט     │ │ ● פיילוט     │ │ ● פעיל       │      │
+│ בכל נושא.                     │                │ │ promise…     │ │ promise…     │ │ promise…     │      │
+│ ──────── fold ≈ 844 ───────── │                │ │ ~~~preview~~~│ │ ▁▂▃▅▇ curve  │ │ ╱ pO₂ line   │      │
+│ ┌───────────────────────────┐ │ TILE 1         │ │ 3 שיעורים  [→]│ │ 6 שיעורים  [→]│ │ 11 שיעורים [→]│      │
+│ │ [◉48]  אקדמיית נייטרוקס   │ │  badge+name    │ └──────────────┘ └──────────────┘ └──────────────┘      │
+│ │        ● פעיל             │ │  status        │ ┌─────────────────────────────────────────────────────┐ │
+│ │ כמה עמוק אפשר לרדת עם     │ │  promise       │ │ [◌] אקדמיית הכימיה · בקרוב · בעבודה. עדיין אין מה…  │ │ soon strip
+│ │ התערובת הזו? גוררים ורואים.│ │                │ └─────────────────────────────────────────────────────┘ │
+│ │ ┌───────────────────────┐ │ │  preview       │                                                           │
+│ │ │ 1.4 ─ ─ ─ ─ ─ ─ ─ ─ ╱ │ │ │  (honest svg)  │                 ככה נראה שיעור כאן                        │ live
+│ │ │            ╱──●───    │ │ │                │ ┌─────────────────────────────────────────────────────┐ │
+│ │ └───────────────────────┘ │ │                │ │ [tabs]   demo (unchanged)                             │ │
+│ │ 11 שיעורים · 2 פרקים [להתחיל →]│ │  meta + cta  │ └─────────────────────────────────────────────────────┘ │
+│ └───────────────────────────┘ │                │                                                           │
+│ ┌───────────────────────────┐ │ TILE 2 (math)  │                 למה לא פשוט לשנן?                         │ method
+│ │ …                         │ │                │ ┌──────────────────────────┬──────────────────────────┐ │ 2 cols
+│ ┌───────────────────────────┐ │ TILE 3 (phys)  │ │ להזיז  ∫→ ─●─ → ▮▮▮ → ∫  │ לשנן  ∫ → 8/3 → 8̶/̶3̶      │ │
+│ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │ soon strip     │ └──────────────────────────┴──────────────────────────┘ │
+│  [◌] אקדמיית הכימיה · בקרוב   │                │                        footer (unchanged)                 │
+│ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘ │                └─────────────────────────────────────────────────────────┘
+│   ככה נראה שיעור כאן  (live)  │
+│   למה לא פשוט לשנן?  (method) │
+│   footer                      │
+└──────────────────────────────┘
+```
+
+With progress (any tile): a greeting line appears above the grid (`ממשיכים מאיפה שעצרתם`),
+that tile's meta row becomes a 36 px ring + `3 מתוך 11 שיעורים`, and its pill reads
+`להמשיך` and links to the lesson the learner was in (§11.7).
+
+### 11.3 The colour rule, relaxed (replaces §1.4's "only on its card")
+
+Why relax it: the diagnosis above (#3) is that the one rule which kept the hub "neutral"
+also kept it cold. The hub is still the OS and the subjects are still the apps; what changes
+is that the OS may show each app's colour wherever that app is represented — exactly like a
+home screen shows app icons in their own colours on a neutral background.
+
+The new rule, precisely:
+
+- **Hub chrome stays neutral**: top bar, language/theme controls, headline, lede, section
+  titles, the method strip, the footer, the feedback button, the live-demo panel frame.
+  These use only §3.2 tokens. Nothing here changes.
+- **A subject's colour appears where that subject is represented**: its tile (tinted
+  surface, badge gradient, status chip, ring, continue pill, preview strokes), its node and
+  axis chip on the hero curve (already so), and inside its own live demo (already so).
+- **Caps, so it reads as one system**: surface tint ≤ 8 % of `--c1` over `--panel-solid` in
+  light, ≤ 14 % in dark (§11.4 tokens); exactly one saturated element per tile (the 48 px
+  badge gradient); text on a tile is `--ink`/`--ink-2` or the subject's text-safe `--ct` —
+  never `--c2` and never `--muted` (the muted token falls to 4.1–4.3:1 on the tints);
+  headings are never coloured; no tinted backgrounds outside the tiles; the spectrum
+  gradient remains the only multi-hue gradient.
+- **Everything else in §7 stands** (no sparkles, no emoji, no AI copy, no gradient text, no
+  blobs). Glow stays reserved for live/pressable things: a tile may glow softly on hover
+  because it is pressable; nothing static glows.
+
+### 11.4 Tokens and tile CSS (exact; add to `hub.css`, replacing the `.subject*` block)
+
+Subject colour declarations live on `[data-subject]` so dark mode can override `--ct`
+(the hero nodes keep their inline SVG fills). Contrast figures are computed (WCAG 2.x) for
+the actual tint washes: light = `--c1` at 8 % over `#ffffff`, dark = `--c1` at 14 % over
+`#16103a`.
+
+```css
+/* ---------- Subject tiles (HUB_LLD.md §11) ---------- */
+/* Per-subject colour: --c1/--c2 = the app's own favicon gradient; --ct = a text-safe
+   variant that passes 4.5:1 on the tile's tinted surface in that theme. Never use --c2 or
+   --muted as text on a tile. */
+.tile[data-subject="nitrox"]    { --c1: #0e9f94; --c2: #2fd4c6; --ct: #0a6f67; }  /* 5.5:1 on light tint */
+.tile[data-subject="math"]      { --c1: #6250d6; --c2: #e87ba4; --ct: #5542c4; }  /* 6.3:1 */
+.tile[data-subject="physics"]   { --c1: #3457d1; --c2: #17a3e8; --ct: #2b4bbd; }  /* 6.6:1 */
+.tile[data-subject="chemistry"] { --c1: var(--amber); --c2: var(--amber); --ct: var(--ink-2); }
+:root[data-theme="dark"] .tile[data-subject="nitrox"]  { --ct: #2fd4c6; }  /* 8.2:1 on dark tint */
+:root[data-theme="dark"] .tile[data-subject="math"]    { --ct: #a99df0; }  /* 6.6:1 */
+:root[data-theme="dark"] .tile[data-subject="physics"] { --ct: #7fa6ff; }  /* 6.7:1 */
+
+:root { --ct-ink: #ffffff; --tile-tint: 8%; --tile-edge: 30%; }
+:root[data-theme="dark"] { --ct-ink: #0d0824; --tile-tint: 14%; --tile-edge: 26%; }
+
+section.subjects { margin-block: 26px 56px; }
+@media (min-width: 720px) { section.subjects { margin-block: 36px 84px; } }
+.subjects-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tiles-greeting { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 12px; }
+.tiles-greeting[hidden] { display: none; }
+
+.tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+@media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.tile {
+  position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  padding: 16px 16px 14px; border-radius: 20px; text-decoration: none; color: inherit;
+  background: color-mix(in srgb, var(--c1) var(--tile-tint), var(--panel-solid));
+  border: 1px solid color-mix(in srgb, var(--c2) var(--tile-edge), var(--line));
+  box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow);
+  transition: transform 180ms var(--ease), border-color 180ms ease, box-shadow 180ms ease;
+}
+@media (min-width: 640px) { .tile { padding: 18px 18px 16px; } }
+.tile:focus-visible { outline: 3px solid var(--ct); outline-offset: 3px; }
+.tile:active { transform: translateY(0) scale(0.995); }
+@media (hover: hover) {
+  .tile:hover { transform: translateY(-2px); border-color: var(--c2);
+    box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow), 0 0 32px -10px color-mix(in srgb, var(--c2) 70%, transparent); }
+  .tile:hover .tile-cta { background: color-mix(in srgb, var(--ct) 88%, black); }
+  /* Nitrox and Math: the dot slides along the curve. Physics: the tangent draws in instead
+     (its tangent is computed for the midpoint, so its dot must stay put). */
+  .tile[data-subject="nitrox"]:hover .pv-dot, .tile[data-subject="math"]:hover .pv-dot { offset-distance: 78%; }
+  .tile[data-subject="physics"]:hover .pv-tangent { stroke-dashoffset: 0; }
+}
+.tile[data-subject="nitrox"]:focus-visible .pv-dot, .tile[data-subject="math"]:focus-visible .pv-dot { offset-distance: 78%; }
+.tile[data-subject="physics"]:focus-visible .pv-tangent { stroke-dashoffset: 0; }
+
+.tile-head { display: flex; align-items: center; gap: 12px; }
+.tile-badge {
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; display: grid; place-items: center;
+  background: linear-gradient(145deg, var(--c1), var(--c2));
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--c1) 60%, black);   /* contact shadow, not a glow */
+}
+.tile-badge svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tile-title { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tile h3 { font-size: 18px; font-weight: 600; line-height: 1.2; color: var(--ink); }
+.tile-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; line-height: 1; color: var(--ct); }
+.tile-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ct); }
+.tile-status .t-en { font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+.tile-promise { font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+
+.tile-preview { width: 100%; height: auto; display: block; direction: ltr; overflow: visible;
+  border-radius: 12px; background: color-mix(in srgb, var(--panel-solid) 55%, transparent); }
+:root[data-theme="dark"] .tile-preview { background: rgba(255,255,255,0.04); }
+.tile-preview .pv-curve { fill: none; stroke: var(--c2); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-fill { fill: var(--c1); fill-opacity: 0.12; }
+.tile-preview .pv-rect { fill: var(--c1); fill-opacity: 0.22; stroke: var(--c1); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-limit { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-label { font-family: var(--mono); font-size: 10px; fill: var(--warn); }
+.tile-preview .pv-mix { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
+.tile-preview .pv-tangent { stroke: var(--c1); stroke-width: 2; stroke-dasharray: 90; stroke-dashoffset: 90; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 320ms var(--ease); }
+.tile-preview .pv-dot { fill: var(--c2); stroke: var(--panel-solid); stroke-width: 2; }
+/* The handle dot rides the curve with CSS motion path where supported (same mechanic as the
+   logo, §1.5); without support it stays at its static cx/cy on the curve. */
+@supports (offset-path: path('M0 0 L1 1')) {
+  .tile-preview .pv-dot { cx: 0; cy: 0; offset-distance: 50%; offset-rotate: 0deg; transition: offset-distance 320ms var(--ease); }
+  .tile[data-subject="nitrox"]  .pv-dot { offset-path: path('M16 52.8 L304 8'); }
+  .tile[data-subject="math"]    .pv-dot { offset-path: path('M16 64 Q 160 64 304 8'); }
+  .tile[data-subject="physics"] .pv-dot { offset-path: path('M16 60 C 120 60, 200 12, 304 12'); }
+}
+
+.tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.tile-meta { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--ink-2); min-width: 0; }
+.tile-meta .t-en { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
+.tile-ring { width: 36px; height: 36px; flex-shrink: 0; display: none; }
+.tile-ring .track { fill: none; stroke: color-mix(in srgb, var(--c1) 22%, var(--panel-solid)); stroke-width: 4; }
+.tile-ring .arc { fill: none; stroke: var(--ct); stroke-width: 4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%;
+  stroke-dasharray: 97.39; stroke-dashoffset: 97.39; transition: stroke-dashoffset 700ms var(--ease); }
+.tile-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+  font-size: 13px; font-weight: 600; line-height: 1; padding: 10px 14px; border-radius: 999px;
+  background: var(--ct); color: var(--ct-ink); transition: background 180ms ease;
+}
+.tile-cta svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* State: progress found (class set by hub.js, §11.7) */
+.tile.has-progress .tile-ring { display: block; }
+.tile.has-progress .meta-first, .tile:not(.has-progress) .meta-progress,
+.tile.has-progress .cta-start, .tile:not(.has-progress) .cta-continue,
+.tile:not(.is-complete) .cta-review, .tile.is-complete .cta-continue { display: none; }
+
+/* State: coming soon — a compact strip, not a card; not a link */
+.tile--soon {
+  flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
+  background: transparent; border: 1px dashed var(--line-strong); box-shadow: none; opacity: 0.7;
+}
+.tile--soon .tile-badge { width: 36px; height: 36px; border-radius: 11px; box-shadow: none; background: color-mix(in srgb, var(--amber) 35%, var(--panel-solid)); }
+.tile--soon .tile-badge svg { stroke: var(--ink-2); width: 20px; height: 20px; }
+.tile--soon h3 { font-size: 15px; }
+.tile--soon .tile-promise { font-size: 13px; }
+@media (min-width: 640px) { .tile--soon { grid-column: 1 / -1; } }
+@media (hover: hover) { .tile--soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; } }
+
+/* Method strip: two columns on desktop so it stops being a second screen of its own */
+@media (min-width: 900px) {
+  .method-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  .method-row + .method-row { margin-top: 0; padding-top: 0; border-top: 0; border-inline-start: 1px dashed var(--line-strong); padding-inline-start: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tile-cta, .pv-dot, .pv-tangent, .tile-ring .arc { transition: none !important; }
+}
+```
+
+Also: in the existing reduced-motion block and in `reveal()`'s selector list, replace
+`.subject` with `.tile` (tiles use the `.reveal` class for the once-only fade-in). Delete
+`.hero-ctas` and the whole `.subjects-head`/`.subjects-grid`/`.subject*` block (§11.8).
+
+### 11.5 Markup (exact)
+
+**Hero**: delete the `.hero-ctas` div; replace the lede text with §11.6 `hero.lede`:
+
+```html
+<div class="hero-more">
+  <p class="lede">
+    <span class="t-he">בכל שיעור יש משהו שמזיזים ביד — ורואים מה קורה. זו השיטה, בכל נושא.</span>
+    <span class="t-en">Every lesson has something you move with your hand — and you watch what happens. That's the method, in every subject.</span>
+  </p>
+</div>
+```
+
+**Tiles section** — replaces the entire `<section id="subjects">` and moves to directly
+after `</section>` of the hero (before `.live`, which now comes before `.method`):
+
+```html
+<section class="subjects" id="subjects" aria-labelledby="subjects-title">
+  <h2 class="subjects-title" id="subjects-title"><span class="t-he">נושאים</span><span class="t-en">Subjects</span></h2>
+  <p class="tiles-greeting" id="tiles-greeting" hidden>
+    <span class="t-he">ממשיכים מאיפה שעצרתם</span><span class="t-en">Pick up where you left off</span>
+  </p>
+  <div class="tiles">
+
+    <a class="tile reveal" href="/academy/subjects/nitrox/" data-subject="nitrox">
+      <div class="tile-head">
+        <div class="tile-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 2h6v3H9zM8 5h8a2 2 0 0 1 2 2v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7a2 2 0 0 1 2-2Zm0 5h8"/></svg>
+        </div>
+        <div class="tile-title">
+          <h3><span class="t-he">אקדמיית נייטרוקס</span><span class="t-en">Nitrox Academy</span></h3>
+          <span class="tile-status"><span class="dot"></span><span class="t-he">פעיל</span><span class="t-en">Live</span></span>
+        </div>
+      </div>
+      <p class="tile-promise">
+        <span class="t-he">כמה עמוק אפשר לרדת עם התערובת הזו? גוררים את העומק ורואים.</span>
+        <span class="t-en">How deep can this mix go? Drag the depth and see.</span>
+      </p>
+      <!-- pO₂ vs depth for EAN32 (FO₂ 0.32), 0–40 m, the same teaching approximation the live
+           demo uses (pO₂ = 0.32 × (1 + depth/10)): a straight line from 0.32 bar at 0 m to 1.60
+           bar at 40 m. Plot: x 16→304 = 0→40 m; y 64→8 = 0→1.6 bar (35 px per bar).
+           0.32 → y 52.8; 1.60 → y 8; the dashed limit at 1.4 bar → y 15. The 1.4 is
+           DEFAULT_PLANNING_PPO2 from apps/nitrox/src/science/limits.ts — no other number. -->
+      <svg class="tile-preview" viewBox="0 0 320 72" aria-hidden="true">
+        <text class="pv-mix" x="16" y="12">EAN32</text>
+        <polygon class="pv-fill" points="16,52.8 304,8 304,64 16,64"/>
+        <line class="pv-limit" x1="16" y1="15" x2="304" y2="15"/>
+        <text class="pv-label" x="304" y="12" text-anchor="end">1.4</text>
+        <path class="pv-curve" d="M16 52.8 L304 8"/>
+        <circle class="pv-dot" cx="160" cy="30.4" r="4.5"/>
+      </svg>
+      <div class="tile-foot">
+        <span class="tile-meta">
+          <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
+          <span class="meta-first"><span class="t-he">11 שיעורים · 2 פרקים</span><span class="t-en">11 lessons · 2 chapters</span></span>
+          <span class="meta-progress"><span class="t-he"></span><span class="t-en"></span></span>
+        </span>
+        <span class="tile-cta">
+          <span class="cta-start"><span class="t-he">להתחיל</span><span class="t-en">Start</span></span>
+          <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
+          <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
+          <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="tile reveal" href="/academy/subjects/math/" data-subject="math">
+      <div class="tile-head">
+        <div class="tile-badge" aria-hidden="true">
+          <!-- the ∫ as a stroke, same geometry as apps/math/public/favicon.svg scaled to the 24 grid -->
+          <svg viewBox="0 0 24 24"><path d="M15 5.5c-1.1 0-1.9.8-1.9 2.2v8.6c0 1.4-.8 2.2-1.9 2.2"/><circle cx="15.4" cy="5.5" r="1.2" fill="#fff" stroke="none"/><circle cx="10.9" cy="18.5" r="1.2" fill="#fff" stroke="none"/></svg>
+        </div>
+        <div class="tile-title">
+          <h3><span class="t-he">אקדמיית המתמטיקה</span><span class="t-en">Math Academy</span></h3>
+          <span class="tile-status"><span class="dot"></span><span class="t-he">פיילוט</span><span class="t-en">Pilot</span></span>
+        </div>
+      </div>
+      <p class="tile-promise">
+        <span class="t-he">נגזרת ואינטגרל שנולדים מול העיניים — ממשיק וממלבנים.</span>
+        <span class="t-en">A derivative and an integral born in front of you — from a tangent and from rectangles.</span>
+      </p>
+      <!-- f(x) = x² on [0,2] with 6 midpoint rectangles — the live demo's own function and rule.
+           Plot: x 16→304 = 0→2; y 64→8 = 0→4 (14 px per unit). The parabola is exact as one
+           quadratic Bézier (control point = tangents' intersection at (1, 0) → (160, 64)).
+           Rect i (i = 0..5): x = 16 + 48i, width 47, midpoint m = (i + ½)/3, height = m²·14:
+           0.389, 3.5, 9.722, 19.056, 31.5, 47.056 → y = 64 − height. -->
+      <svg class="tile-preview" viewBox="0 0 320 72" aria-hidden="true">
+        <rect class="pv-rect" x="16"  y="63.61" width="47" height="0.39"/>
+        <rect class="pv-rect" x="64"  y="60.5"  width="47" height="3.5"/>
+        <rect class="pv-rect" x="112" y="54.28" width="47" height="9.72"/>
+        <rect class="pv-rect" x="160" y="44.94" width="47" height="19.06"/>
+        <rect class="pv-rect" x="208" y="32.5"  width="47" height="31.5"/>
+        <rect class="pv-rect" x="256" y="16.94" width="47" height="47.06"/>
+        <path class="pv-curve" d="M16 64 Q 160 64 304 8"/>
+        <circle class="pv-dot" cx="188.8" cy="43.84" r="4.5"/>
+      </svg>
+      <div class="tile-foot">
+        <span class="tile-meta">
+          <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
+          <span class="meta-first"><span class="t-he">6 שיעורים · 2 נושאים</span><span class="t-en">6 lessons · 2 topics</span></span>
+          <span class="meta-progress"><span class="t-he"></span><span class="t-en"></span></span>
+        </span>
+        <span class="tile-cta">
+          <span class="cta-start"><span class="t-he">להתחיל</span><span class="t-en">Start</span></span>
+          <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
+          <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
+          <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="tile reveal" href="/academy/subjects/physics/" data-subject="physics">
+      <div class="tile-head">
+        <div class="tile-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 18 Q 12 2 21 18"/><circle cx="12" cy="9.5" r="1.8" fill="#fff" stroke="none"/></svg>
+        </div>
+        <div class="tile-title">
+          <h3><span class="t-he">אקדמיית הפיזיקה</span><span class="t-en">Physics Academy</span></h3>
+          <span class="tile-status"><span class="dot"></span><span class="t-he">פיילוט</span><span class="t-en">Pilot</span></span>
+        </div>
+      </div>
+      <p class="tile-promise">
+        <span class="t-he">גוררים נקודה על גרף תנועה — והמהירות והתאוצה מגיבות.</span>
+        <span class="t-en">Drag a point along a motion graph — velocity and acceleration respond.</span>
+      </p>
+      <!-- Position vs time, an ease-in-out motion (the shape Physics Academy's own hero uses),
+           with the tangent at the handle = the velocity. No axis numbers: nothing here is a
+           quantitative claim. Midpoint of the cubic = (160, 36); tangent slope there is
+           −72/276 ≈ −0.26 (screen coords), drawn ±40 px in x. -->
+      <svg class="tile-preview" viewBox="0 0 320 72" aria-hidden="true">
+        <path class="pv-curve" d="M16 60 C 120 60, 200 12, 304 12"/>
+        <line class="pv-tangent" x1="120" y1="46.4" x2="200" y2="25.6"/>
+        <circle class="pv-dot" cx="160" cy="36" r="4.5"/>
+      </svg>
+      <div class="tile-foot">
+        <span class="tile-meta">
+          <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
+          <span class="meta-first"><span class="t-he">3 שיעורים · נושא אחד</span><span class="t-en">3 lessons · 1 topic</span></span>
+          <span class="meta-progress"><span class="t-he"></span><span class="t-en"></span></span>
+        </span>
+        <span class="tile-cta">
+          <span class="cta-start"><span class="t-he">להתחיל</span><span class="t-en">Start</span></span>
+          <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
+          <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
+          <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <div class="tile tile--soon reveal" data-subject="chemistry">
+      <div class="tile-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9V3M7.5 15h9"/></svg>
+      </div>
+      <div class="tile-title">
+        <h3><span class="t-he">אקדמיית הכימיה</span><span class="t-en">Chemistry Academy</span></h3>
+        <p class="tile-promise"><span class="t-he">בקרוב · בעבודה, עדיין אין מה לפתוח.</span><span class="t-en">Soon · in the works, nothing to open yet.</span></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+```
+
+Notes for the implementer:
+
+- The physics tile's `.pv-dot` must **not** slide (its tangent is drawn for the midpoint);
+  the §11.4 hover/focus rules are already scoped so only Nitrox and Math slide, and the
+  physics tile's effect is the tangent drawing in (`.pv-tangent`). Static `cx/cy` fallbacks: Nitrox
+  (160, 30.4) is the line's midpoint; Math (188.8, 43.84) is the parabola at Bézier t = 0.6;
+  Physics (160, 36) is the cubic's midpoint. All three sit on their curve.
+- Lesson totals in `meta-first` are **content facts**, not design: Nitrox 11 = 5 (ch01) + 6
+  (ch02) in `apps/nitrox/src/content/chapters/*.json` (the eight roadmap chapters have no
+  lessons and are not counted — the app's own `lessonCount()` counts the same way, and its
+  dashboard shows "0 מתוך 11"); Math 6 = `apps/math/src/content/lessons/*.yaml` in 2 topics
+  (`topics.ts`); Physics 3 = `apps/physics/src/content/lessons/*.yaml`, one topic. They are
+  repeated as `total` in `hub.js` (§11.7) and both places must be updated together whenever
+  content is added — §11.9 checks them against the YAML/JSON.
+- Both `meta-progress` spans start empty and are filled by `hub.js`. Digits inside a Hebrew
+  sentence (`3 מתוך 11 שיעורים`) are **not** wrapped in `.num` (§3.3's rule).
+- The Chemistry strip is a `<div>`: no `href`, no `tabindex`, no "notify me". Its status
+  word is inside the promise so the strip has one line of text, not a chip row.
+- The whole tile is one `<a>`; the "pill" is a `<span>` (no nested interactive elements).
+
+### 11.6 Copy — every new or changed string (HE first)
+
+| key | HE | EN |
+|---|---|---|
+| hero.lede (replaces §2.2) | בכל שיעור יש משהו שמזיזים ביד — ורואים מה קורה. זו השיטה, בכל נושא. | Every lesson has something you move with your hand — and you watch what happens. That's the method, in every subject. |
+| subjects.title (visually hidden h2) | נושאים | Subjects |
+| tiles.greeting (hidden until progress is found) | ממשיכים מאיפה שעצרתם | Pick up where you left off |
+| tile.nitrox.name | אקדמיית נייטרוקס | Nitrox Academy |
+| tile.nitrox.promise | כמה עמוק אפשר לרדת עם התערובת הזו? גוררים את העומק ורואים. | How deep can this mix go? Drag the depth and see. |
+| tile.nitrox.meta | 11 שיעורים · 2 פרקים | 11 lessons · 2 chapters |
+| tile.math.name | אקדמיית המתמטיקה | Math Academy |
+| tile.math.promise | נגזרת ואינטגרל שנולדים מול העיניים — ממשיק וממלבנים. | A derivative and an integral born in front of you — from a tangent and from rectangles. |
+| tile.math.meta | 6 שיעורים · 2 נושאים | 6 lessons · 2 topics |
+| tile.physics.name | אקדמיית הפיזיקה | Physics Academy |
+| tile.physics.promise | גוררים נקודה על גרף תנועה — והמהירות והתאוצה מגיבות. | Drag a point along a motion graph — velocity and acceleration respond. |
+| tile.physics.meta | 3 שיעורים · נושא אחד | 3 lessons · 1 topic |
+| tile.chemistry.name | אקדמיית הכימיה | Chemistry Academy |
+| tile.chemistry.promise | בקרוב · בעבודה, עדיין אין מה לפתוח. | Soon · in the works, nothing to open yet. |
+| tile.status.live / pilot | פעיל / פיילוט | Live / Pilot |
+| tile.cta.start | להתחיל | Start |
+| tile.cta.continue | להמשיך | Continue |
+| tile.cta.review (all lessons done) | לחזור | Review |
+| tile.meta.progress (JS template) | `{done} מתוך {total} שיעורים` | `{done} of {total} lessons` |
+
+Headline (§2.1), eyebrow (§2.3), section titles and the footer are unchanged. The "promise"
+lines claim only what each app does today: Nitrox's MOD/depth simulation (its Lab and
+Chapter 2), Math's tangent/secant and Riemann explorers, Physics's motion scrubber. "Free" is
+still said only in the eyebrow and footer, both tied to the pilot. The English subject names
+are the apps' own `<title>`s; the Hebrew names likewise.
+
+### 11.7 `hub.js` — `tileProgress()`: reading each app's progress, read-only
+
+**Feasibility (verified 2026-11-09 with a Playwright probe against the `docs/` build served
+at one origin, the same situation as `edenguy.github.io`).** All three apps persist with
+zustand `persist` + `createJSONStorage` over `idb-keyval` 6.3.0 using the library's
+*default* store (`get`/`set` with no custom store argument — `apps/*/src/progress/store.ts`),
+i.e. IndexedDB database **`keyval-store`**, object store **`keyval`**, version 1. Each app
+writes one key:
+
+| app | key | written by |
+|---|---|---|
+| Nitrox | `nitrox-academy:v1` | `apps/nitrox/src/progress/store.ts` (`name`) |
+| Math | `academy-math:v1` | `apps/math/src/progress/store.ts` |
+| Physics | `academy-physics:v1` | `apps/physics/src/progress/store.ts` |
+
+The stored value is a **JSON string** of `{ "state": { … partialized fields … }, "version": 1 }`.
+Observed records from the probe (fields the hub reads in bold):
+
+```
+nitrox-academy:v1  {"state":{"settings":{…},"lessonsCompleted":{},"lastVisited":{"chapterId":"ch01","lessonId":"ch01-l02"},"assessments":[],"attempts":[],"predictions":{},"achievements":{},"labVisits":0,"acknowledgedAt":null},"version":1}
+academy-math:v1    {"state":{"settings":{…},"lessonsCompleted":{},"lastVisited":null,"attempts":[],"achievements":{}},"version":1}
+academy-physics:v1 {"state":{"settings":{…},"lessonsCompleted":{},"lastVisited":"velocity-slope","attempts":[],"achievements":{}},"version":1}
+```
+
+The hub reads exactly two fields per record: **`state.lessonsCompleted`** (object: lesson id →
+completion timestamp) and **`state.lastVisited`** (Nitrox: `{chapterId, lessonId}` object or
+`null`; Math/Physics: lesson-id string or `null`). Nothing else — not settings, attempts,
+achievements, assessments or the Nitrox acknowledgement. The hub never writes, never deletes,
+never opens a `readwrite` transaction, and never upgrades the database.
+
+The one real hazard, and its fix: `indexedDB.open('keyval-store')` on a profile where no app
+has run yet would *create* an empty version-1 database with **no** `keyval` store; idb-keyval
+only creates its store inside `onupgradeneeded`, which then never fires for the apps, so every
+app's read/write would fail with `NotFoundError` forever. The hub must therefore **abort
+inside `onupgradeneeded`** so the database is never created. The probe confirmed this: after
+the hub's read on a fresh profile, `indexedDB.databases()` was `[]`; after each app had been
+opened once, the hub read all three keys.
+
+Pseudocode-plus-exact-keys (plain ES2020, one IIFE, called last in `DOMContentLoaded`):
+
+```js
+function tileProgress() {
+  var tiles = document.querySelectorAll('.tile[data-subject]:not(.tile--soon)');
+  if (!tiles.length || !('indexedDB' in window)) return;
+  var ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;   // lesson/chapter ids are kebab-case; anything else is rejected
+  // `total` must equal the real lesson count (see §11.5 notes) — same numbers as the tiles' meta-first text.
+  var SOURCES = {
+    nitrox:  { key: 'nitrox-academy:v1',  total: 11, home: '/academy/subjects/nitrox/',
+               lessonUrl: function (lv) { return '/academy/subjects/nitrox/#/learn/' + lv.chapterId + '/' + lv.lessonId; },
+               lastVisited: function (v) { return v && typeof v === 'object' && ID_RE.test(v.chapterId) && ID_RE.test(v.lessonId) ? { chapterId: v.chapterId, lessonId: v.lessonId } : null; } },
+    math:    { key: 'academy-math:v1',    total: 6,  home: '/academy/subjects/math/',
+               lessonUrl: function (id) { return '/academy/subjects/math/#/lesson/' + id; },
+               lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
+    physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
+               lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
+               lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
+  };
+
+  // 1. Open read-only; abort if the DB would be created; give up silently after 1500 ms.
+  function openExisting(cb) {
+    var done = false; function finish(db) { if (!done) { done = true; cb(db || null); } }
+    try {
+      var req = indexedDB.open('keyval-store');            // no version → opens whatever exists
+      req.onupgradeneeded = function () { try { req.transaction.abort(); } catch (e) {} finish(null); }; // DB absent → never create it
+      req.onerror = req.onblocked = function () { finish(null); };
+      req.onsuccess = function () {
+        var db = req.result;
+        db.onversionchange = function () { try { db.close(); } catch (e) {} };
+        if (!db.objectStoreNames.contains('keyval')) { db.close(); return finish(null); }
+        finish(db);
+      };
+      setTimeout(function () { finish(null); }, 1500);
+    } catch (e) { finish(null); }
+  }
+
+  // 2. One readonly transaction, one get per key.
+  function readAll(db, keys, cb) {
+    var out = {}; try {
+      var tx = db.transaction('keyval', 'readonly'), store = tx.objectStore('keyval');
+      keys.forEach(function (k) { var g = store.get(k); g.onsuccess = function () { out[k] = g.result; }; });
+      tx.oncomplete = function () { db.close(); cb(out); };
+      tx.onerror = tx.onabort = function () { db.close(); cb(out); };
+    } catch (e) { try { db.close(); } catch (_) {} cb(out); }
+  }
+
+  // 3. Parse defensively: anything unexpected → null (first-visit state).
+  function parse(raw, src) {
+    try {
+      if (typeof raw !== 'string') return null;             // idb-keyval stores zustand's JSON string
+      var state = JSON.parse(raw).state;
+      if (!state || typeof state !== 'object') return null;
+      var lc = state.lessonsCompleted;
+      var completed = {};
+      if (lc && typeof lc === 'object' && !Array.isArray(lc)) {
+        Object.keys(lc).forEach(function (id) { if (ID_RE.test(id) && typeof lc[id] === 'number' && isFinite(lc[id])) completed[id] = true; });
+      }
+      var done = Math.min(src.total, Object.keys(completed).length);
+      var lv = src.lastVisited(state.lastVisited);
+      var lvId = lv && (typeof lv === 'string' ? lv : lv.lessonId);
+      var resume = lv && !completed[lvId];                   // the apps' own useNextLesson rule: last visited, if still incomplete
+      return { done: done, total: src.total, complete: done >= src.total, href: resume ? src.lessonUrl(lv) : src.home, hasProgress: done > 0 || !!lv };
+    } catch (e) { return null; }
+  }
+
+  // 4. Apply to the DOM. Both languages are written; CSS shows one.
+  function apply(tile, p) {
+    if (!p || !p.hasProgress) return;                        // first-visit state is the markup's default
+    tile.classList.add('has-progress'); if (p.complete) tile.classList.add('is-complete');
+    tile.href = p.href;
+    var he = tile.querySelector('.meta-progress .t-he'), en = tile.querySelector('.meta-progress .t-en');
+    if (he) he.textContent = p.done + ' מתוך ' + p.total + ' שיעורים';
+    if (en) en.textContent = p.done + ' of ' + p.total + ' lessons';
+    var arc = tile.querySelector('.tile-ring .arc');
+    if (arc) { var c = 97.39; arc.style.strokeDashoffset = String(c * (1 - (p.total ? p.done / p.total : 0))); }
+    var ring = tile.querySelector('.tile-ring'); if (ring) ring.setAttribute('aria-label', Math.round(100 * p.done / p.total) + '%');
+    var greet = document.getElementById('tiles-greeting'); if (greet) greet.hidden = false;
+  }
+
+  openExisting(function (db) {
+    if (!db) return;
+    var keys = Object.keys(SOURCES).map(function (k) { return SOURCES[k].key; });
+    readAll(db, keys, function (values) {
+      tiles.forEach(function (tile) {
+        var src = SOURCES[tile.dataset.subject]; if (!src) return;
+        apply(tile, parse(values[src.key], src));
+      });
+    });
+  });
+}
+```
+
+Behavioural contract and edge cases (each is a §11.9 check):
+
+| situation | what the hub does |
+|---|---|
+| No IndexedDB (very old browser, some webviews, blocked storage) | `'indexedDB' in window` false or `open` throws → return; tiles stay first-visit. |
+| Fresh profile, no app ever opened | `onupgradeneeded` fires → abort → `databases()` stays empty; first-visit state. **The hub must never create `keyval-store`.** |
+| DB exists but has no `keyval` store (impossible via idb-keyval, but guard) | `objectStoreNames.contains` false → close, first-visit. |
+| Private mode where `open` errors or hangs | `onerror` / 1500 ms timeout → first-visit. |
+| App opened once, nothing done (Nitrox writes a record on first load: `lessonsCompleted: {}`, `lastVisited: null`) | `hasProgress` false → first-visit state, not "0 of 11 · continue". |
+| Lesson visited, none completed | `has-progress`: ring at 0 %, `0 מתוך 11 שיעורים`, pill "להמשיך" → that lesson. |
+| `lastVisited` lesson already completed | pill "להמשיך" → the app's **home** (the app's own dashboard computes the next incomplete lesson; the hub has no lesson list and must not guess). |
+| All lessons done (`done >= total`) | `is-complete`: ring full, pill "לחזור" → app home. |
+| Record from a future app version (`version` ≠ 1, extra/missing fields) | `version` is ignored; parsing is by shape; unknown ids are counted only if kebab-case with a finite timestamp; `done` is clamped to `total`. |
+| Corrupt value (not a string, not JSON, `state` missing) | `parse` → null → first-visit. |
+| Ids with unexpected characters | rejected by `ID_RE`; `href` falls back to app home — nothing from storage is ever placed in a URL unvalidated. |
+| Learner resets progress in an app | the app writes `lessonsCompleted: {}` / `lastVisited: null` → next hub load shows first-visit. |
+| Language switched after load | both `.t-he` and `.t-en` are filled; the CSS toggle does the rest. |
+| Reduced motion | ring has no transition (§11.4). |
+| JS disabled | tiles render first-visit state; everything is still a working link. |
+| Two tabs writing while the hub reads | readonly transaction; worst case a value one write stale — acceptable. |
+
+Keep `tileProgress()` under ~110 lines; no globals; no `setInterval`; the only timer is the
+single 1500 ms guard. Run it after `reveal()` so the first paint never waits on IndexedDB.
+
+### 11.8 Orphaned code to remove in the same change
+
+- `hub.css`: `.subject.active-glow { … }` (nothing ever adds `active-glow`); the whole
+  `.subjects-head`, `.subjects-grid`, `.subject`, `.subject.in-view`, `.subject.soon`,
+  `.subject-head`, `.subject-tile`, `.subject-title`, `.subject h3`, `.subject .status-chip*`,
+  `.subject p.subject-desc`, `.subject-signature*` rules (replaced by §11.4); `.hero-ctas`;
+  `.subject` in the `prefers-reduced-motion` block (replace with `.tile`); `.chip` if no other
+  element uses it after the count chip goes (grep before deleting).
+- `hub.js`: `body.dataset.active = s.key;` in `snapTo()` and the `var body = document.body;`
+  declaration (no CSS consumes `body[data-active]`); `.subject` in `reveal()`'s
+  `querySelectorAll('.reveal, .subject, .method-row')` → `.tile`.
+- `index.html`: the `.hero-ctas` div, the old `<section id="subjects">` markup (cards, count
+  chip, signature SVGs), and the hero anchors `href="#live"`/`href="#subjects"` that pointed
+  at them. `id="live"` stays (nothing else links to it, but it is a stable anchor).
+- `HUB_LLD.md` §5.6 and §2.4 are kept as superseded text; do not delete them.
+
+### 11.9 Acceptance checklist (run at 390×844 and 1440×900, HE and EN, dark and light)
+
+1. Page order top to bottom is: top bar, hero (eyebrow, h1, handle panel, lede), tiles, live
+   preview, method strip, footer. No CTA buttons in the hero; the hero panel's "Open the full
+   lesson" link still works for the snapped subject.
+2. 390×844, HE and EN, no stored progress: the first tile's badge, name and status chip are
+   fully visible without scrolling (header row bottom ≤ 844 px); the hero handle panel is
+   still on the first screen (top ≤ 300 px).
+3. 1440×900: three live tiles in one row of equal height; the Chemistry strip spans the full
+   row beneath; no tile is orphaned on its own row; 640–899 px shows 2 + 1 tiles with the
+   strip spanning both columns.
+4. No horizontal overflow at 360, 390, 1440 in either language; tile text never clips; the
+   pill never wraps to two lines (check EN `Continue` and HE `להמשיך` at 360 px).
+5. Each live tile's preview is honest and matches its comment: Nitrox line from (16, 52.8) to
+   (304, 8) with the dashed 1.4 limit at y = 15 and labels `EAN32`/`1.4` only; Math's six
+   rectangle heights equal `((i+½)/3)² × 14` px (0.39, 3.5, 9.72, 19.06, 31.5, 47.06); Physics
+   shows no numbers. No other numbers anywhere on a tile except lesson counts.
+6. Lesson counts: `meta-first` texts and `SOURCES[*].total` read 11 / 6 / 3 and equal the
+   lesson counts in `apps/nitrox/src/content/chapters/ch01.json` + `ch02.json`,
+   `apps/math/src/content/lessons/*.yaml`, `apps/physics/src/content/lessons/*.yaml`
+   (`ls | wc -l`); Nitrox's roadmap chapters are not counted.
+7. Contrast (any WCAG tool, both themes): `--ct` on each tile's actual background ≥ 4.5:1;
+   `--ink-2` on each tile ≥ 4.5:1; pill text on `--ct` ≥ 4.5:1; no `--muted` text and no
+   `--c2` text anywhere on a tile.
+8. Subject colour appears only on tiles, hero nodes/chips and inside the demos; the top bar,
+   headline, section titles, method strip, footer and feedback button are unchanged hub
+   tokens. The tile surfaces read as tinted paper/indigo, not as four saturated blocks
+   (tint ≤ 8 % light / ≤ 14 % dark).
+9. Hover is defined only inside `@media (hover: hover)`; on a touch emulation (Chromium
+   device mode, iPhone preset) tapping a tile navigates with no stuck lifted/glowing state
+   after returning. `:focus-visible` shows a 3 px `--ct` outline, offset 3 px.
+10. Hover on the Nitrox and Math tiles slides the preview dot 50 % → 78 % along the curve
+    and back; hover on Physics draws the tangent in; the Chemistry strip has no hover or
+    focus effect and is not focusable (no `href`, no `tabindex`).
+11. In a browser without `offset-path` support (or with the `@supports` block commented out),
+    every dot sits on its curve at the static `cx/cy`.
+12. Fresh browser profile (never opened any subject app): load the hub, then run
+    `await indexedDB.databases()` in the console → no `keyval-store` entry; tiles show the
+    first-visit state; no console errors.
+13. Open Nitrox Academy, start lesson `ch01-l02` without finishing, return to the hub: Nitrox
+    tile shows the greeting line, a ring at 0 %, `0 מתוך 11 שיעורים` / `0 of 11 lessons`, pill
+    `להמשיך` / `Continue`, `href` = `/academy/subjects/nitrox/#/learn/ch01/ch01-l02`. Math
+    and Physics tiles are unchanged.
+14. Complete a Math lesson, then open a second one: Math tile ring ≈ 17 % (1/6), `1 מתוך 6
+    שיעורים`, pill → `/academy/subjects/math/#/lesson/<second id>`. Complete it too and go
+    back to the first: pill → `/academy/subjects/math/` (last-visited is complete → app home).
+15. Complete all three Physics lessons: ring 100 %, pill `לחזור` / `Review` → app home.
+16. Reset progress inside an app (its settings/reset), reload hub → that tile is back to
+    first-visit.
+17. Tamper test (DevTools → Application → IndexedDB → `keyval-store` → `keyval`): set
+    `academy-physics:v1` to `"not json"`, to `{"state":null}`, to a record whose
+    `lastVisited` is `"../../evil"`, and to one with 99 `lessonsCompleted` entries. Each
+    reload: no console error; the first two show first-visit, the third shows a pill to the
+    Physics home, the fourth shows `3 מתוך 3` (clamped) and `לחזור`.
+18. The hub never writes: after the sequences above, the apps' records are byte-identical to
+    what the apps wrote (compare in DevTools), and the apps still load and save normally.
+19. Switching language on the hub after progress has rendered flips the meta text and pill
+    label with no reflow glitch; numbers inside the Hebrew sentence read in the right order.
+20. `prefers-reduced-motion: reduce`: no reveal transform, no ring sweep, no dot slide; drags
+    still work; tiles are fully opaque.
+21. Lighthouse (mobile) still ≥ 95 performance / 100 accessibility; page weight still
+    < 80 KB excluding fonts; no new network requests on load besides fonts.
+22. `grep -n "active-glow\|dataset.active\|hero-ctas\|subjects-grid\|subject-signature" docs/index.html docs/hub/hub.css docs/hub/hub.js` returns nothing.
+23. `CLAUDE.md` ("The hub page" and "Visual design system (hub)") and `README.md` step 3
+    describe tiles, the relaxed colour rule and the progress read; `HUB_LLD.md` §1.4, §2.4,
+    §3.1 #3, §3.2, §4, §5.2 step 3, §5.6 carry their *superseded by §11* notes.

@@ -138,12 +138,15 @@ Today every subject supports exactly `en` and `he`. To add a third language (say
 4. Give it its own logo mark — subject-specific is correct here (unlike the hub page, which
    must stay neutral since it spans every subject; see `docs/hub/logo.svg`'s neutral "Handle"
    mark vs. Math Academy's `∫`).
-5. Add it in **three places** on the hub: a card in the subjects grid (`docs/index.html`,
-   with its Hebrew *and* English name — the apps' own `<title>`s are the source), a node
+5. Add it in **three places** on the hub: a tile in the subjects grid (`docs/index.html`,
+   with its Hebrew *and* English name — the apps' own `<title>`s are the source — a one-line
+   promise, an honest inline-SVG preview and its real lesson count), a node
    `<g class="node">` + an `.axis-chip` button in the hero handle's SVG/axis (`docs/index.html`),
    and an entry in the `SUBJECTS` array in `docs/hub/hub.js` (position on the curve, status,
-   URL) — replacing a "coming soon" placeholder if one exists. Also bump the count chip in the
-   subjects header.
+   URL) — replacing a "coming soon" placeholder if one exists. If the subject persists
+   progress with the shared zustand + idb-keyval pattern, also add its record to
+   `tileProgress()`'s `SOURCES` (idb key, lesson total, URL shapes) so its tile can show
+   "continue" — see `HUB_LLD.md` §11.7.
 6. `cd apps/<subject> && npm install && npm run build` and commit the result under `docs/`.
 
 **Content organization within a subject (decided, not yet built):** once a subject has more
@@ -170,18 +173,27 @@ or direction.
 
 The hub keeps its own neutral "Handle" mark (`docs/hub/logo.svg` — a handle on a spectrum
 curve, the one gesture every lesson shares) and a draggable hero handle that scrubs between
-subjects on that same curve — subject-specific icon colors show up only on the subject cards
-and inside the hero handle's nodes, never on the hub's own chrome (top bar, buttons, headings;
-see "What this is" above on why the hub can't wear any one subject's icon). Full design spec:
-`HUB_LLD.md` at the repo root (kept outside `docs/` so it never gets served).
+subjects on that same curve. Directly under the hero come the **subject tiles** — one tinted,
+progress-aware tile per subject (its own badge, promise, honest preview, lesson count, and a
+"continue" state read from that app's own saved progress) — followed by the live demo and the
+"why not memorize" strip. Subject colour appears wherever a subject is represented (its tile,
+its hero node/chip, its own demo) but never on the hub's own chrome (top bar, controls,
+headings, method strip, footer; see "What this is" above on why the hub can't wear any one
+subject's icon). The tiles read the apps' IndexedDB records **read-only** and degrade to a
+first-visit state on anything unexpected — never write to, create, or upgrade another app's
+storage. Full design spec: `HUB_LLD.md` at the repo root (kept outside `docs/` so it never
+gets served); the tiles restructure is its §11.
 
 ## Visual design system (hub) and UX approach
 
 The hub (`docs/hub/hub.css`) is deliberately **typographically and tonally distinct from the
 subject apps**: hub = the "OS" (system chrome, neutral), subjects = "apps" (their own
-personality). Don't blur that line — e.g. don't bring Rubik or a subject's violet→pink pair
-onto the hub, and don't bring the hub's Plex/mono "instrument" look into a subject app
-uninvited.
+personality). Don't blur that line — e.g. don't bring Rubik onto the hub, don't paint hub
+chrome in a subject's colours, and don't bring the hub's Plex/mono "instrument" look into a
+subject app uninvited. Like a home screen, though, the OS *does* show each app in its own
+colours where that app is represented: the subject tiles are tinted (≤ 8 % light / ≤ 14 %
+dark), carry a saturated badge, and use a per-subject text-safe colour for status, ring and
+pill — the one deliberately colourful band on the page (`HUB_LLD.md` §11.3–11.4).
 
 - **Register:** "futuristic hi-tech" here means *a well-lit instrument*, not an "AI product" —
   no sparkles, neural-net dots, mesh-gradient blobs, gradient-filled headlines, emoji icons, or
@@ -195,8 +207,11 @@ uninvited.
   `--panel` (glass: blur + hairline border + inset top-edge highlight), `--ink/--ink-2/--muted`,
   `--accent` (hub's own electric violet, *not* Math's violet→pink), `--teal/--violet/--pink/
   --amber/--blue` (the "spectrum" — the only multi-hue gradient on the page, used for the logo
-  curve and the hero curve; never as a background wash). A subject's own `--c1/--c2` are set
-  inline on its card, never promoted to hub tokens.
+  curve and the hero curve; never as a background wash). A subject's own `--c1/--c2` (its
+  favicon gradient) and `--ct` (text-safe variant, per theme) are declared on its
+  `.tile[data-subject]` selector in `hub.css`, never promoted to `:root` hub tokens; on a
+  tile, text is `--ink`/`--ink-2`/`--ct` only — never `--c2`, never `--muted` (both fail
+  4.5:1 on the tints).
 - **Numbers never mirror:** every number, formula, airport/mix code is an LTR island
   (`.num`/`dir="ltr"` + `unicode-bidi: isolate`) inside the RTL page — same rule the subject
   apps already follow. Hebrew text is never tracked or uppercased.
@@ -251,6 +266,9 @@ npm run export:pdf    # same content as a printable PDF
   review round trip" above on why a static page can only carry one locale's meta tags at a
   time). Full spec: `HUB_LLD.md`.
 - **Decided, not yet built:** the topic-first content structure described above, for whenever
-  Math Academy (or a future subject) grows past one topic.
+  Math Academy (or a future subject) grows past one topic. The hub's "inviting landing"
+  restructure — subject tiles directly under the hero, with progress read from each app's own
+  storage; the live demo and method strip moved below — is fully specified in `HUB_LLD.md`
+  §11 and waits for implementation.
 - **Not started:** a third subject (Physics Academy and Chemistry Academy are placeholder
   cards on the hub page, no app yet for either).
