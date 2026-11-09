@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getLesson, lessonNeighbors } from '@/content';
+import { LESSONS, getLesson, lessonNeighbors } from '@/content';
 import { pick } from '@/content/localize';
-import { useLocale, useCompletedLessons } from '@/app/providers';
+import { useLocale } from '@/app/providers';
+import { useProgress } from '@/progress/store';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { LinkButton } from '@/components/ui/Button';
@@ -15,12 +17,27 @@ export function LessonPage() {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const { lessonId } = useParams<{ lessonId: string }>();
-  const [, markDone] = useCompletedLessons();
+  const completeLesson = useProgress((s) => s.completeLesson);
+  const visitLesson = useProgress((s) => s.visitLesson);
+  const recordAttempt = useProgress((s) => s.recordAttempt);
+  const unlock = useProgress((s) => s.unlock);
   const lesson = lessonId ? getLesson(lessonId) : undefined;
+
+  useEffect(() => {
+    if (lesson) visitLesson(lesson.id);
+    // Only re-run when the lesson itself changes, not on every store update.
+  }, [lesson?.id, visitLesson]);
 
   if (!lesson) return <Navigate to="/" replace />;
 
   const { prev, next } = lessonNeighbors(lesson.id);
+
+  const handleAllDone = () => {
+    completeLesson(lesson.id);
+    // completeLesson() updates the store synchronously, so this already reflects it.
+    const completed = useProgress.getState().lessonsCompleted;
+    if (LESSONS.every((l) => completed[l.id])) unlock('kinematics-complete');
+  };
 
   return (
     <div className="space-y-6">
@@ -68,7 +85,14 @@ export function LessonPage() {
         <h2 className="text-xl text-ink mb-3 flex items-center gap-2">
           <Icon name="target" size={20} className="text-accent" /> {t('lesson.quizTitle')}
         </h2>
-        <Quiz questions={lesson.quiz} locale={locale} onAllDone={() => markDone(lesson.id)} signature={lessonSignature(lesson)} />
+        <Quiz
+          key={lesson.id}
+          questions={lesson.quiz}
+          locale={locale}
+          onAllDone={handleAllDone}
+          onAnswer={(questionId, correct) => recordAttempt({ lessonId: lesson.id, questionId, correct, at: Date.now() })}
+          signature={lessonSignature(lesson)}
+        />
       </section>
 
       <nav className="flex items-center justify-between pt-2 gap-3" data-fab-avoid>

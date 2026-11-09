@@ -2,8 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'motion/react';
 import { LESSONS } from '@/content';
 import { pick } from '@/content/localize';
-import { useLocale, useCompletedLessons } from '@/app/providers';
+import { useLocale } from '@/app/providers';
+import { useProgress, type AchievementId } from '@/progress/store';
+import { useCourseProgress, useNextLesson, useQuizAccuracy } from '@/progress/selectors';
 import { Icon } from '@/components/ui/Icon';
+import { Card } from '@/components/ui/Card';
+import { LinkButton } from '@/components/ui/Button';
+import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
 import { HERO_CURVE } from '@/physics/heroCurve';
@@ -59,9 +64,88 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
   );
 }
 
+/** Progress section: a real dashboard scaled to Physics's one topic, three lessons — course
+ * progress, honest quiz accuracy (no invented mastery level), a "continue where you left
+ * off" CTA, and achievement badges earned so far. First-time visitors with no progress yet
+ * get a sensible zero state, not a broken-looking empty ring. */
+function ProgressSection() {
+  const { t } = useTranslation();
+  const { locale } = useLocale();
+  const progress = useCourseProgress();
+  const accuracy = useQuizAccuracy();
+  const next = useNextLesson();
+  const achievements = useProgress((s) => s.achievements);
+  const started = progress.done > 0 || accuracy.total > 0;
+  const unlocked = (Object.entries(achievements) as [AchievementId, number][]).sort((a, b) => b[1] - a[1]);
+
+  return (
+    <section>
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.progressTitle')}</h2>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card variant="card" className="flex items-center gap-4">
+          <ProgressRing value={progress.fraction} size={68} stroke={7} className="shrink-0">
+            <span className="readout text-[15px] font-bold text-ink">{Math.round(progress.fraction * 100)}%</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <div className="font-semibold text-ink text-[15px]">{t('home.lessonsTitle')}</div>
+            <div className="text-sm text-muted">{t('home.lessonsDone', { done: progress.done, total: progress.total })}</div>
+          </div>
+        </Card>
+
+        <Card variant="card" className="flex items-center gap-4">
+          <ProgressRing value={accuracy.fraction ?? 0} size={68} stroke={7} color="var(--accent-2)" className="shrink-0">
+            <span className="readout text-[15px] font-bold text-ink">{accuracy.fraction === null ? '—' : `${Math.round(accuracy.fraction * 100)}%`}</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <div className="font-semibold text-ink text-[15px]">{t('home.accuracyTitle')}</div>
+            <div className="text-sm text-muted">
+              {accuracy.fraction === null ? t('home.accuracyEmpty') : <span className="num">{t('home.accuracyCount', { correct: accuracy.correct, total: accuracy.total })}</span>}
+            </div>
+          </div>
+        </Card>
+
+        <Card variant="card" className="flex flex-col gap-2 sm:col-span-2 lg:col-span-1">
+          <div className="font-semibold text-ink text-[15px]">{next ? t('home.upNext') : t('home.allDoneTitle')}</div>
+          {next ? (
+            <>
+              <div className="text-sm text-ink-2 flex-1 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
+                {pick(next.lesson.title, locale)}
+              </div>
+              <LinkButton to={`/lesson/${next.lesson.id}`} size="sm" className="self-start mt-1">
+                <Icon name="play" size={15} /> {started ? t('home.continueCta') : t('home.startCta')}
+              </LinkButton>
+            </>
+          ) : (
+            <p className="text-sm text-ink-2">{t('home.allDoneBody')}</p>
+          )}
+        </Card>
+
+        <Card variant="card" className="flex flex-col gap-2">
+          <div className="font-semibold text-ink text-[15px] flex items-center gap-2">
+            <Icon name="trophy" size={17} className="text-accent-2" /> {t('home.achievementsTitle')}
+          </div>
+          {unlocked.length === 0 ? (
+            <p className="text-sm text-muted">{t('home.achievementsEmpty')}</p>
+          ) : (
+            <ul className="space-y-1.5">
+              {unlocked.map(([id]) => (
+                <li key={id} className="text-sm">
+                  <span className="font-medium text-ink">{t(`achievements.${id}.title`)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage() {
   const { t } = useTranslation();
-  const [completed] = useCompletedLessons();
+  const completed = useProgress((s) => s.lessonsCompleted);
 
   return (
     <div className="space-y-10 md:space-y-14">
@@ -86,11 +170,13 @@ export function HomePage() {
         </div>
       </section>
 
+      <ProgressSection />
+
       <section>
         <h2 className="text-[22px] md:text-[26px] font-bold text-ink mb-4">{t('home.lessonsTitle')}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LESSONS.map((lesson, i) => (
-            <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={completed.includes(lesson.id)} />
+            <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={!!completed[lesson.id]} />
           ))}
         </div>
       </section>

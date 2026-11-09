@@ -12,11 +12,33 @@
     "theme": "מצב תצוגה",
     "music": "מוזיקת רקע רגועה"
   },
+  "common": {
+    "close": "סגירה"
+  },
+  "storage": {
+    "slow": "טעינת ההתקדמות שלכם לוקחת יותר זמן מהרגיל…",
+    "unavailable": "לא ניתן לשמור התקדמות במכשיר הזה (האחסון חסום). אפשר להמשיך ללמוד; שום דבר לא יישמר."
+  },
   "home": {
     "eyebrowNew": "פיילוט חדש",
     "heroTitle": "בואו לגלות",
     "heroTitle2": "למה דברים נעים בדיוק ככה",
     "heroBody": "שיעורים משחקיים עם סימולציה חיה: גוררים ידית על גרף תנועה ורואים מהירות ותאוצה מגיבות — במקום לשנן נוסחה.",
+    "greeting": "ברוכים השבים",
+    "greetingNew": "ברוכים הבאים",
+    "progressTitle": "ההתקדמות שלכם",
+    "lessonsDone": "{{done}} מתוך {{total}} שיעורים",
+    "accuracyTitle": "דיוק בתרגול",
+    "accuracyEmpty": "ענו על שאלה כדי לראות נתון זה",
+    "accuracyCount": "{{correct}} מתוך {{total}} נכונות",
+    "achievementsTitle": "הישגים",
+    "achievementsEmpty": "סיימו שיעור כדי לזכות בתג הראשון שלכם",
+    "achievementUnlocked": "הישג נפתח",
+    "continueCta": "המשך ללמוד",
+    "startCta": "התחלת לימוד",
+    "upNext": "בהמשך",
+    "allDoneTitle": "סיימתם את כל השיעורים",
+    "allDoneBody": "כל הכבוד — אפשר לחזור לכל שיעור בכל רגע, או לתרגל מחדש כדי לחדד את הדיוק.",
     "lessonsTitle": "השיעורים",
     "lessonLabel": "שיעור {{n}}",
     "start": "התחלה",
@@ -26,6 +48,20 @@
     "questionsCount": "{{count}} שאלות תרגול",
     "startAria": "התחלה: {{title}}",
     "reviewAria": "חזרה על השיעור: {{title}}"
+  },
+  "achievements": {
+    "first-lesson": {
+      "title": "שיעור ראשון הושלם",
+      "body": "סיימתם את שאלות התרגול של השיעור הראשון שלכם."
+    },
+    "kinematics-complete": {
+      "title": "שליטה בקינמטיקה",
+      "body": "סיימתם את כל השיעורים ביחידת הקינמטיקה."
+    },
+    "ten-correct": {
+      "title": "קלעי מטרה",
+      "body": "עניתם נכון על 10 שאלות תרגול."
+    }
   },
   "hero": {
     "signatureHint": "הזיזו את האצבע על הגרף"

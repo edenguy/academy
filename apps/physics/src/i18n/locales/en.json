@@ -12,11 +12,33 @@
     "theme": "Theme",
     "music": "Calm background music"
   },
+  "common": {
+    "close": "Close"
+  },
+  "storage": {
+    "slow": "Loading your progress is taking longer than usual…",
+    "unavailable": "Progress can't be saved on this device (storage is blocked). You can still learn; nothing will be remembered."
+  },
   "home": {
     "eyebrowNew": "New pilot",
     "heroTitle": "Come discover",
     "heroTitle2": "why things really move",
     "heroBody": "Playful lessons with a live simulation: drag a handle along a motion graph and watch velocity and acceleration respond — instead of memorizing a formula.",
+    "greeting": "Welcome back",
+    "greetingNew": "Welcome",
+    "progressTitle": "Your progress",
+    "lessonsDone": "{{done}} of {{total}} lessons",
+    "accuracyTitle": "Quiz accuracy",
+    "accuracyEmpty": "Answer a question to see this",
+    "accuracyCount": "{{correct}} of {{total}} correct",
+    "achievementsTitle": "Achievements",
+    "achievementsEmpty": "Finish a lesson to earn your first badge",
+    "achievementUnlocked": "Achievement unlocked",
+    "continueCta": "Continue learning",
+    "startCta": "Start learning",
+    "upNext": "Up next",
+    "allDoneTitle": "You've finished every lesson",
+    "allDoneBody": "Nice work — revisit any lesson any time, or retake a quiz to sharpen your accuracy.",
     "lessonsTitle": "Lessons",
     "lessonLabel": "Lesson {{n}}",
     "start": "Start",
@@ -26,6 +48,20 @@
     "questionsCount": "{{count}} practice questions",
     "startAria": "Start: {{title}}",
     "reviewAria": "Review: {{title}}"
+  },
+  "achievements": {
+    "first-lesson": {
+      "title": "First Lesson Complete",
+      "body": "You finished your first lesson's practice questions."
+    },
+    "kinematics-complete": {
+      "title": "Kinematics Mastered",
+      "body": "You finished every lesson in Kinematics."
+    },
+    "ten-correct": {
+      "title": "Sharp Shooter",
+      "body": "You answered 10 quiz questions correctly."
+    }
   },
   "hero": {
     "signatureHint": "Slide your finger along the graph"
