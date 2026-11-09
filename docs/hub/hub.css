@@ -64,20 +64,16 @@ section > h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 600; line-height:
 /* Desktop rhythm trimmed from 96px to 84px — the wider 96px gaps read as dead air once the
    page had real panels to show (method strip, live preview, subjects); see HUB_LLD.md §4. */
 @media (min-width: 720px) { section { margin-block: 84px; } section > h2 { margin-bottom: 18px; } }
-section.hero { margin-block: 20px 56px; }
-@media (min-width: 900px) { section.hero { margin-block: 56px 84px; } }
+/* The hero's bottom margin is the gap to the subject tiles (HUB_LLD.md §11.2); margins between
+   sibling sections collapse, so it has to equal section.subjects' own top margin, not exceed it. */
+section.hero { margin-block: 20px 26px; }
+@media (min-width: 900px) { section.hero { margin-block: 56px 36px; } }
 
 h1, h2, h3, p { margin: 0; }
 
-/* Chips: Plex Sans 600 for Hebrew (Plex Mono has no Hebrew glyphs — it would fall back to a
-   system face), Plex Mono uppercase for the Latin variant only. */
-.chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--sans); font-size: 12px; font-weight: 600; line-height: 1;
-  padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line-strong);
-  color: var(--ink-2); white-space: nowrap;
-}
-.chip .t-en, .eyebrow .t-en, .status-chip .t-en, .hero-readout .status .t-en, .axis-chip .t-en {
+/* Latin variants of small status labels: Plex Mono uppercase (Plex Mono has no Hebrew glyphs,
+   so Hebrew labels stay in Plex Sans 600 and are never uppercased or tracked). */
+.eyebrow .t-en, .hero-readout .status .t-en, .axis-chip .t-en {
   font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em;
 }
 
@@ -154,7 +150,7 @@ h1, h2, h3, p { margin: 0; }
 @keyframes breathe { 0%, 100% { offset-distance: 50%; } 50% { offset-distance: 56%; } }
 
 /* ---------- Hero ---------- */
-/* Phone: headline → the handle → lede → CTAs, so the thing you grab is on the first screen.
+/* Phone: headline → the handle → lede, so the thing you grab is on the first screen.
    Desktop (≥900): copy in the start column, the handle panel in the end column. */
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .hero-copy { grid-area: copy; }
@@ -188,10 +184,9 @@ h1.headline .line2::after {
   height: 4px; background: var(--spectrum); border-radius: 4px;
 }
 
-p.lede { max-width: 52ch; color: var(--ink-2); font-size: clamp(16px, 1.6vw, 19px); line-height: 1.6; margin-bottom: 20px; }
-@media (min-width: 900px) { p.lede { margin-top: 18px; margin-bottom: 24px; } }
+p.lede { max-width: 52ch; color: var(--ink-2); font-size: clamp(16px, 1.6vw, 19px); line-height: 1.6; }
+@media (min-width: 900px) { p.lede { margin-top: 18px; } }
 
-.hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
 .btn {
   appearance: none; border: none; cursor: pointer; text-decoration: none;
   font: inherit; font-weight: 600; font-size: 15px; line-height: 1; padding: 13px 20px; border-radius: 999px;
@@ -337,47 +332,6 @@ input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border-radius
   .open-lesson:hover { text-decoration: underline; }
 }
 
-/* ---------- Subjects ---------- */
-.subjects-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
-.subjects-head h2 { margin-bottom: 0; }
-.subjects-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
-@media (min-width: 640px) { .subjects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
-.subject {
-  display: flex; flex-direction: column; position: relative; text-decoration: none; color: inherit;
-  padding: 18px 18px 14px; border-radius: 18px; overflow: hidden;
-  background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  /* Same inset top-edge highlight as .panel, so a card reads as the same machined surface
-     as the rest of the instrument rather than a flatter cousin of it. */
-  box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow);
-  transition: transform 180ms var(--ease), border-color 180ms ease, box-shadow 180ms ease;
-  opacity: 0; transform: translateY(14px);
-}
-@media (min-width: 640px) { .subject { padding: 22px 22px 16px; } }
-.subject.in-view { opacity: 1; transform: translateY(0); transition: transform 180ms var(--ease), border-color 180ms ease, box-shadow 180ms ease, opacity 360ms ease; }
-.subject.active-glow { transform: translateY(-2px); border-color: var(--c2); box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow), 0 0 32px -6px var(--c2); }
-.subject.soon { opacity: 0.6; border-style: dashed; border-color: var(--line-strong); }
-.subject.soon.in-view { opacity: 0.6; }
-@media (hover: hover) {
-  .subject:hover { transform: translateY(-2px); border-color: var(--c2); box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow), 0 0 32px -6px var(--c2); }
-  .subject.soon:hover { transform: none; box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow); border-color: var(--line-strong); }
-  .subject:hover .subject-signature circle.sig-dot { opacity: 1; }
-}
-.subject-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-/* Neutral (uncoloured) contact shadow under the tile — depth, not a glow, so it stays inside
-   the "glow is only for live/draggable things" rule while still giving the gradient some lift. */
-.subject-tile { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--c1), var(--c2)); box-shadow: 0 8px 16px -10px rgba(0,0,0,0.4); }
-.subject-tile svg { width: 56%; height: 56%; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.subject-title { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.subject h3 { font-size: 17px; font-weight: 600; line-height: 1.2; }
-@media (min-width: 640px) { .subject h3 { font-size: 18px; } }
-.subject .status-chip { font-family: var(--sans); font-size: 12px; font-weight: 600; line-height: 1; color: var(--c2); display: inline-flex; align-items: center; gap: 5px; }
-.subject .status-chip .t-en { font-size: 11px; }
-.subject .status-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c2); }
-.subject p.subject-desc { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
-.subject-signature { width: 100%; height: 22px; display: block; margin-top: auto; padding-top: 12px; box-sizing: content-box; opacity: 0.9; }
-.subject-signature path.sig-curve { fill: none; stroke: var(--c2); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.subject-signature circle.sig-dot { fill: var(--c2); opacity: 0; transition: opacity 420ms ease; }
-
 /* ---------- Footer ---------- */
 footer.hub-footer {
   display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
@@ -394,6 +348,134 @@ footer.hub-footer a svg { width: 12px; height: 12px; stroke: currentColor; fill:
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 
+/* ---------- Subject tiles (HUB_LLD.md §11) ---------- */
+/* Per-subject colour: --c1/--c2 = the app's own favicon gradient; --ct = a text-safe
+   variant that passes 4.5:1 on the tile's tinted surface in that theme. Never use --c2 or
+   --muted as text on a tile. */
+.tile[data-subject="nitrox"]    { --c1: #0e9f94; --c2: #2fd4c6; --ct: #0a6f67; }  /* 5.5:1 on light tint */
+.tile[data-subject="math"]      { --c1: #6250d6; --c2: #e87ba4; --ct: #5542c4; }  /* 6.3:1 */
+.tile[data-subject="physics"]   { --c1: #3457d1; --c2: #17a3e8; --ct: #2b4bbd; }  /* 6.6:1 */
+.tile[data-subject="chemistry"] { --c1: var(--amber); --c2: var(--amber); --ct: var(--ink-2); }
+:root[data-theme="dark"] .tile[data-subject="nitrox"]  { --ct: #2fd4c6; }  /* 8.2:1 on dark tint */
+:root[data-theme="dark"] .tile[data-subject="math"]    { --ct: #a99df0; }  /* 6.6:1 */
+:root[data-theme="dark"] .tile[data-subject="physics"] { --ct: #7fa6ff; }  /* 6.7:1 */
+
+:root { --ct-ink: #ffffff; --tile-tint: 8%; --tile-edge: 30%; }
+:root[data-theme="dark"] { --ct-ink: #0d0824; --tile-tint: 14%; --tile-edge: 26%; }
+
+section.subjects { margin-block: 26px 56px; }
+@media (min-width: 720px) { section.subjects { margin-block: 36px 84px; } }
+.subjects-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tiles-greeting { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 12px; }
+.tiles-greeting[hidden] { display: none; }
+
+.tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+@media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.tile {
+  position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  padding: 16px 16px 14px; border-radius: 20px; text-decoration: none; color: inherit;
+  background: color-mix(in srgb, var(--c1) var(--tile-tint), var(--panel-solid));
+  border: 1px solid color-mix(in srgb, var(--c2) var(--tile-edge), var(--line));
+  box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow);
+  /* opacity is listed too: this rule sits after .reveal and would otherwise replace its fade-in */
+  transition: opacity 360ms var(--ease), transform 180ms var(--ease), border-color 180ms ease, box-shadow 180ms ease;
+}
+@media (min-width: 640px) { .tile { padding: 18px 18px 16px; } }
+.tile:focus-visible { outline: 3px solid var(--ct); outline-offset: 3px; }
+.tile:active { transform: translateY(0) scale(0.995); }
+@media (hover: hover) {
+  .tile:hover { transform: translateY(-2px); border-color: var(--c2);
+    box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow), 0 0 32px -10px color-mix(in srgb, var(--c2) 70%, transparent); }
+  .tile:hover .tile-cta { background: color-mix(in srgb, var(--ct) 88%, black); }
+  /* Nitrox and Math: the dot slides along the curve. Physics: the tangent draws in instead
+     (its tangent is computed for the midpoint, so its dot must stay put). */
+  .tile[data-subject="nitrox"]:hover .pv-dot, .tile[data-subject="math"]:hover .pv-dot { offset-distance: 78%; }
+  .tile[data-subject="physics"]:hover .pv-tangent { stroke-dashoffset: 0; }
+}
+.tile[data-subject="nitrox"]:focus-visible .pv-dot, .tile[data-subject="math"]:focus-visible .pv-dot { offset-distance: 78%; }
+.tile[data-subject="physics"]:focus-visible .pv-tangent { stroke-dashoffset: 0; }
+
+.tile-head { display: flex; align-items: center; gap: 12px; }
+.tile-badge {
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; display: grid; place-items: center;
+  background: linear-gradient(145deg, var(--c1), var(--c2));
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--c1) 60%, black);   /* contact shadow, not a glow */
+}
+.tile-badge svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tile-title { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tile h3 { font-size: 18px; font-weight: 600; line-height: 1.2; color: var(--ink); }
+.tile-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; line-height: 1; color: var(--ct); }
+.tile-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ct); }
+.tile-status .t-en { font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+.tile-promise { font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+
+.tile-preview { width: 100%; height: auto; display: block; direction: ltr; overflow: visible;
+  border-radius: 12px; background: color-mix(in srgb, var(--panel-solid) 55%, transparent); }
+:root[data-theme="dark"] .tile-preview { background: rgba(255,255,255,0.04); }
+.tile-preview .pv-curve { fill: none; stroke: var(--c2); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-fill { fill: var(--c1); fill-opacity: 0.12; }
+.tile-preview .pv-rect { fill: var(--c1); fill-opacity: 0.22; stroke: var(--c1); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-limit { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+.tile-preview .pv-label { font-family: var(--mono); font-size: 10px; fill: var(--warn); }
+.tile-preview .pv-mix { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
+.tile-preview .pv-tangent { stroke: var(--c1); stroke-width: 2; stroke-dasharray: 90; stroke-dashoffset: 90; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 320ms var(--ease); }
+.tile-preview .pv-dot { fill: var(--c2); stroke: var(--panel-solid); stroke-width: 2; }
+/* The handle dot rides the curve with CSS motion path where supported (same mechanic as the
+   logo, §1.5); without support it stays at its static cx/cy on the curve. */
+@supports (offset-path: path('M0 0 L1 1')) {
+  .tile-preview .pv-dot { cx: 0; cy: 0; offset-distance: 50%; offset-rotate: 0deg; transition: offset-distance 320ms var(--ease); }
+  .tile[data-subject="nitrox"]  .pv-dot { offset-path: path('M16 52.8 L304 8'); }
+  .tile[data-subject="math"]    .pv-dot { offset-path: path('M16 64 Q 160 64 304 8'); }
+  .tile[data-subject="physics"] .pv-dot { offset-path: path('M16 60 C 120 60, 200 12, 304 12'); }
+}
+
+.tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.tile-meta { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--ink-2); min-width: 0; }
+.tile-meta .t-en { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
+.tile-ring { width: 36px; height: 36px; flex-shrink: 0; display: none; }
+.tile-ring .track { fill: none; stroke: color-mix(in srgb, var(--c1) 22%, var(--panel-solid)); stroke-width: 4; }
+.tile-ring .arc { fill: none; stroke: var(--ct); stroke-width: 4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%;
+  stroke-dasharray: 97.39; stroke-dashoffset: 97.39; transition: stroke-dashoffset 700ms var(--ease); }
+.tile-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+  font-size: 13px; font-weight: 600; line-height: 1; padding: 10px 14px; border-radius: 999px;
+  background: var(--ct); color: var(--ct-ink); transition: background 180ms ease;
+}
+.tile-cta svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* State: progress found (class set by hub.js, §11.7) */
+.tile.has-progress .tile-ring { display: block; }
+.tile.has-progress .meta-first, .tile:not(.has-progress) .meta-progress,
+.tile.has-progress .cta-start, .tile:not(.has-progress) .cta-continue,
+.tile:not(.is-complete) .cta-review, .tile.is-complete .cta-continue { display: none; }
+
+/* State: coming soon — a compact strip, not a card; not a link */
+.tile--soon {
+  flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
+  background: transparent; border: 1px dashed var(--line-strong); box-shadow: none;
+}
+/* 0.8, not the spec's 0.7: --ink-2 text at 0.7 over the light page is 4.05:1 (< 4.5) */
+.tile--soon.reveal.in-view { opacity: 0.8; }
+.tile--soon:active { transform: none; }
+.tile--soon .tile-badge { width: 36px; height: 36px; border-radius: 11px; box-shadow: none; background: color-mix(in srgb, var(--amber) 35%, var(--panel-solid)); }
+.tile--soon .tile-badge svg { stroke: var(--ink-2); width: 20px; height: 20px; }
+.tile--soon h3 { font-size: 15px; }
+.tile--soon .tile-promise { font-size: 13px; }
+@media (min-width: 640px) { .tile--soon { grid-column: 1 / -1; } }
+@media (hover: hover) { .tile--soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; } }
+
+/* Method strip: two columns on desktop so it stops being a second screen of its own */
+@media (min-width: 900px) {
+  .method-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  .method-row + .method-row { margin-top: 0; padding-top: 0; border-top: 0; border-inline-start: 1px dashed var(--line-strong); padding-inline-start: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tile-cta, .pv-dot, .pv-tangent, .tile-ring .arc { transition: none !important; }
+}
+
 /* ---------- Hero spotlight ---------- */
 @media (hover: hover) {
   .hero-panel::after {
@@ -406,9 +488,9 @@ footer.hub-footer a svg { width: 12px; height: 12px; stroke: currentColor; fill:
 
 @media (prefers-reduced-motion: reduce) {
   .mark .handle { animation: none !important; }
-  .reveal, .subject { transition: none !important; transform: none !important; }
-  .reveal:not(.soon), .subject:not(.soon) { opacity: 1 !important; }
-  .subject.soon { opacity: 0.6 !important; }
+  .reveal, .tile { transition: none !important; transform: none !important; }
+  .reveal:not(.tile--soon) { opacity: 1 !important; }
+  .tile--soon { opacity: 0.8 !important; }
   .mini-slider .thumb, .mini-chart .bar, .hero-handle-group, .axis-chip, .btn { transition: none !important; }
 }
 

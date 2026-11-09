@@ -61,7 +61,6 @@
     var statusText = document.getElementById('hero-status-text');
     var openLink = document.getElementById('hero-open-link');
     var axis = document.getElementById('hero-axis');
-    var body = document.body;
     var VIEW_W = 520; // must match the SVG's viewBox width
 
     // Subjects sit on the curve at a target x (SVG units) rather than an arc-length fraction,
@@ -165,7 +164,6 @@
       group.style.transition = opts.animate === false ? 'none' : 'transform 260ms cubic-bezier(.2,.8,.2,1)';
       placeAt(sampleAtX(s.x));
       setReadout(index, false);
-      body.dataset.active = s.key;
       updateAriaValueText();
       requestAnimationFrame(function () { group.style.transition = ''; });
     }
@@ -381,15 +379,22 @@
   // ---------- reveal on scroll + method strip + hero spotlight ----------
   function reveal() {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var targets = document.querySelectorAll('.reveal, .subject, .method-row');
+    var targets = document.querySelectorAll('.reveal, .tile, .method-row');
     if (reduced || !('IntersectionObserver' in window)) {
       targets.forEach(function (el) { el.classList.add('in-view'); });
     } else {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            io.unobserve(entry.target);
+            var el = entry.target;
+            el.classList.add('in-view');
+            io.unobserve(el);
+            // The stagger delay is for the fade-in only; drop it so hover transitions on tiles are immediate.
+            el.addEventListener('transitionend', function clear(ev) {
+              if (ev.propertyName !== 'opacity') return;
+              el.style.transitionDelay = '';
+              el.removeEventListener('transitionend', clear);
+            });
           }
         });
       }, { threshold: 0.2 });
