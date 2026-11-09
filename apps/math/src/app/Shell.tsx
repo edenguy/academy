@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { Icon } from '@/components/ui/Icon';
 import { Logo } from '@/components/Logo';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
+import { AchievementToast } from './AchievementToast';
 import { useAmbient } from '@/audio/useAmbient';
 import { useLocale, useThemeToggle } from './providers';
 
@@ -114,6 +115,7 @@ export function Shell() {
         <Outlet />
       </main>
       <FeedbackWidget />
+      <AchievementToast />
     </div>
   );
 }

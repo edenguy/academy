@@ -7,6 +7,9 @@
   "nav": {
     "home": "Home"
   },
+  "common": {
+    "close": "Close"
+  },
   "settings": {
     "language": "Language",
     "theme": "Theme",
@@ -30,6 +33,30 @@
   },
   "hero": {
     "signatureHint": "Slide your finger along the graph"
+  },
+  "dashboard": {
+    "progressTitle": "Your progress",
+    "lessonsDone": "{{done}} of {{total}} lessons",
+    "accuracyTitle": "Quiz accuracy",
+    "accuracyEmpty": "No questions answered yet",
+    "accuracyStat": "{{correct}} of {{total}} correct",
+    "achievementsTitle": "Achievements",
+    "achievementsEmpty": "Complete a lesson to earn your first badge",
+    "achievementUnlocked": "Achievement unlocked",
+    "continueTitle": "Continue where you left off",
+    "startTitle": "Ready to start?",
+    "startBody": "Pick a lesson below, or jump straight into the first one.",
+    "continueCta": "Continue",
+    "startCta": "Start learning",
+    "upNext": "Up next"
+  },
+  "achievements": {
+    "first-lesson": { "title": "First lesson!", "body": "You completed your first lesson." },
+    "both-topics-started": { "title": "Explorer", "body": "You've started both Integrals and Derivatives." },
+    "integrals-complete": { "title": "Integrals, done", "body": "You completed every lesson in Integrals." },
+    "derivatives-complete": { "title": "Derivatives, done", "body": "You completed every lesson in Derivatives." },
+    "ten-correct": { "title": "Sharp shooter", "body": "You answered 10 quiz questions correctly." },
+    "all-complete": { "title": "Math Academy, complete", "body": "You finished every lesson in both topics." }
   },
   "lesson": {
     "backHome": "All lessons",

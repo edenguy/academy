@@ -1,19 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { applyLocaleToDocument, readStoredLocale } from '@/i18n';
+import { applyLocaleToDocument } from '@/i18n';
 import type { Locale } from '@/content/localize';
-
-type Theme = 'light' | 'dark';
-
-function readStoredTheme(): Theme {
-  try {
-    const t = localStorage.getItem('academy-math:theme');
-    if (t === 'light' || t === 'dark') return t;
-  } catch {
-    /* ignore */
-  }
-  return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
+import { useProgress, type ThemePreference as Theme } from '@/progress/store';
 
 interface Ctx {
   locale: Locale;
@@ -24,10 +13,20 @@ interface Ctx {
 
 const AppContext = createContext<Ctx | null>(null);
 
+/**
+ * Locale and theme now live in the progress store (persisted to IndexedDB) instead of their
+ * own ad-hoc localStorage reads/writes — one coherent piece of persisted state, same as
+ * apps/nitrox's `useLocaleSync`/`useThemeSync`. Each still mirrors its value back into
+ * localStorage on change (`applyLocaleToDocument` for locale, directly below for theme) so
+ * `index.html`'s synchronous pre-paint script — which cannot await IndexedDB — keeps
+ * preventing a flash of the wrong language/direction/theme on load.
+ */
 export function AppProviders({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation();
-  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
-  const [theme, setTheme] = useState<Theme>(() => readStoredTheme());
+  const locale = useProgress((s) => s.settings.locale);
+  const theme = useProgress((s) => s.settings.theme);
+  const setLocaleStore = useProgress((s) => s.setLocale);
+  const setThemeStore = useProgress((s) => s.setTheme);
 
   useEffect(() => {
     applyLocaleToDocument(locale);
@@ -43,8 +42,8 @@ export function AppProviders({ children }: { children: ReactNode }) {
     }
   }, [theme]);
 
-  const setLocale = useCallback((l: Locale) => setLocaleState(l), []);
-  const toggleTheme = useCallback(() => setTheme((t) => (t === 'light' ? 'dark' : 'light')), []);
+  const setLocale = useCallback((l: Locale) => setLocaleStore(l), [setLocaleStore]);
+  const toggleTheme = useCallback(() => setThemeStore(theme === 'light' ? 'dark' : 'light'), [theme, setThemeStore]);
 
   const value = useMemo(() => ({ locale, setLocale, theme, toggleTheme }), [locale, setLocale, theme, toggleTheme]);
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -65,29 +64,4 @@ export function useLocale(): { locale: Locale; setLocale: (l: Locale) => void; d
 export function useThemeToggle(): { theme: Theme; toggleTheme: () => void } {
   const { theme, toggleTheme } = useApp();
   return { theme, toggleTheme };
-}
-
-/** Which lesson ids the learner has finished all practice questions for (see <Quiz>). */
-export function useCompletedLessons(): [string[], (id: string) => void] {
-  const [done, setDone] = useState<string[]>(() => {
-    try {
-      const raw = localStorage.getItem('academy-math:completed');
-      return raw ? (JSON.parse(raw) as string[]) : [];
-    } catch {
-      return [];
-    }
-  });
-  const markDone = useCallback((id: string) => {
-    setDone((prev) => {
-      if (prev.includes(id)) return prev;
-      const next = [...prev, id];
-      try {
-        localStorage.setItem('academy-math:completed', JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
-  return [done, markDone];
 }

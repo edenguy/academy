@@ -7,6 +7,9 @@
   "nav": {
     "home": "בית"
   },
+  "common": {
+    "close": "סגירה"
+  },
   "settings": {
     "language": "שפה",
     "theme": "מצב תצוגה",
@@ -30,6 +33,30 @@
   },
   "hero": {
     "signatureHint": "הזיזו את האצבע על הגרף"
+  },
+  "dashboard": {
+    "progressTitle": "ההתקדמות שלכם",
+    "lessonsDone": "{{done}} מתוך {{total}} שיעורים",
+    "accuracyTitle": "דיוק בתרגול",
+    "accuracyEmpty": "עדיין לא נענו שאלות",
+    "accuracyStat": "{{correct}} מתוך {{total}} נכונות",
+    "achievementsTitle": "הישגים",
+    "achievementsEmpty": "סיימו שיעור כדי לזכות בתג הראשון שלכם",
+    "achievementUnlocked": "הישג נפתח",
+    "continueTitle": "תמשיכו מהנקודה שעצרתם בה",
+    "startTitle": "מוכנים להתחיל?",
+    "startBody": "בחרו שיעור למטה, או קפצו ישר לשיעור הראשון.",
+    "continueCta": "המשך",
+    "startCta": "התחלת הלימוד",
+    "upNext": "בתור הבא"
+  },
+  "achievements": {
+    "first-lesson": { "title": "שיעור ראשון!", "body": "סיימתם את השיעור הראשון שלכם." },
+    "both-topics-started": { "title": "חוקרים", "body": "התחלתם גם באינטגרלים וגם בנגזרות." },
+    "integrals-complete": { "title": "אינטגרלים, הושלם", "body": "סיימתם את כל השיעורים באינטגרלים." },
+    "derivatives-complete": { "title": "נגזרות, הושלם", "body": "סיימתם את כל השיעורים בנגזרות." },
+    "ten-correct": { "title": "קליעה למטרה", "body": "עניתם נכון על 10 שאלות תרגול." },
+    "all-complete": { "title": "אקדמיית המתמטיקה, הושלמה", "body": "סיימתם את כל השיעורים בשני הנושאים." }
   },
   "lesson": {
     "backHome": "כל השיעורים",

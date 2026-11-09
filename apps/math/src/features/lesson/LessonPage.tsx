@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getLesson, lessonNeighbors } from '@/content';
 import { TOPICS } from '@/content/topics';
 import { pick } from '@/content/localize';
-import { useLocale, useCompletedLessons } from '@/app/providers';
+import { useLocale } from '@/app/providers';
+import { useProgress } from '@/progress/store';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { LinkButton } from '@/components/ui/Button';
@@ -16,8 +18,16 @@ export function LessonPage() {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const { lessonId } = useParams<{ lessonId: string }>();
-  const [, markDone] = useCompletedLessons();
+  const visitLesson = useProgress((s) => s.visitLesson);
+  const completeLesson = useProgress((s) => s.completeLesson);
+  const recordAttempt = useProgress((s) => s.recordAttempt);
   const lesson = lessonId ? getLesson(lessonId) : undefined;
+
+  // Last-visited lesson, for the home dashboard's "continue where you left off" — recorded on
+  // open regardless of completion, same as a visit in Nitrox's progress store.
+  useEffect(() => {
+    if (lesson) visitLesson(lesson.id);
+  }, [lesson, visitLesson]);
 
   if (!lesson) return <Navigate to="/" replace />;
 
@@ -74,7 +84,13 @@ export function LessonPage() {
         <h2 className="text-xl text-ink mb-3 flex items-center gap-2">
           <Icon name="target" size={20} className="text-accent" /> {t('lesson.quizTitle')}
         </h2>
-        <Quiz questions={lesson.quiz} locale={locale} onAllDone={() => markDone(lesson.id)} signature={lessonSignature(lesson)} />
+        <Quiz
+          questions={lesson.quiz}
+          locale={locale}
+          onAnswer={(questionId, correct) => recordAttempt({ lessonId: lesson.id, questionId, correct, at: Date.now() })}
+          onAllDone={() => completeLesson(lesson.id)}
+          signature={lessonSignature(lesson)}
+        />
       </section>
 
       <nav className="flex items-center justify-between pt-2 gap-3" data-fab-avoid>
