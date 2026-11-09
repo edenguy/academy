@@ -16,11 +16,16 @@ export function Quiz({
   questions,
   locale,
   onAllDone,
+  onAnswer,
   signature,
 }: {
   questions: Question[];
   locale: Locale;
   onAllDone?: () => void;
+  /** Called once per check, with the question's id and whether that check was correct — the
+   * lesson page wires this into the progress store's `recordAttempt` (an answer that's
+   * retried after "try again" is a second attempt, same as a learner really re-answering). */
+  onAnswer?: (questionId: string, correct: boolean) => void;
   /** The lesson's own LessonSignature drawing, shown drawing itself in on the finished state
    * instead of a trophy (§5.7 #7) — computed by the calling page's per-subject mapping. */
   signature?: SignatureDraw;
@@ -52,6 +57,7 @@ export function Quiz({
     setIsCorrect(correct);
     setChecked(true);
     if (!correct) setWiggleKey((k) => k + 1);
+    onAnswer?.(q.id, correct);
   }
 
   function next() {

@@ -1,15 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { lessonsByTopic } from '@/content';
 import { TOPICS, TOPIC_ORDER } from '@/content/topics';
 import { pick } from '@/content/localize';
-import { useLocale, useCompletedLessons } from '@/app/providers';
+import { useLocale } from '@/app/providers';
+import { useProgress, type AchievementId } from '@/progress/store';
+import { useCourseProgress, useNextLesson, useQuizAccuracy } from '@/progress/selectors';
 import { Icon } from '@/components/ui/Icon';
+import { Card } from '@/components/ui/Card';
+import { LinkButton } from '@/components/ui/Button';
+import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
 import { HERO_CURVE } from '@/math/heroCurve';
 import { lessonSignature } from '@/math/lessonSignature';
-import { Link } from 'react-router-dom';
 import type { Lesson } from '@/content/schema';
 
 function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; isDone: boolean }) {
@@ -60,10 +65,93 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
   );
 }
 
+/** The progress dashboard — course-progress ring, quiz accuracy, a "continue where you left
+ * off" CTA and earned achievement badges. Replaces the old static catalog-style home: the
+ * hero signature graph above is unchanged, everything below now reflects the learner's own
+ * stored state (apps/math/src/progress/store.ts) instead of the lesson list alone. */
+function ProgressSection() {
+  const { t } = useTranslation();
+  const { locale } = useLocale();
+  const course = useCourseProgress();
+  const accuracy = useQuizAccuracy();
+  const next = useNextLesson();
+  const achievements = useProgress((s) => s.achievements);
+  const unlocked = (Object.entries(achievements) as [AchievementId, number][]).sort((a, b) => b[1] - a[1]);
+
+  return (
+    <section className="space-y-4">
+      {next ? (
+        <Card variant="bench" className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="text-[12.5px] font-semibold uppercase tracking-[0.1em] text-accent mb-1">
+              {next.resumed ? t('dashboard.continueTitle') : t('dashboard.startTitle')}
+            </div>
+            <div className="font-display font-bold text-ink text-[19px] leading-snug">{pick(next.lesson.title, locale)}</div>
+            <div className="text-sm text-ink-2 mt-0.5">{pick(TOPICS[next.lesson.topic].title, locale)}</div>
+          </div>
+          <LinkButton to={`/lesson/${next.lesson.id}`} size="lg" className="shrink-0">
+            <Icon name="play" size={18} /> {next.resumed ? t('dashboard.continueCta') : t('dashboard.startCta')}
+          </LinkButton>
+        </Card>
+      ) : (
+        <Card variant="bench" className="flex items-center gap-3">
+          <span className="grid place-items-center w-11 h-11 rounded-pill bg-good-soft text-good shrink-0">
+            <Icon name="check" size={22} />
+          </span>
+          <div className="font-display font-bold text-ink text-[17px]">{t('achievements.all-complete.title')}</div>
+        </Card>
+      )}
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card className="flex items-center gap-4">
+          <ProgressRing value={course.fraction} size={64} stroke={7} className="shrink-0">
+            <span className="readout text-[15px] font-bold text-ink">{Math.round(course.fraction * 100)}%</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <div className="font-semibold text-ink text-[15px]">{t('dashboard.progressTitle')}</div>
+            <div className="text-sm text-muted num">{t('dashboard.lessonsDone', { done: course.done, total: course.total })}</div>
+          </div>
+        </Card>
+        <Card className="flex items-center gap-4">
+          <ProgressRing value={accuracy.fraction ?? 0} size={64} stroke={7} color="var(--accent-2)" className="shrink-0">
+            <span className="readout text-[15px] font-bold text-ink">{accuracy.fraction === null ? '—' : `${Math.round(accuracy.fraction * 100)}%`}</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <div className="font-semibold text-ink text-[15px]">{t('dashboard.accuracyTitle')}</div>
+            <div className="text-sm text-muted num">
+              {accuracy.total === 0 ? t('dashboard.accuracyEmpty') : t('dashboard.accuracyStat', { correct: accuracy.correct, total: accuracy.total })}
+            </div>
+          </div>
+        </Card>
+        <Card>
+          <div className="font-semibold text-ink text-[15px] mb-2 flex items-center gap-2">
+            <Icon name="trophy" size={17} className="text-accent-2" /> {t('dashboard.achievementsTitle')}
+          </div>
+          {unlocked.length === 0 ? (
+            <p className="text-sm text-muted">{t('dashboard.achievementsEmpty')}</p>
+          ) : (
+            <ul className="flex flex-wrap gap-1.5">
+              {unlocked.map(([id]) => (
+                <li
+                  key={id}
+                  title={t(`achievements.${id}.body`)}
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold bg-accent-2-soft text-accent-2 rounded-pill px-2.5 h-7"
+                >
+                  <Icon name="trophy" size={13} /> {t(`achievements.${id}.title`)}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage() {
   const { t } = useTranslation();
   const { locale } = useLocale();
-  const [completed] = useCompletedLessons();
+  const completed = useProgress((s) => s.lessonsCompleted);
 
   return (
     <div className="space-y-10 md:space-y-14">
@@ -91,6 +179,8 @@ export function HomePage() {
         </div>
       </section>
 
+      <ProgressSection />
+
       {TOPIC_ORDER.map((topicId) => {
         const topic = TOPICS[topicId];
         const lessons = lessonsByTopic(topicId);
@@ -105,7 +195,7 @@ export function HomePage() {
             <p className="text-sm text-ink-2 mb-4">{pick(topic.description, locale)}</p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {lessons.map((lesson, i) => (
-                <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={completed.includes(lesson.id)} />
+                <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={Boolean(completed[lesson.id])} />
               ))}
             </div>
           </section>
