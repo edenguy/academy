@@ -425,6 +425,100 @@
     }
   }
 
+  // ---------- subject tiles: "continue where you stopped", read-only (HUB_LLD.md §11.7) ----------
+  // Reads the three apps' saved progress straight out of their own IndexedDB records. The hub
+  // NEVER writes, deletes, upgrades or creates anything there: see openExisting() for how the
+  // database is guaranteed not to be created on a profile where no app has run yet.
+  function tileProgress() {
+    var tiles = document.querySelectorAll('.tile[data-subject]:not(.tile--soon)');
+    if (!tiles.length || !('indexedDB' in window)) return;
+    var ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;   // lesson/chapter ids are kebab-case; anything else is rejected
+    // `total` must equal the real lesson count (see §11.5 notes) — same numbers as the tiles' meta-first text.
+    var SOURCES = {
+      nitrox:  { key: 'nitrox-academy:v1',  total: 11, home: '/academy/subjects/nitrox/',
+                 lessonUrl: function (lv) { return '/academy/subjects/nitrox/#/learn/' + lv.chapterId + '/' + lv.lessonId; },
+                 lastVisited: function (v) { return v && typeof v === 'object' && ID_RE.test(v.chapterId) && ID_RE.test(v.lessonId) ? { chapterId: v.chapterId, lessonId: v.lessonId } : null; } },
+      math:    { key: 'academy-math:v1',    total: 6,  home: '/academy/subjects/math/',
+                 lessonUrl: function (id) { return '/academy/subjects/math/#/lesson/' + id; },
+                 lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
+      physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
+                 lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
+                 lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
+    };
+
+    // 1. Open read-only; abort if the DB would be created; give up silently after 1500 ms.
+    function openExisting(cb) {
+      var done = false; function finish(db) { if (!done) { done = true; cb(db || null); } }
+      try {
+        var req = indexedDB.open('keyval-store');            // no version → opens whatever exists
+        req.onupgradeneeded = function () { try { req.transaction.abort(); } catch (e) {} finish(null); }; // DB absent → never create it
+        req.onerror = req.onblocked = function () { finish(null); };
+        req.onsuccess = function () {
+          var db = req.result;
+          if (done) { try { db.close(); } catch (e) {} return; }   // arrived after the 1500 ms guard: don't leave a connection open
+          db.onversionchange = function () { try { db.close(); } catch (e) {} };
+          if (!db.objectStoreNames.contains('keyval')) { db.close(); return finish(null); }
+          finish(db);
+        };
+        setTimeout(function () { finish(null); }, 1500);
+      } catch (e) { finish(null); }
+    }
+
+    // 2. One readonly transaction, one get per key.
+    function readAll(db, keys, cb) {
+      var out = {}; try {
+        var tx = db.transaction('keyval', 'readonly'), store = tx.objectStore('keyval');
+        keys.forEach(function (k) { var g = store.get(k); g.onsuccess = function () { out[k] = g.result; }; });
+        tx.oncomplete = function () { db.close(); cb(out); };
+        tx.onerror = tx.onabort = function () { db.close(); cb(out); };
+      } catch (e) { try { db.close(); } catch (_) {} cb(out); }
+    }
+
+    // 3. Parse defensively: anything unexpected → null (first-visit state).
+    function parse(raw, src) {
+      try {
+        if (typeof raw !== 'string') return null;             // idb-keyval stores zustand's JSON string
+        var state = JSON.parse(raw).state;
+        if (!state || typeof state !== 'object') return null;
+        var lc = state.lessonsCompleted;
+        var completed = {};
+        if (lc && typeof lc === 'object' && !Array.isArray(lc)) {
+          Object.keys(lc).forEach(function (id) { if (ID_RE.test(id) && typeof lc[id] === 'number' && isFinite(lc[id])) completed[id] = true; });
+        }
+        var done = Math.min(src.total, Object.keys(completed).length);
+        var lv = src.lastVisited(state.lastVisited);
+        var lvId = lv && (typeof lv === 'string' ? lv : lv.lessonId);
+        var resume = lv && !completed[lvId];                   // the apps' own useNextLesson rule: last visited, if still incomplete
+        return { done: done, total: src.total, complete: done >= src.total, href: resume ? src.lessonUrl(lv) : src.home, hasProgress: done > 0 || !!lv };
+      } catch (e) { return null; }
+    }
+
+    // 4. Apply to the DOM. Both languages are written; CSS shows one.
+    function apply(tile, p) {
+      if (!p || !p.hasProgress) return;                        // first-visit state is the markup's default
+      tile.classList.add('has-progress'); if (p.complete) tile.classList.add('is-complete');
+      tile.href = p.href;
+      var he = tile.querySelector('.meta-progress .t-he'), en = tile.querySelector('.meta-progress .t-en');
+      if (he) he.textContent = p.done + ' מתוך ' + p.total + ' שיעורים';
+      if (en) en.textContent = p.done + ' of ' + p.total + ' lessons';
+      var arc = tile.querySelector('.tile-ring .arc');
+      if (arc) { var c = 97.39; arc.style.strokeDashoffset = String(c * (1 - (p.total ? p.done / p.total : 0))); }
+      var ring = tile.querySelector('.tile-ring'); if (ring) ring.setAttribute('aria-label', Math.round(100 * p.done / p.total) + '%');
+      var greet = document.getElementById('tiles-greeting'); if (greet) greet.hidden = false;
+    }
+
+    openExisting(function (db) {
+      if (!db) return;
+      var keys = Object.keys(SOURCES).map(function (k) { return SOURCES[k].key; });
+      readAll(db, keys, function (values) {
+        tiles.forEach(function (tile) {
+          var src = SOURCES[tile.dataset.subject]; if (!src) return;
+          apply(tile, parse(values[src.key], src));
+        });
+      });
+    });
+  }
+
   // ---------- tabs (live preview) ----------
   function tabs() {
     var tablist = document.querySelector('[role="tablist"]');
@@ -539,6 +633,7 @@
     riemannDemo();
     nitroxDemo();
     reveal();
+    tileProgress();
     feedbackWidget();
   });
 })();
