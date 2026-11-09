@@ -50,9 +50,10 @@ reachable at any URL.
 2. Update its `vite.config.ts`: `base: '/academy/subjects/<subject>/'`,
    `outDir: '../../docs/subjects/<subject>'`.
 3. Give it its own logo/icon (subject-specific is correct — only the hub page's mark must
-   stay neutral) and add it to the hub in three places: a card on `docs/index.html`, a node
-   + axis chip in the hero handle's markup there, and an entry in the `SUBJECTS` array in
-   `docs/hub/hub.js` (see `CLAUDE.md`, "How to add a new academy topic").
+   stay neutral) and add it to the hub in three places: a tile in the subjects grid on `docs/index.html`, a node
+   + axis chip in the hero handle's markup there, and an entry in the `SUBJECTS` array and in
+   `tileProgress()`'s `SOURCES` in `docs/hub/hub.js` (see `CLAUDE.md`, "How to add a new
+   academy topic").
 4. `cd apps/<subject> && npm install && npm run build` and commit the result.
 
 See `apps/math/README.md` for the YAML content model (bilingual fields, Zod validation, the
