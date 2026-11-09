@@ -23,6 +23,26 @@ phones, node placement, axis chips, constant-size controls, `touch-action`, keyb
 mapping), §5.3 (real formula instead of placeholder lines; tile layout), §5.6 (card anatomy,
 2-column grid, Hebrew names), §5.7 (footer stack), §5.8 (feedback widget, new).
 
+**Revision (warmth pass, after comparing the hub to Nitrox Academy's own UI).** The repo
+owner found the hub "too generic" next to Nitrox's app — not a palette complaint (the hub
+stays neutral, see §1.4) but a surface-and-density one: against Nitrox's opaque `--surface`
+cards (solid fill, visible border, a grounded `--shadow`), the hub's glass panels read as
+comparatively thin and floaty, and the 96 px desktop section gaps read as dead air once the
+page had real panels to fill them (method strip, live preview, subjects grid; confirmed by
+screenshot comparison at 390/1440, both themes, both languages, before any change). Fixed in
+place, no information architecture changed: §3.2's `--panel`/`--line`/`--panel-edge` alphas
+raised and `--shadow` split into a two-layer ambient + contact shadow (closer in spirit to
+Nitrox's own `--shadow` token); §3.4's panel blur brought down from 18px to 14px (crisper,
+less milky); §4's desktop section rhythm trimmed from 96px to 84px; the inset top-edge
+highlight that `.panel` already had was extended to `.subject` cards, and each subject
+tile got a neutral (uncoloured) contact shadow for lift, not a glow; the hero curve's
+`is-active` node — the one reporting the live selection — got a small `currentColor` glow,
+justified by the existing glow=alive rule (§3.1 #5) since it is literally live, not static;
+stroke weights on the hero curve and the card signature lines were thickened slightly
+(6→7, 2→2.4) so the one place subject colour is allowed to appear carries a bit more
+presence. Mobile phone rhythm (already tuned by the mobile-rebalance revision above) and
+every section's content/copy/order were left untouched.
+
 ---
 
 ## 0. The one idea the whole page is built on
@@ -287,9 +307,9 @@ electric (`#7c5cff` vs Math's `#6250d6`) so the two read as relatives, not twins
 ```css
 :root {                                   /* light: "paper lab" */
   --bg: #f5f3fc;  --bg-2: #ece9f8;
-  --panel: rgba(255,255,255,0.78); --panel-solid: #ffffff;
-  --panel-edge: rgba(255,255,255,0.9);    /* inset top highlight */
-  --line: rgba(60,40,140,0.12); --line-strong: rgba(60,40,140,0.26);
+  --panel: rgba(255,255,255,0.86); --panel-solid: #ffffff;
+  --panel-edge: rgba(255,255,255,0.95);   /* inset top highlight */
+  --line: rgba(60,40,140,0.16); --line-strong: rgba(60,40,140,0.32);
   --ink: #15102a; --ink-2: #463c6a; --muted: #7a7099;
   --accent: #5b3df5; --accent-ink: #ffffff; --accent-soft: rgba(91,61,245,0.12);
   --glow: rgba(91,61,245,0.28);
@@ -300,9 +320,9 @@ electric (`#7c5cff` vs Math's `#6250d6`) so the two read as relatives, not twins
 }
 :root[data-theme="dark"] {                /* dark: "lit instrument" */
   --bg: #0a0718;  --bg-2: #0f0b24;
-  --panel: rgba(22,16,52,0.62); --panel-solid: #16103a;
-  --panel-edge: rgba(255,255,255,0.07);
-  --line: rgba(173,160,255,0.14); --line-strong: rgba(173,160,255,0.30);
+  --panel: rgba(22,16,52,0.74); --panel-solid: #16103a;
+  --panel-edge: rgba(255,255,255,0.11);
+  --line: rgba(173,160,255,0.18); --line-strong: rgba(173,160,255,0.36);
   --ink: #f4f1ff; --ink-2: #c6bdea; --muted: #857aad;
   --accent: #7c5cff; --accent-ink: #0d0824; --accent-soft: rgba(124,92,255,0.16);
   --glow: rgba(124,92,255,0.45);
@@ -310,6 +330,10 @@ electric (`#7c5cff` vs Math's `#6250d6`) so the two read as relatives, not twins
   --teal: #2fd4c6; --violet: #7c5cff; --pink: #ff7ec4; --amber: #ffb547; --blue: #5bb0ff;
 }
 ```
+
+(Warmth-pass revision: `--panel`, `--panel-edge`, `--line` and `--line-strong` alphas were
+raised in both themes — crisper edges, a less see-through surface — see the revision note
+above.)
 
 Subject card colors are **not** hub tokens; each card sets its own `--c1/--c2` inline:
 Nitrox `#0e9f94 → #2fd4c6`, Math `#6250d6 → #e87ba4`, Physics `var(--blue) → var(--violet)`,
@@ -384,14 +408,26 @@ its own RTL context.
 ### 3.4 Surfaces, radii, shadows
 
 ```css
-.panel { background: var(--panel); backdrop-filter: blur(18px);
+.panel { background: var(--panel); backdrop-filter: blur(14px);
          border: 1px solid var(--line); border-radius: 24px;
-         box-shadow: inset 0 1px 0 var(--panel-edge), 0 24px 60px -32px rgba(0,0,0,.55); }
+         box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow); }
 .panel--hero { border-top: 0; }
-.panel--hero::before { content:''; position:absolute; inset:0 0 auto 0; height:2px;
+.panel--hero::before { content:''; position:absolute; inset:0 0 auto 0; height:3px;
                        background: var(--spectrum); border-radius: 24px 24px 0 0; }
 ```
-Radii: panels 24, inner cards 18, chips/buttons 999. Light theme shadows at 0.18 alpha.
+Radii: panels 24, inner cards 18, chips/buttons 999.
+
+`--shadow` is a two-layer stack — a long, soft ambient throw plus a tight contact shadow
+right under the surface — closer in spirit to `apps/nitrox/src/styles.css`'s own `--shadow`
+token than the single wide shadow the hub shipped with originally (warmth-pass revision):
+```css
+/* light */ --shadow: 0 20px 48px -26px rgba(23,16,43,.32), 0 3px 10px -4px rgba(23,16,43,.20);
+/* dark  */ --shadow: 0 22px 54px -26px rgba(0,0,0,.70), 0 4px 14px -6px rgba(0,0,0,.55);
+```
+`.subject` cards get the same `inset 0 1px 0 var(--panel-edge)` top highlight as `.panel` —
+they are the same machined surface, not a flatter cousin of it — and each `.subject-tile`
+carries its own small neutral (uncoloured) contact shadow for lift. Neither is a glow (§3.1
+#5 still applies): both are plain, colourless drop shadows.
 
 ### 3.5 Motion language
 
@@ -434,9 +470,11 @@ reviewable; the pre-paint script stays inline in `<head>` so there's no flash of
 language/direction/theme. Keep `<html lang="he" dir="rtl">` as the server-side default.
 
 Max content width **1080 px** (up from 860 — the page now has real content). Section
-vertical rhythm: 96 px desktop, **56 px** below 720 px, and the hero starts 20 px under the
-top bar on phones (the original 64 px there was a dead band that pushed the handle below the
-fold). Side gutters `clamp(16px, 5vw, 48px)`.
+vertical rhythm: **84 px** desktop (warmth-pass revision, down from the original 96px — with
+the method strip, live preview and subjects grid actually in place, 96px read as dead air),
+**56 px** below 720 px (unchanged — already tuned by the mobile-rebalance revision), and the
+hero starts 20 px under the top bar on phones (the original 64 px there was a dead band that
+pushed the handle below the fold). Side gutters `clamp(16px, 5vw, 48px)`.
 Everything uses logical properties (`margin-inline-start`, `inset-inline-end`, `text-align:
 start`) so RTL/LTR is a free flip.
 
@@ -495,7 +533,10 @@ draggable version of the mark that doubles as a subject scrubber:
   looked up on the sampled curve), not by arc-length fraction — arc fractions bunched the
   middle nodes ~63 px apart at phone width, too close for labels. Node order along the
   curve = story order (Nitrox first). Dots are filled with each subject's own colour (teal,
-  Math violet, Physics blue, amber), "soon" nodes at 35 % fill with a dashed ring.
+  Math violet, Physics blue, amber), "soon" nodes at 35 % fill with a dashed ring. The
+  `is-active` node also gets a small `currentColor` glow (warmth-pass revision) — it is the
+  one reporting the live selection, so it earns the glow=alive rule (§3.1 #5); no other node
+  glows.
 - Nodes and the handle are drawn at unit size and **counter-scaled in JS**
   (`transform: translate(x,y) scale(k)`, `k = 520 / renderedWidth`, clamped to [1, 1.8],
   re-measured with a `ResizeObserver`) so they are the same on-screen size whether the panel
