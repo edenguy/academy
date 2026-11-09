@@ -1,93 +1,60 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { applyLocaleToDocument, readStoredLocale } from '@/i18n';
+import { applyLocaleToDocument, localeDir } from '@/i18n';
 import type { Locale } from '@/content/localize';
+import { useProgress, type Theme } from '@/progress/store';
+import { HydrationGate } from './HydrationGate';
+import { AchievementToast } from './AchievementToast';
 
-type Theme = 'light' | 'dark';
+/** The same key the pre-paint `<script>` in `index.html` reads before first paint, kept as
+ * a synchronous mirror of the store's theme setting so there is still no flash of the wrong
+ * theme while the async IndexedDB-backed store is loading. (The locale's own mirror —
+ * `academy-physics:locale` — is already written by `applyLocaleToDocument` below.) */
+const THEME_MIRROR_KEY = 'academy-physics:theme';
 
-function readStoredTheme(): Theme {
-  try {
-    const t = localStorage.getItem('academy-physics:theme');
-    if (t === 'light' || t === 'dark') return t;
-  } catch {
-    /* ignore */
-  }
-  return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
-
-interface Ctx {
-  locale: Locale;
-  setLocale: (l: Locale) => void;
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
-const AppContext = createContext<Ctx | null>(null);
-
-export function AppProviders({ children }: { children: ReactNode }) {
+/** Keeps i18next and <html lang/dir> in sync with the stored locale. */
+function useLocaleSync(): void {
+  const locale = useProgress((s) => s.settings.locale);
   const { i18n } = useTranslation();
-  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
-  const [theme, setTheme] = useState<Theme>(() => readStoredTheme());
-
   useEffect(() => {
-    applyLocaleToDocument(locale);
     if (i18n.language !== locale) void i18n.changeLanguage(locale);
+    applyLocaleToDocument(locale);
   }, [locale, i18n]);
+}
 
+/** Keeps <html data-theme> in sync with the stored theme, and mirrors it to localStorage. */
+function useThemeSync(): void {
+  const theme = useProgress((s) => s.settings.theme);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem('academy-physics:theme', theme);
+      localStorage.setItem(THEME_MIRROR_KEY, theme);
     } catch {
       /* ignore */
     }
   }, [theme]);
-
-  const setLocale = useCallback((l: Locale) => setLocaleState(l), []);
-  const toggleTheme = useCallback(() => setTheme((t) => (t === 'light' ? 'dark' : 'light')), []);
-
-  const value = useMemo(() => ({ locale, setLocale, theme, toggleTheme }), [locale, setLocale, theme, toggleTheme]);
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
-function useApp(): Ctx {
-  const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used inside <AppProviders>');
-  return ctx;
+export function AppProviders({ children }: { children: ReactNode }) {
+  useLocaleSync();
+  useThemeSync();
+  return (
+    <HydrationGate>
+      {children}
+      <AchievementToast />
+    </HydrationGate>
+  );
 }
 
 export function useLocale(): { locale: Locale; setLocale: (l: Locale) => void; dir: 'ltr' | 'rtl'; isRtl: boolean } {
-  const { locale, setLocale } = useApp();
-  const dir = locale === 'he' ? 'rtl' : 'ltr';
+  const locale = useProgress((s) => s.settings.locale);
+  const setLocale = useProgress((s) => s.setLocale);
+  const dir = localeDir(locale);
   return { locale, setLocale, dir, isRtl: dir === 'rtl' };
 }
 
 export function useThemeToggle(): { theme: Theme; toggleTheme: () => void } {
-  const { theme, toggleTheme } = useApp();
-  return { theme, toggleTheme };
-}
-
-/** Which lesson ids the learner has finished all practice questions for (see <Quiz>). */
-export function useCompletedLessons(): [string[], (id: string) => void] {
-  const [done, setDone] = useState<string[]>(() => {
-    try {
-      const raw = localStorage.getItem('academy-physics:completed');
-      return raw ? (JSON.parse(raw) as string[]) : [];
-    } catch {
-      return [];
-    }
-  });
-  const markDone = useCallback((id: string) => {
-    setDone((prev) => {
-      if (prev.includes(id)) return prev;
-      const next = [...prev, id];
-      try {
-        localStorage.setItem('academy-physics:completed', JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
-  return [done, markDone];
+  const theme = useProgress((s) => s.settings.theme);
+  const setTheme = useProgress((s) => s.setTheme);
+  return { theme, toggleTheme: () => setTheme(theme === 'light' ? 'dark' : 'light') };
 }
