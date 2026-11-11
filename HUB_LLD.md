@@ -901,7 +901,15 @@ For the tiles restructure, run §11.9 as well — it supersedes the subject-card
 
 ---
 
-## 11. Revision — "Inviting landing": restructure around subject tiles (spec, not yet built)
+> **Later amendment (Nitrox unlisted).** Nitrox Academy was removed from the hub at Guy's request
+> (it's unrelated to the school-subject academies): no tile, hero node/axis chip, demo tab or
+> `SOURCES` entry, no link on `/academy/subjects/`, and the share cards no longer mention it.
+> Its URL stays live. Wherever this section describes a Nitrox tile, node, chip, pO₂ demo or
+> `nitrox-academy:v1` read, that part is **superseded**: the hub has two subject tiles (Math,
+> Physics) + the Chemistry strip, a single Riemann demo (no tab row), tiles in a 2-column grid
+> from 640 px, and hero positions Math x=120, Physics x=270, Chemistry x=420.
+
+## 11. Revision — "Inviting landing": restructure around subject tiles (spec, implemented)
 
 Scope: `docs/index.html`, `docs/hub/hub.css`, `docs/hub/hub.js` only. Nothing under `apps/`
 or `docs/subjects/` changes. No new network dependency, no framework, no raster image; every

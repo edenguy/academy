@@ -66,10 +66,9 @@
     // Subjects sit on the curve at a target x (SVG units) rather than an arc-length fraction,
     // so their axis chips are evenly spaced and never collide at phone width.
     var SUBJECTS = [
-      { key: 'nitrox', x: 74, live: true, url: '/academy/subjects/nitrox/', nameHe: 'נייטרוקס', nameEn: 'NITROX', statusHe: 'פעיל', statusEn: 'LIVE' },
-      { key: 'math', x: 200, live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'physics', x: 322, live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'chemistry', x: 446, live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
+      { key: 'math', x: 120, live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
+      { key: 'physics', x: 270, live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
+      { key: 'chemistry', x: 420, live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
     ];
 
     var totalLength = curvePath.getTotalLength();
@@ -343,39 +342,6 @@
     slider.addEventListener('input', function () { render(parseInt(slider.value, 10)); });
   }
 
-  // ---------- Nitrox demo: pO2 vs depth for EAN32 ----------
-  function nitroxDemo() {
-    var slider = document.getElementById('nitrox-depth');
-    if (!slider) return;
-    var fill = document.getElementById('nitrox-fill');
-    var depthReadout = document.getElementById('nitrox-depth-readout');
-    var po2Readout = document.getElementById('nitrox-po2-readout');
-    var warnNote = document.getElementById('nitrox-warn-note');
-
-    var FO2 = 0.32;
-    // Recreational planning limit, sourced from apps/nitrox/src/science/limits.ts
-    // (DEFAULT_PLANNING_PPO2 = 1.4). Do not add any other limit/MOD number here.
-    var PLANNING_PPO2 = 1.4;
-    var GAUGE_MAX = 1.6;
-    var barW = 400; // matches the gauge track's SVG width, see markup
-
-    function po2(depth) { return FO2 * (1 + depth / 10); }
-
-    function render(depth) {
-      var p = po2(depth);
-      var w = Math.min(1, p / GAUGE_MAX) * barW;
-      fill.setAttribute('width', w);
-      depthReadout.textContent = depth + ' m';
-      po2Readout.textContent = p.toFixed(2) + ' bar';
-      var over = p > PLANNING_PPO2;
-      po2Readout.classList.toggle('warn', over);
-      warnNote.classList.toggle('show', over);
-    }
-
-    render(parseInt(slider.value, 10));
-    slider.addEventListener('input', function () { render(parseInt(slider.value, 10)); });
-  }
-
   // ---------- reveal on scroll + method strip + hero spotlight ----------
   function reveal() {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -435,9 +401,6 @@
     var ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;   // lesson/chapter ids are kebab-case; anything else is rejected
     // `total` must equal the real lesson count (see §11.5 notes) — same numbers as the tiles' meta-first text.
     var SOURCES = {
-      nitrox:  { key: 'nitrox-academy:v1',  total: 11, home: '/academy/subjects/nitrox/',
-                 lessonUrl: function (lv) { return '/academy/subjects/nitrox/#/learn/' + lv.chapterId + '/' + lv.lessonId; },
-                 lastVisited: function (v) { return v && typeof v === 'object' && ID_RE.test(v.chapterId) && ID_RE.test(v.lessonId) ? { chapterId: v.chapterId, lessonId: v.lessonId } : null; } },
       math:    { key: 'academy-math:v1',    total: 6,  home: '/academy/subjects/math/',
                  lessonUrl: function (id) { return '/academy/subjects/math/#/lesson/' + id; },
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
@@ -631,7 +594,6 @@
     tabs();
     heroHandle();
     riemannDemo();
-    nitroxDemo();
     reveal();
     tileProgress();
     feedbackWidget();

@@ -39,10 +39,19 @@ overclaim.
 
 | Subject | Path | What it is |
 |---|---|---|
-| **Nitrox Academy** | `apps/nitrox` | Enriched-air diving theory. The original, most mature app (migrated in from its own repo): chapters, assessment engine, mastery/spaced review, achievements, installable PWA with offline support. Has its own conventions — **read `apps/nitrox/CLAUDE.md`**. The UX reference for everything else. 11 lessons (5 + 6 across two chapters; the roadmap is excluded from the count). |
+| **Nitrox Academy** | `apps/nitrox` | Enriched-air diving theory. The original, most mature app (migrated in from its own repo): chapters, assessment engine, mastery/spaced review, achievements, installable PWA with offline support. Has its own conventions — **read `apps/nitrox/CLAUDE.md`**. The UX reference for everything else. 11 lessons (5 + 6 across two chapters; the roadmap is excluded from the count). **Unlisted:** live at `/academy/subjects/nitrox/` for anyone with the link, but deliberately *not* shown anywhere on the hub or linked from other subjects (see below). |
 | **Math Academy** | `apps/math` | Two topics, 6 lessons: **Derivatives** (rate of change, derivative rules, extremum points; grade י, 5-unit) and **Integrals** (area under a curve, Riemann sums, antiderivative; grade י"א, 5-unit). Topic content follows the official Ministry 5-unit curriculum PDF. Treat Math as the template for a *new* subject. |
 | **Physics Academy** | `apps/physics` | Kinematics, 3 lessons (position vs time, velocity as slope, acceleration as area). Scaffolded from Math. Its feedback form still needs a real Web3Forms key (see "Open items"). |
 | Chemistry | — | Placeholder tile on the hub only ("coming soon", not clickable). No app. |
+
+**Nitrox is unlisted, on purpose (Guy's decision).** It is unrelated to the school-subject
+academies (Math, Physics, ...), so the hub — tiles, hero handle, demo, `/academy/subjects/`
+page, share cards — does not mention it, and Math/Physics never link to it. But its URL is a
+public, shared link and **must keep working exactly as it does today**: never delete or move
+`apps/nitrox` or `docs/subjects/nitrox/`, never change its `base`, and don't add it back to the
+hub (or to any cross-subject navigation) unless Guy asks. (Unlisted ≠ hidden from the internet:
+the page is still public and crawlable; if that's ever wanted, that's a separate `noindex` change
+inside the Nitrox app.)
 
 Nitrox is the reference for what a subject looks like once it's grown large — not something to
 imitate on day one. Math/Physics adopt Nitrox's *personal, progress-aware feel* (below), not its
@@ -235,7 +244,7 @@ Layout, top to bottom: top bar → **hero** (the brand line "לא משננים. 
 Grab it.", a draggable handle on a spectrum curve that scrubs between subjects, one-sentence lede)
 → **subject tiles** directly under it (one tinted, progress-aware tile per subject: badge,
 promise, honest inline-SVG preview, real lesson count, Start/Continue/Review pill + ring; a
-muted, non-clickable Chemistry strip) → **live demo** (Riemann rectangles / Nitrox pO₂ vs depth)
+muted, non-clickable Chemistry strip) → **live demo** (Riemann rectangles — Math's own integral)
 → **"why not memorize" method strip** → footer. A floating feedback pill sits start-side.
 
 The tiles read the apps' IndexedDB records **read-only** (see the progress system above) and
@@ -269,9 +278,10 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
   background wash). A subject's `--c1/--c2` (favicon gradient) and `--ct` (text-safe, per theme)
   are declared on its `.tile[data-subject]` selector, never promoted to `:root`; on a tile, text
   is `--ink`/`--ink-2`/`--ct` only — never `--c2`, never `--muted` (both fail 4.5:1 on tints).
-- **Never invent a number for a live demo.** A demo-displayed constant (e.g. Nitrox's 1.4 pO₂
-  limit) is read from and cited to the subject's own source of truth
-  (`apps/nitrox/src/science/limits.ts`'s `DEFAULT_PLANNING_PPO2`), never hardcoded.
+- **Never invent a number for a live demo.** A demo-displayed constant is read from and cited to
+  the subject's own source of truth (a constant in its own code or content), never retyped or
+  guessed. (This is how the hub's former Nitrox demo cited `DEFAULT_PLANNING_PPO2`; the same
+  applies to any demo you add.)
 
 ## How to add a lesson or topic to an existing subject
 
@@ -396,7 +406,8 @@ layout bug. Don't commit temp scripts.
 
 - **Live on `main`:** the hub with the inviting-landing restructure (tiles under the hero,
   progress-aware, tinted; live demo and method strip below; `/academy/subjects/` redirect page);
-  Nitrox Academy (mature); Math Academy (Derivatives + Integrals, 6 lessons, topic-grouped
+  Nitrox Academy (mature; **unlisted** — reachable by its direct link only, removed from the hub);
+  Math Academy (Derivatives + Integrals, 6 lessons, topic-grouped
   dashboard home with progress, accuracy, achievements); Physics Academy (kinematics, 3 lessons,
   same dashboard); the "Bench" skin on both.
 - **Open items:**
@@ -408,9 +419,8 @@ layout bug. Don't commit temp scripts.
   - Math's "next lesson" follows global topic order (Derivatives before Integrals), so finishing
     an Integrals lesson can point back to Derivatives — intentional (matches curriculum order),
     revisit if it feels wrong.
-  - Known visual nits on the hub tiles: the Nitrox preview's "1.4" label is crossed by the curve
-    end; on a phone the tile stack is about three screens tall; the hub's top bar and hero are
-    still plainer than the tinted tiles below.
+  - Known visual nits on the hub: the hub's top bar and hero are still plainer than the tinted
+    tiles below; with only two subjects the tiles are a 2-column row plus the Chemistry strip.
   - `apps/math/README.md` / `apps/physics/README.md` "Status" sections and `README.md` are older
     than this file and may lag (e.g. Math's README still describes the integral-only pilot and an
     old `docs/math` build path) — this file wins; fix them when you touch those apps.

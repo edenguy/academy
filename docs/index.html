@@ -108,7 +108,6 @@
               <line id="hero-hairline" class="hairline" x1="40" y1="16" x2="40" y2="300"/>
               <path class="curve" d="M 40 256 C 230 256, 290 48, 480 48" stroke="url(#spectrumHero)"/>
 
-              <g class="node" data-subject="nitrox" style="color:#2fd4c6"><circle class="dot" fill="#2fd4c6"/></g>
               <g class="node" data-subject="math" style="color:#6250d6"><circle class="dot" fill="#6250d6"/></g>
               <g class="node" data-subject="physics" style="color:#3457d1"><circle class="dot" fill="#3457d1"/></g>
               <g class="node soon" data-subject="chemistry" style="color:var(--amber)"><circle class="dot" fill="var(--amber)"/></g>
@@ -119,7 +118,6 @@
               </g>
             </svg>
             <div class="hero-axis" id="hero-axis">
-              <button type="button" class="axis-chip" data-subject="nitrox"><span class="t-he">נייטרוקס</span><span class="t-en">Nitrox</span></button>
               <button type="button" class="axis-chip" data-subject="math"><span class="t-he">מתמטיקה</span><span class="t-en">Math</span></button>
               <button type="button" class="axis-chip" data-subject="physics"><span class="t-he">פיזיקה</span><span class="t-en">Physics</span></button>
               <button type="button" class="axis-chip soon" data-subject="chemistry"><span class="t-he">כימיה</span><span class="t-en">Chem</span></button>
@@ -152,48 +150,6 @@
         <span class="t-he">ממשיכים מאיפה שעצרתם</span><span class="t-en">Pick up where you left off</span>
       </p>
       <div class="tiles">
-
-        <a class="tile reveal" href="/academy/subjects/nitrox/" data-subject="nitrox">
-          <div class="tile-head">
-            <div class="tile-badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M9 2h6v3H9zM8 5h8a2 2 0 0 1 2 2v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7a2 2 0 0 1 2-2Zm0 5h8"/></svg>
-            </div>
-            <div class="tile-title">
-              <h3><span class="t-he">אקדמיית נייטרוקס</span><span class="t-en">Nitrox Academy</span></h3>
-              <span class="tile-status"><span class="dot"></span><span class="t-he">פעיל</span><span class="t-en">Live</span></span>
-            </div>
-          </div>
-          <p class="tile-promise">
-            <span class="t-he">כמה עמוק אפשר לרדת עם התערובת הזו? גוררים את העומק ורואים.</span>
-            <span class="t-en">How deep can this mix go? Drag the depth and see.</span>
-          </p>
-          <!-- pO₂ vs depth for EAN32 (FO₂ 0.32), 0–40 m, the same teaching approximation the live
-               demo uses (pO₂ = 0.32 × (1 + depth/10)): a straight line from 0.32 bar at 0 m to 1.60
-               bar at 40 m. Plot: x 16→304 = 0→40 m; y 64→8 = 0→1.6 bar (35 px per bar).
-               0.32 → y 52.8; 1.60 → y 8; the dashed limit at 1.4 bar → y 15. The 1.4 is
-               DEFAULT_PLANNING_PPO2 from apps/nitrox/src/science/limits.ts — no other number. -->
-          <svg class="tile-preview" viewBox="0 0 320 72" aria-hidden="true">
-            <text class="pv-mix" x="16" y="12">EAN32</text>
-            <polygon class="pv-fill" points="16,52.8 304,8 304,64 16,64"/>
-            <line class="pv-limit" x1="16" y1="15" x2="304" y2="15"/>
-            <text class="pv-label" x="304" y="12" text-anchor="end">1.4</text>
-            <path class="pv-curve" d="M16 52.8 L304 8"/>
-            <circle class="pv-dot" cx="160" cy="30.4" r="4.5"/>
-          </svg>
-          <div class="tile-foot">
-            <span class="tile-meta">
-              <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
-              <span class="meta-first"><span class="t-he">11 שיעורים · 2 פרקים</span><span class="t-en">11 lessons · 2 chapters</span></span>
-              <span class="meta-progress"><span class="t-he"></span><span class="t-en"></span></span>
-            </span>
-            <span class="tile-cta">
-              <span class="cta-start"><span class="t-he">להתחיל</span><span class="t-en">Start</span></span>
-              <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
-              <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
-              <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-            </span>
-          </div>
-        </a>
 
         <a class="tile reveal" href="/academy/subjects/math/" data-subject="math">
           <div class="tile-head">
@@ -294,15 +250,6 @@
     <section class="live" id="live">
       <h2 class="reveal"><span class="t-he">ככה נראה שיעור כאן</span><span class="t-en">This is what a lesson looks like here</span></h2>
       <div class="panel live-panel reveal">
-        <div class="tabs" role="tablist" aria-label="Live demo">
-          <button type="button" role="tab" data-tab="math" aria-controls="demo-math" aria-selected="true">
-            <span class="t-he">אינטגרל · מלבנים</span><span class="t-en">Integral · rectangles</span>
-          </button>
-          <button type="button" role="tab" data-tab="nitrox" aria-controls="demo-nitrox" aria-selected="false">
-            <span class="t-he">נייטרוקס · לחץ חלקי</span><span class="t-en">Nitrox · <span class="num">pO₂</span></span>
-          </button>
-        </div>
-
         <div class="demo-panel" id="demo-math" role="tabpanel">
           <div class="demo-grid">
             <svg id="riemann-svg" class="demo-svg" viewBox="0 0 480 240" role="img" aria-label="Riemann rectangles under x squared from 0 to 2" data-label-he="מלבני רימן מתחת לפונקציה x בריבוע, בין 0 ל-2" data-label-en="Riemann rectangles under x squared from 0 to 2">
@@ -332,37 +279,6 @@
           </div>
         </div>
 
-        <div class="demo-panel" id="demo-nitrox" role="tabpanel" hidden>
-          <div class="demo-grid">
-            <svg class="demo-svg" viewBox="0 0 480 120" role="img" aria-label="Oxygen partial pressure gauge for EAN32 by depth" data-label-he="מד לחץ חלקי של חמצן עבור EAN32 לפי עומק" data-label-en="Oxygen partial pressure gauge for EAN32 by depth">
-              <text x="0" y="20" class="mono" fill="var(--muted)" font-size="12">EAN32</text>
-              <rect x="0" y="40" width="400" height="20" rx="10" fill="var(--line-strong)"/>
-              <rect id="nitrox-fill" x="0" y="40" width="0" height="20" rx="10" fill="var(--teal)"/>
-              <line x1="350" y1="30" x2="350" y2="70" stroke="var(--warn)" stroke-width="2"/>
-              <text x="350" y="86" class="mono" fill="var(--warn)" font-size="11" text-anchor="middle">1.4</text>
-            </svg>
-            <div class="demo-controls">
-              <input type="range" id="nitrox-depth" min="0" max="40" step="1" value="18" aria-label="depth">
-              <div class="demo-readouts">
-                <div class="demo-readout-row">
-                  <span class="label"><span class="t-he">עומק</span><span class="t-en">depth</span></span>
-                  <span class="value mono num" id="nitrox-depth-readout">18 m</span>
-                </div>
-                <div class="demo-readout-row">
-                  <span class="label"><span class="t-he">לחץ חלקי של חמצן</span><span class="t-en">oxygen partial pressure</span></span>
-                  <span class="value mono num" id="nitrox-po2-readout">0.90 bar</span>
-                </div>
-              </div>
-              <p class="demo-warn-note" id="nitrox-warn-note">
-                <span class="t-he">מעל גבול התכנון (1.4)</span><span class="t-en">past the planning limit (1.4)</span>
-              </p>
-              <a class="open-lesson" href="/academy/subjects/nitrox/">
-                <span class="t-he">לשיעור המלא</span><span class="t-en">Open the full lesson</span>
-                <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 

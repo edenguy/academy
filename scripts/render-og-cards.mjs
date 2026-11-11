@@ -41,14 +41,14 @@ const CARDS = [
     dir: 'rtl',
     title: 'לא משננים. תופסים.',
     subtitle: 'האקדמיה · Academy',
-    tagline: 'התחיל מקורס נייטרוקס בעשר בלילה בשדה תעופה; היום שיעורים בכמה נושאים, ובכל אחד סימולציה שמזיזים ביד. חינם בזמן הפיילוט.',
+    tagline: 'שיעורים בכמה נושאים, ובכל אחד סימולציה שמזיזים ביד — מרגישים את הרעיון, לא רק קוראים עליו. חינם בזמן הפיילוט.',
   },
   {
     file: 'preview-square-en.jpg',
     dir: 'ltr',
     title: "Don't memorize it. Grab it.",
     subtitle: 'Academy · האקדמיה',
-    tagline: 'Started with a Nitrox course at 10pm in an airport; now lessons in several subjects, each with a simulation you move by hand. Free during the pilot.',
+    tagline: 'Lessons in several subjects, each with a simulation you move by hand — feel the idea, don\'t just read about it. Free during the pilot.',
   },
 ];
 
