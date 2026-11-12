@@ -157,10 +157,25 @@ self-unregistering service worker pattern.
   `AchievementToast`, `ProgressRing`. The **home page is a dashboard**: scrubbable hero graph,
   continue/start CTA, course-progress ring, quiz accuracy (shows "–", not "0%", before the
   first answer), earned achievements, then lesson cards with completion state.
-  Gotcha already hit: zustand `persist` calls `merge()` on *every* load, even a first visit
-  with nothing stored — a naive `{...current, ...sanitise(persisted)}` overwrites the live
-  first-paint settings with fallbacks. Math's `mergePersisted()` (in `sanitize.ts`) only adopts
-  persisted `settings` if the stored blob actually had them; keep that behaviour.
+  Gotcha already hit twice. Zustand `persist` calls `merge()` on every load, including a
+  first visit with nothing stored, and `onFinishHydration` then writes that merged state
+  back to IndexedDB.
+  - **Settings.** A naive `{...current, ...sanitise(persisted)}` overwrites the live
+    first-paint settings with the static fallback. `mergePersisted()` adopts persisted
+    `settings` only when the stored blob actually had a `settings` key. Keep that.
+  - **Your courses.** The lesson page used to call `visitLesson` before that merge. The
+    saved snapshot (empty on a first open, or an older lesson after that) replaced
+    `lastVisited` with `null` or the old id, and the hydration write stored the wipe.
+    The hub treats a missing `lastVisited` and an empty `lessonsCompleted` as never
+    started, so the row stays hidden while the learner is inside a lesson. Chemistry
+    waits for `hydrated` before `visitLesson`
+    (`apps/chemistry/src/features/lesson/LessonPage.tsx`), and `mergePersisted`
+    (`apps/chemistry/src/progress/sanitize.ts`) keeps a `lastVisited`, completion,
+    attempt, or achievement already in memory. Copy that pair. Math and Physics still
+    record the visit on mount; a subject copied from them will not appear in Your
+    courses until this is applied. Check: open one lesson, finish nothing, and read
+    `academy-<subject>:v1` — `state.lastVisited` must be that lesson id. The hub row
+    then shows 0% and that lesson's YAML title.
 - **The hub reads this storage.** Each app's record is `{state, version}` as a JSON string at
   an idb-keyval key in the default `keyval-store`/`keyval` store: `nitrox-academy:v1`,
   `academy-math:v1`, `academy-physics:v1`, `academy-chemistry:v1`. The hub reads only `lessonsCompleted` and
@@ -308,7 +323,10 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
    different explorer shapes, update `src/i18n/locales/{en,he}.json` for the app's own copy.
    Rename the progress store key (`academy-<subject>:v1`) and the pre-paint script's
    localStorage keys; rewrite achievements for the subject. Never copy another subject's lesson
-   text or facts.
+   text or facts. The Math scaffold still records a lesson visit before hydration, which
+   hides the new subject from Your courses. Replace that with Chemistry's pair: `visitLesson`
+   only after `hydrated`, and `mergePersisted` that keeps in-memory progress (see "Progress
+   system" above). Do this before the first build you ship.
 3. `vite.config.ts`: `base: '/academy/subjects/<subject>/'`, `outDir: '../../docs/subjects/<subject>'`.
 4. Give it its own logo mark and a subject palette (extend the Bench tokens; keep the system
    shared, the palette per subject).
