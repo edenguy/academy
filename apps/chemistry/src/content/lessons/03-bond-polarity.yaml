@@ -1,0 +1,87 @@
+id: bond-polarity
+topic: structure-and-bonding
+order: 3
+
+title:
+  en: "Polarity: the shape decides"
+  he: "קוטביות: הצורה מחליטה"
+
+subtitle:
+  en: "Two equal bond dipoles. Straight across, they cancel. Bent, they don't."
+  he: "שני דיפולים שווים בקשר. בקו ישר הם מתבטלים. בכיפוף, לא."
+
+intro:
+  - en: >-
+      In a covalent bond the shared pair is not always shared evenly. The atom that pulls
+      harder carries a partial negative charge, written δ−. The other end is δ+. That uneven
+      bond is a **polar covalent bond**. An even share is **nonpolar**.
+    he: >-
+      בקשר קוולנטי הזוג המשותף לא תמיד מחולק שווה בשווה. האטום שמושך חזק יותר נושא מטען
+      חלקי שלילי, δ−. הקצה השני הוא δ+. קשר לא שווה כזה הוא **קשר קוולנטי קוטבי**. חלוקה
+      שווה היא **לא קוטבית**.
+  - en: >-
+      A molecule can contain polar bonds and still be nonpolar. Drag the angle between two
+      **equal** bond dipoles. The number on the screen is their vector sum. It is [[2]]
+      when they point the same way, and [[0]] when the angle is [[180]] degrees. Zero means
+      the molecule is nonpolar.
+    he: >-
+      מולקולה יכולה להכיל קשרים קוטביים ועדיין להיות לא קוטבית. גררו את הזווית בין שני
+      דיפולים **שווים**. המספר על המסך הוא סכום הווקטורים שלהם: {{net}} הוא [[2]] כשהם
+      פונים לאותו כיוון, ו-[[0]] כשהזווית היא [[180]] מעלות. אפס אומר שהמולקולה לא קוטבית.
+  - en: >-
+      Carbon dioxide is the straight case: the two bond dipoles point opposite ways and
+      cancel, so the molecule is nonpolar. Water is the bent case: they do not cancel, so
+      the molecule is polar. This lesson does not show electronegativity numbers.
+    he: >-
+      פחמן דו-חמצני הוא המקרה הישר: שני דיפולי הקשר פונים לכיוונים הפוכים ומתבטלים, ולכן
+      המולקולה לא קוטבית. מים הם המקרה הכפוף: הם לא מתבטלים, ולכן המולקולה קוטבית. השיעור
+      הזה לא מציג מספרי אלקטרושליליות.
+
+explorers:
+  - kind: dipole
+    angle: 180
+    caption:
+      en: "Drag the angle. Watch the net dipole fall to zero when the molecule is straight."
+      he: "גררו את הזווית. ראו את הדיפול השקול יורד לאפס כשהמולקולה ישרה."
+
+keyPoints:
+  - en: "δ+ and δ− mark an uneven share. That bond is polar covalent. An even share is nonpolar."
+    he: "δ+ ו-δ− מסמנים חלוקה לא שווה. הקשר הזה קוולנטי קוטבי. חלוקה שווה היא לא קוטבית."
+  - en: "Two equal bond dipoles cancel at 180°. Bend them and a net dipole remains."
+    he: "שני דיפולי קשר שווים מתבטלים ב-180°. מכופפים אותם, ונשאר דיפול שקול."
+  - en: "CO2 is linear and nonpolar. H2O is bent and polar. The shape, not just the bonds, decides."
+    he: "CO2 קווי ולא קוטבי. H2O כפוף וקוטבי. הצורה, לא רק הקשרים, מחליטה."
+
+quiz:
+  - type: mcq
+    id: q1-co2
+    prompt:
+      en: "Carbon dioxide has two polar bonds in a straight line. The molecule is:"
+      he: "לפחמן דו-חמצני יש שני קשרים קוטביים על קו ישר. המולקולה היא:"
+    choices:
+      - en: "Nonpolar, because the two bond dipoles cancel"
+        he: "לא קוטבית, כי שני דיפולי הקשר מתבטלים"
+      - en: "Polar, because every polar bond makes a polar molecule"
+        he: "קוטבית, כי כל קשר קוטבי יוצר מולקולה קוטבית"
+      - en: "Ionic, because the charges are partial"
+        he: "יונית, כי המטענים חלקיים"
+    correctIndex: 0
+    explanation:
+      en: "Partial charges on a straight molecule point opposite ways. The vector sum at 180° is zero, so the molecule is nonpolar."
+      he: "מטענים חלקיים במולקולה ישרה פונים לכיוונים הפוכים. סכום הווקטורים ב-180° הוא אפס, ולכן המולקולה לא קוטבית."
+  - type: mcq
+    id: q2-water
+    prompt:
+      en: "Water is bent, not straight. What does that do to the two bond dipoles?"
+      he: "מים כפופים, לא ישרים. מה זה עושה לשני דיפולי הקשר?"
+    choices:
+      - en: "They cancel, so water is nonpolar"
+        he: "הם מתבטלים, ולכן מים לא קוטביים"
+      - en: "They do not cancel, so the molecule is polar"
+        he: "הם לא מתבטלים, ולכן המולקולה קוטבית"
+      - en: "The bend turns the bonds into ionic bonds"
+        he: "הכיפוף הופך את הקשרים לקשרים יוניים"
+    correctIndex: 1
+    explanation:
+      en: "A bend leaves a nonzero vector sum. That net dipole is why the water molecule is polar."
+      he: "כיפוף משאיר סכום וקטורים שאינו אפס. הדיפול השקול הזה הוא הסיבה שמולקולת המים קוטבית."

@@ -68,7 +68,7 @@
     var SUBJECTS = [
       { key: 'math', x: 120, live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
       { key: 'physics', x: 270, live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'chemistry', x: 420, live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
+      { key: 'chemistry', x: 420, live: true, url: '/academy/subjects/chemistry/', nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'פיילוט', statusEn: 'PILOT' },
     ];
 
     var totalLength = curvePath.getTotalLength();
@@ -406,6 +406,9 @@
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
       physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
                  lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
+                 lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
+      chemistry: { key: 'academy-chemistry:v1', total: 6, home: '/academy/subjects/chemistry/',
+                 lessonUrl: function (id) { return '/academy/subjects/chemistry/#/lesson/' + id; },
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
     };
 

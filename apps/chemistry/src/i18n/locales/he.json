@@ -1,0 +1,135 @@
+{
+  "app": {
+    "name": "אקדמיית הכימיה",
+    "unofficial": "כלי לימוד עצמאי ובלתי רשמי",
+    "skipToContent": "מעבר לתוכן"
+  },
+  "nav": {
+    "home": "בית"
+  },
+  "common": {
+    "close": "סגירה"
+  },
+  "settings": {
+    "language": "שפה",
+    "theme": "מצב תצוגה",
+    "music": "מוזיקת רקע רגועה"
+  },
+  "home": {
+    "eyebrowNew": "פיילוט חדש",
+    "heroTitle": "בואו לראות",
+    "heroTitle2": "מה מחזיק חומר",
+    "heroBody": "גוררים אלקטרון, זווית של קשר, או מולקולת מים שנייה, ורואים את הקשר מגיב. שישה שיעורים על מבנה וקישור.",
+    "lessonsTitle": "השיעורים",
+    "lessonLabel": "שיעור {{n}}",
+    "start": "התחלה",
+    "continue": "המשך",
+    "review": "חזרה על השיעור",
+    "done": "הושלם",
+    "questionsCount": "{{count}} שאלות תרגול",
+    "startAria": "התחלה: {{title}}",
+    "reviewAria": "חזרה על השיעור: {{title}}"
+  },
+  "hero": {
+    "signatureHint": "הזיזו את האצבע על הגרף"
+  },
+  "dashboard": {
+    "progressTitle": "ההתקדמות שלכם",
+    "lessonsDone": "{{done}} מתוך {{total}} שיעורים",
+    "accuracyTitle": "דיוק בתרגול",
+    "accuracyEmpty": "עדיין לא נענו שאלות",
+    "accuracyStat": "{{correct}} מתוך {{total}} נכונות",
+    "achievementsTitle": "הישגים",
+    "achievementsEmpty": "סיימו שיעור כדי לזכות בתג הראשון שלכם",
+    "achievementUnlocked": "הישג נפתח",
+    "continueTitle": "תמשיכו מהנקודה שעצרתם בה",
+    "startTitle": "מוכנים להתחיל?",
+    "startBody": "בחרו שיעור למטה, או קפצו ישר לשיעור הראשון.",
+    "continueCta": "המשך",
+    "startCta": "התחלת הלימוד",
+    "upNext": "בתור הבא"
+  },
+  "achievements": {
+    "first-lesson": { "title": "שיעור ראשון", "body": "סיימתם את השיעור הראשון שלכם." },
+    "topic-complete": { "title": "מבנה וקישור, הושלם", "body": "סיימתם את כל השיעורים בפרק הזה." },
+    "ten-correct": { "title": "עשר תשובות נכונות", "body": "עניתם נכון על 10 שאלות תרגול." },
+    "all-complete": { "title": "אקדמיית הכימיה, הושלמה", "body": "סיימתם את כל השיעורים." }
+  },
+  "lesson": {
+    "backHome": "כל השיעורים",
+    "yes": "כן",
+    "no": "לא",
+    "varies": "משתנה",
+    "formula": "נוסחה",
+    "conducts": "מוליך",
+    "pair": "זוג",
+    "state": "מצב",
+    "states": { "solid": "מוצק", "melt": "התכה", "solution": "תמיסה" },
+    "electronsMoved": "אלקטרונים שעברו",
+    "ionGraph": "אלקטרון נע מאטום של מתכת לאטום של אל-מתכת",
+    "pairsCount": "זוגות משותפים",
+    "bondOrder": "סדר קשר",
+    "arrangement": "סידור",
+    "arrangements": { "molecular": "מולקולות", "network": "סריג" },
+    "sharedGraph": "זוגות אלקטרונים משותפים, או סריג קוולנטי",
+    "netDipole": "דיפול שקול",
+    "polarity": "מולקולה",
+    "polar": "קוטבית",
+    "nonpolar": "לא קוטבית",
+    "angle": "זווית",
+    "dipoleGraph": "שני דיפולי קשר שווים והסכום שלהם",
+    "holds": "הסריג מחזיק",
+    "electronsDrift": "אלקטרונים זורמים",
+    "shear": "גזירה",
+    "drift": "זרימה",
+    "seaGraph": "יונים חיוביים בים של אלקטרונים",
+    "hydrogenBond": "קשר מימן",
+    "separation": "מרחק",
+    "rotation": "סיבוב",
+    "waterGraph": "שתי מולקולות מים. קו מקווקו הוא קשר מימן.",
+    "answer": "תשובה",
+    "material": "מבנה",
+    "materials": { "ionic": "יוני", "molecular": "מולקולרי", "metallic": "מתכתי", "network": "סריג" },
+    "probe": "בדיקה",
+    "probes": { "conductSolid": "מוליך כמוצק", "conductMelt": "מוליך כשמותכים", "dissolve": "נמס", "meltEasy": "ניתך בקלות" },
+    "probeGraph": "המבנה שבודקים",
+    "keyPointsTitle": "נקודות מפתח",
+    "quizTitle": "זמן לתרגל",
+    "prevLesson": "השיעור הקודם",
+    "nextLesson": "השיעור הבא",
+    "backToLessons": "חזרה לכל השיעורים"
+  },
+  "quiz": {
+    "check": "בדיקת תשובה",
+    "tryAgain": "ניסיון נוסף",
+    "correct": "נכון!",
+    "incorrect": "לא בדיוק",
+    "explanation": "הסבר",
+    "numericPlaceholder": "התשובה שלכם",
+    "progress": "שאלה {{current}} מ-{{total}}",
+    "finished": "כל הכבוד! סיימתם את שאלות התרגול של השיעור.",
+    "retake": "תרגול חוזר",
+    "next": "השאלה הבאה"
+  },
+  "footer": {
+    "disclaimer": "אקדמיית הכימיה היא כלי לימוד עצמאי ובלתי רשמי, ואינה תחליף להוראה בכיתה.",
+    "credit": "נוצר על ידי גיא עדן"
+  },
+  "feedback": {
+    "open": "משוב",
+    "title": "שאלה, רעיון או באג?",
+    "subtitle": "נשמח לשמוע. אפשר גם לצרף תמונת מסך.",
+    "typeQuestion": "שאלה",
+    "typeIdea": "רעיון",
+    "typeFeature": "בקשת שיפור",
+    "typeBug": "דיווח על באג",
+    "messageLabel": "מה תרצו לספר לנו?",
+    "fileLabel": "תמונת מסך (רשות)",
+    "fileChoose": "בחירת קובץ…",
+    "emailLabel": "אימייל לחזרה אליכם (רשות)",
+    "send": "שליחה",
+    "sending": "שולח…",
+    "success": "תודה! קיבלנו את ההודעה שלכם.",
+    "error": "משהו השתבש. נסו שוב, או כתבו ישירות."
+  }
+}

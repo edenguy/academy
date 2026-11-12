@@ -51,7 +51,7 @@
   color-scheme: dark;
 }
 
-/* === SKIN BASE — identical in apps/math and apps/physics; keep in sync (diff them) === */
+/* === SKIN BASE — identical in apps/math, apps/physics, and apps/chemistry; keep in sync (diff them) === */
 
 :root {
   --r-xl: 20px;   /* hero signature panel, explorer "bench" */

@@ -15,14 +15,16 @@ academy/                              (this repo)
 ├── apps/                              SOURCE — never served
 │   ├── nitrox/                         source for Nitrox Academy (enriched-air diving theory)
 │   ├── math/                           source for Math Academy
-│   └── <subject>/                       future subjects follow the same shape
+│   ├── physics/                        source for Physics Academy
+│   └── chemistry/                      source for Chemistry Academy
 └── docs/                              SERVED by GitHub Pages — the whole site lives here
     ├── index.html                      landing page, listing every subject
     ├── hub/                             the hub's OWN assets only (favicon.svg, social/) — nothing a subject owns
     └── subjects/
         ├── nitrox/                       built output of apps/nitrox, at /academy/subjects/nitrox/
         ├── math/                         built output of apps/math, at /academy/subjects/math/
-        └── <subject>/                     built output of a future apps/<subject>
+        ├── physics/                      built output of apps/physics, at /academy/subjects/physics/
+        └── chemistry/                    built output of apps/chemistry, at /academy/subjects/chemistry/
 ```
 
 A subject never touches another subject's code; what's shared (a UI primitive, the

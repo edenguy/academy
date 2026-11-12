@@ -1,0 +1,83 @@
+id: covalent-bond
+topic: structure-and-bonding
+order: 2
+
+title:
+  en: "Covalent bond: a shared pair"
+  he: "קשר קוולנטי: זוג משותף"
+
+subtitle:
+  en: "One pair, two, or three — and a lattice where nothing is a separate molecule"
+  he: "זוג אחד, שניים, או שלושה — וסריג שבו אין מולקולה נפרדת"
+
+intro:
+  - en: >-
+      Two atoms can **share** a pair of electrons instead of handing one over. That shared
+      pair is a covalent bond. One pair is a **single** bond. Two pairs are a **double** bond.
+      Three pairs are a **triple** bond.
+    he: >-
+      שני אטומים יכולים **לחלוק** זוג אלקטרונים במקום למסור אחד. הזוג המשותף הזה הוא קשר
+      קוולנטי. זוג אחד הוא קשר **יחיד**. שני זוגות הם קשר **כפול**. שלושה זוגות הם קשר **משולש**.
+  - en: >-
+      A Lewis picture is just those pairs, drawn between the atoms. The count on the screen
+      is the bond order: [[1]], [[2]], or [[3]] shared pairs. Nothing else is being measured.
+    he: >-
+      נוסחת לואיס היא פשוט הזוגות האלה, מצוירים בין האטומים. המספר על המסך הוא סדר הקשר:
+      [[1]], [[2]] או [[3]] זוגות משותפים. שום דבר אחר לא נמדד כאן.
+  - en: >-
+      In a **molecular** substance the sharing stops at the edge of each molecule. In a
+      **covalent network**, like diamond, every atom is tied to its neighbors. There is no
+      separate molecule to pick up.
+    he: >-
+      בחומר **מולקולרי** השיתוף נעצר בקצה של כל מולקולה. ב**סריג קוולנטי**, כמו יהלום, כל
+      אטום קשור לשכניו. אין מולקולה נפרדת שאפשר להרים.
+
+explorers:
+  - kind: sharedPairs
+    order: 1
+    arrangement: molecular
+    caption:
+      en: "Move the handle to add shared pairs. Then switch to a network."
+      he: "הזיזו את הידית כדי להוסיף זוגות משותפים. אחר כך עברו לסריג."
+
+keyPoints:
+  - en: "A covalent bond is a shared pair of electrons. Single, double, and triple mean one, two, and three pairs."
+    he: "קשר קוולנטי הוא זוג אלקטרונים משותף. יחיד, כפול ומשולש הם זוג אחד, שניים ושלושה."
+  - en: "A Lewis picture draws those pairs between the atoms."
+    he: "נוסחת לואיס מציירת את הזוגות האלה בין האטומים."
+  - en: "Molecular substances are separate molecules. Diamond is a covalent network: every atom is bonded to its neighbors."
+    he: "חומרים מולקולריים הם מולקולות נפרדות. יהלום הוא סריג קוולנטי: כל אטום קשור לשכניו."
+
+quiz:
+  - type: mcq
+    id: q1-double
+    prompt:
+      en: "A double bond is which of these?"
+      he: "קשר כפול הוא איזה מאלה?"
+    choices:
+      - en: "Two atoms that have swapped electrons and become ions"
+        he: "שני אטומים שהחליפו אלקטרונים והפכו ליונים"
+      - en: "Two shared pairs between the same two atoms"
+        he: "שני זוגות משותפים בין אותם שני אטומים"
+      - en: "A bond that is twice as long as a single bond"
+        he: "קשר שאורכו כפול מקשר יחיד"
+    correctIndex: 1
+    explanation:
+      en: "Bond order here is the number of shared pairs. Double means two pairs. This lesson does not measure a length."
+      he: "סדר הקשר כאן הוא מספר הזוגות המשותפים. כפול פירושו שני זוגות. השיעור הזה לא מודד אורך."
+  - type: mcq
+    id: q2-diamond
+    prompt:
+      en: "Diamond is best described as which kind of substance?"
+      he: "יהלום מתואר הכי נכון כאיזה סוג חומר?"
+    choices:
+      - en: "A pile of small separate molecules"
+        he: "ערימה של מולקולות קטנות ונפרדות"
+      - en: "An ionic lattice of C+ and C−"
+        he: "סריג יוני של C+ ו-C−"
+      - en: "A covalent network, each atom bonded to its neighbors"
+        he: "סריג קוולנטי, כל אטום קשור לשכניו"
+    correctIndex: 2
+    explanation:
+      en: "In diamond the covalent bonds do not stop at a molecule. They run through the whole network."
+      he: "ביהלום הקשרים הקוולנטיים לא נעצרים במולקולה. הם נמשכים דרך כל הסריג."

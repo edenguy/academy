@@ -354,9 +354,10 @@ footer.hub-footer a svg { width: 12px; height: 12px; stroke: currentColor; fill:
    --muted as text on a tile. */
 .tile[data-subject="math"]      { --c1: #6250d6; --c2: #e87ba4; --ct: #5542c4; }  /* 6.3:1 */
 .tile[data-subject="physics"]   { --c1: #3457d1; --c2: #17a3e8; --ct: #2b4bbd; }  /* 6.6:1 */
-.tile[data-subject="chemistry"] { --c1: var(--amber); --c2: var(--amber); --ct: var(--ink-2); }
+.tile[data-subject="chemistry"] { --c1: #e0922a; --c2: #14998a; --ct: #8a4e08; }  /* 6.2:1 on light tint */
 :root[data-theme="dark"] .tile[data-subject="math"]    { --ct: #a99df0; }  /* 6.6:1 */
 :root[data-theme="dark"] .tile[data-subject="physics"] { --ct: #7fa6ff; }  /* 6.7:1 */
+:root[data-theme="dark"] .tile[data-subject="chemistry"] { --ct: #f0b45a; }  /* 8.0:1 on dark tint */
 
 :root { --ct-ink: #ffffff; --tile-tint: 8%; --tile-edge: 30%; }
 :root[data-theme="dark"] { --ct-ink: #0d0824; --tile-tint: 14%; --tile-edge: 26%; }
@@ -369,6 +370,8 @@ section.subjects { margin-block: 26px 56px; }
 
 .tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 640px) and (max-width: 899px) { .tiles > .tile:nth-child(3) { grid-column: 1 / -1; } }
+@media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .tile {
   position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0;
@@ -390,9 +393,11 @@ section.subjects { margin-block: 26px 56px; }
      (its tangent is computed for the midpoint, so its dot must stay put). */
   .tile[data-subject="math"]:hover .pv-dot { offset-distance: 78%; }
   .tile[data-subject="physics"]:hover .pv-tangent { stroke-dashoffset: 0; }
+  .tile[data-subject="chemistry"]:hover .pv-dot { offset-distance: 78%; }
 }
 .tile[data-subject="math"]:focus-visible .pv-dot { offset-distance: 78%; }
 .tile[data-subject="physics"]:focus-visible .pv-tangent { stroke-dashoffset: 0; }
+.tile[data-subject="chemistry"]:focus-visible .pv-dot { offset-distance: 78%; }
 
 .tile-head { display: flex; align-items: center; gap: 12px; }
 .tile-badge {
@@ -419,12 +424,15 @@ section.subjects { margin-block: 26px 56px; }
 .tile-preview .pv-mix { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
 .tile-preview .pv-tangent { stroke: var(--c1); stroke-width: 2; stroke-dasharray: 90; stroke-dashoffset: 90; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 320ms var(--ease); }
 .tile-preview .pv-dot { fill: var(--c2); stroke: var(--panel-solid); stroke-width: 2; }
+.tile-preview .pv-bond { stroke: var(--c1); stroke-width: 2; }
+.tile-preview .pv-atom { fill: none; stroke: var(--c1); stroke-width: 2; }
 /* The handle dot rides the curve with CSS motion path where supported (same mechanic as the
    logo, §1.5); without support it stays at its static cx/cy on the curve. */
 @supports (offset-path: path('M0 0 L1 1')) {
   .tile-preview .pv-dot { cx: 0; cy: 0; offset-distance: 50%; offset-rotate: 0deg; transition: offset-distance 320ms var(--ease); }
   .tile[data-subject="math"]    .pv-dot { offset-path: path('M16 64 Q 160 64 304 8'); }
   .tile[data-subject="physics"] .pv-dot { offset-path: path('M16 60 C 120 60, 200 12, 304 12'); }
+  .tile[data-subject="chemistry"] .pv-dot { offset-path: path('M56 36 L264 36'); }
 }
 
 .tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
@@ -446,21 +454,6 @@ section.subjects { margin-block: 26px 56px; }
 .tile.has-progress .meta-first, .tile:not(.has-progress) .meta-progress,
 .tile.has-progress .cta-start, .tile:not(.has-progress) .cta-continue,
 .tile:not(.is-complete) .cta-review, .tile.is-complete .cta-continue { display: none; }
-
-/* State: coming soon — a compact strip, not a card; not a link */
-.tile--soon {
-  flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
-  background: transparent; border: 1px dashed var(--line-strong); box-shadow: none;
-}
-/* 0.8, not the spec's 0.7: --ink-2 text at 0.7 over the light page is 4.05:1 (< 4.5) */
-.tile--soon.reveal.in-view { opacity: 0.8; }
-.tile--soon:active { transform: none; }
-.tile--soon .tile-badge { width: 36px; height: 36px; border-radius: 11px; box-shadow: none; background: color-mix(in srgb, var(--amber) 35%, var(--panel-solid)); }
-.tile--soon .tile-badge svg { stroke: var(--ink-2); width: 20px; height: 20px; }
-.tile--soon h3 { font-size: 15px; }
-.tile--soon .tile-promise { font-size: 13px; }
-@media (min-width: 640px) { .tile--soon { grid-column: 1 / -1; } }
-@media (hover: hover) { .tile--soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; } }
 
 /* Method strip: two columns on desktop so it stops being a second screen of its own */
 @media (min-width: 900px) {
@@ -485,8 +478,7 @@ section.subjects { margin-block: 26px 56px; }
 @media (prefers-reduced-motion: reduce) {
   .mark .handle { animation: none !important; }
   .reveal, .tile { transition: none !important; transform: none !important; }
-  .reveal:not(.tile--soon) { opacity: 1 !important; }
-  .tile--soon { opacity: 0.8 !important; }
+  .reveal { opacity: 1 !important; }
   .mini-slider .thumb, .mini-chart .bar, .hero-handle-group, .axis-chip, .btn { transition: none !important; }
 }
 
