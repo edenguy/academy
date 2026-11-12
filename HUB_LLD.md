@@ -359,8 +359,9 @@ Subject colours are **not** `:root` hub tokens. *Amended by §11.4:* each subjec
 (gradient pair, from its own app's favicon) and `--ct` (a text-safe variant, per theme) are
 declared in `hub.css` on `[data-subject="…"]` selectors — not inline — so dark mode can
 override them: Nitrox `#0e9f94 → #2fd4c6`, Math `#6250d6 → #e87ba4`, Physics `#3457d1 →
-#17a3e8` (`apps/physics/public/favicon.svg`), Chemistry `var(--amber)` (placeholder until the
-app exists). The hero nodes keep their inline fills (they are SVG attributes).
+#17a3e8` (`apps/physics/public/favicon.svg`), Chemistry `#e0922a → #14998a`
+(`apps/chemistry/public/favicon.svg`). The hero nodes keep their inline fills (they are SVG
+attributes). Chemistry's node fill is `#e0922a`, the same `--c1`.
 
 Spectrum line (the only multi-hue gradient on the page), reused as a CSS value:
 `--spectrum: linear-gradient(90deg, var(--teal), var(--violet) 38%, var(--pink) 70%, var(--amber));`
@@ -905,9 +906,11 @@ For the tiles restructure, run §11.9 as well — it supersedes the subject-card
 > (it's unrelated to the school-subject academies): no tile, hero node/axis chip, demo tab or
 > `SOURCES` entry, no link on `/academy/subjects/`, and the share cards no longer mention it.
 > Its URL stays live. Wherever this section describes a Nitrox tile, node, chip, pO₂ demo or
-> `nitrox-academy:v1` read, that part is **superseded**: the hub has two subject tiles (Math,
-> Physics) + the Chemistry strip, a single Riemann demo (no tab row), tiles in a 2-column grid
-> from 640 px, and hero positions Math x=120, Physics x=270, Chemistry x=420.
+> `nitrox-academy:v1` read, that part is **superseded**: the hub has three subject tiles (Math,
+> Physics, Chemistry), a single Riemann demo (no tab row), and hero positions Math x=120,
+> Physics x=270, Chemistry x=420. Chemistry is a live Pilot tile, not a soon strip. The tile
+> grid is one column on a phone, two columns from 640 px with the third tile spanning both
+> columns until 899 px, and three equal columns from 900 px.
 
 ## 11. Revision — "Inviting landing": restructure around subject tiles (spec, implemented)
 
@@ -1051,10 +1054,11 @@ the actual tint washes: light = `--c1` at 8 % over `#ffffff`, dark = `--c1` at 1
 .tile[data-subject="nitrox"]    { --c1: #0e9f94; --c2: #2fd4c6; --ct: #0a6f67; }  /* 5.5:1 on light tint */
 .tile[data-subject="math"]      { --c1: #6250d6; --c2: #e87ba4; --ct: #5542c4; }  /* 6.3:1 */
 .tile[data-subject="physics"]   { --c1: #3457d1; --c2: #17a3e8; --ct: #2b4bbd; }  /* 6.6:1 */
-.tile[data-subject="chemistry"] { --c1: var(--amber); --c2: var(--amber); --ct: var(--ink-2); }
+.tile[data-subject="chemistry"] { --c1: #e0922a; --c2: #14998a; --ct: #8a4e08; }  /* 6.2:1 on light tint #fdf6ee */
 :root[data-theme="dark"] .tile[data-subject="nitrox"]  { --ct: #2fd4c6; }  /* 8.2:1 on dark tint */
 :root[data-theme="dark"] .tile[data-subject="math"]    { --ct: #a99df0; }  /* 6.6:1 */
 :root[data-theme="dark"] .tile[data-subject="physics"] { --ct: #7fa6ff; }  /* 6.7:1 */
+:root[data-theme="dark"] .tile[data-subject="chemistry"] { --ct: #f0b45a; }  /* 8.0:1 on dark tint #322238 */
 
 :root { --ct-ink: #ffffff; --tile-tint: 8%; --tile-edge: 30%; }
 :root[data-theme="dark"] { --ct-ink: #0d0824; --tile-tint: 14%; --tile-edge: 26%; }
@@ -1067,6 +1071,8 @@ section.subjects { margin-block: 26px 56px; }
 
 .tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+/* 640–899: the third live tile spans both columns so it is not a half-width orphan. */
+@media (min-width: 640px) and (max-width: 899px) { .tiles > .tile:nth-child(3) { grid-column: 1 / -1; } }
 @media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .tile {
@@ -1088,9 +1094,11 @@ section.subjects { margin-block: 26px 56px; }
      (its tangent is computed for the midpoint, so its dot must stay put). */
   .tile[data-subject="nitrox"]:hover .pv-dot, .tile[data-subject="math"]:hover .pv-dot { offset-distance: 78%; }
   .tile[data-subject="physics"]:hover .pv-tangent { stroke-dashoffset: 0; }
+  .tile[data-subject="chemistry"]:hover .pv-dot { offset-distance: 78%; }
 }
 .tile[data-subject="nitrox"]:focus-visible .pv-dot, .tile[data-subject="math"]:focus-visible .pv-dot { offset-distance: 78%; }
 .tile[data-subject="physics"]:focus-visible .pv-tangent { stroke-dashoffset: 0; }
+.tile[data-subject="chemistry"]:focus-visible .pv-dot { offset-distance: 78%; }
 
 .tile-head { display: flex; align-items: center; gap: 12px; }
 .tile-badge {
@@ -1117,6 +1125,8 @@ section.subjects { margin-block: 26px 56px; }
 .tile-preview .pv-mix { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
 .tile-preview .pv-tangent { stroke: var(--c1); stroke-width: 2; stroke-dasharray: 90; stroke-dashoffset: 90; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 320ms var(--ease); }
 .tile-preview .pv-dot { fill: var(--c2); stroke: var(--panel-solid); stroke-width: 2; }
+.tile-preview .pv-bond { stroke: var(--c1); stroke-width: 2; }
+.tile-preview .pv-atom { fill: none; stroke: var(--c1); stroke-width: 2; }
 /* The handle dot rides the curve with CSS motion path where supported (same mechanic as the
    logo, §1.5); without support it stays at its static cx/cy on the curve. */
 @supports (offset-path: path('M0 0 L1 1')) {
@@ -1124,6 +1134,7 @@ section.subjects { margin-block: 26px 56px; }
   .tile[data-subject="nitrox"]  .pv-dot { offset-path: path('M16 52.8 L304 8'); }
   .tile[data-subject="math"]    .pv-dot { offset-path: path('M16 64 Q 160 64 304 8'); }
   .tile[data-subject="physics"] .pv-dot { offset-path: path('M16 60 C 120 60, 200 12, 304 12'); }
+  .tile[data-subject="chemistry"] .pv-dot { offset-path: path('M56 36 L264 36'); }
 }
 
 .tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
@@ -1146,17 +1157,7 @@ section.subjects { margin-block: 26px 56px; }
 .tile.has-progress .cta-start, .tile:not(.has-progress) .cta-continue,
 .tile:not(.is-complete) .cta-review, .tile.is-complete .cta-continue { display: none; }
 
-/* State: coming soon — a compact strip, not a card; not a link */
-.tile--soon {
-  flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
-  background: transparent; border: 1px dashed var(--line-strong); box-shadow: none; opacity: 0.7;
-}
-.tile--soon .tile-badge { width: 36px; height: 36px; border-radius: 11px; box-shadow: none; background: color-mix(in srgb, var(--amber) 35%, var(--panel-solid)); }
-.tile--soon .tile-badge svg { stroke: var(--ink-2); width: 20px; height: 20px; }
-.tile--soon h3 { font-size: 15px; }
-.tile--soon .tile-promise { font-size: 13px; }
-@media (min-width: 640px) { .tile--soon { grid-column: 1 / -1; } }
-@media (hover: hover) { .tile--soon:hover { transform: none; border-color: var(--line-strong); box-shadow: none; } }
+/* The Chemistry soon strip is gone. Do not add `.tile--soon` back for a live subject. */
 
 /* Method strip: two columns on desktop so it stops being a second screen of its own */
 @media (min-width: 900px) {
@@ -1322,15 +1323,44 @@ after `</section>` of the hero (before `.live`, which now comes before `.method`
       </div>
     </a>
 
-    <div class="tile tile--soon reveal" data-subject="chemistry">
-      <div class="tile-badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9V3M7.5 15h9"/></svg>
+    <a class="tile reveal" href="/academy/subjects/chemistry/" data-subject="chemistry">
+      <div class="tile-head">
+        <div class="tile-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9V3M7.5 15h9"/></svg>
+        </div>
+        <div class="tile-title">
+          <h3><span class="t-he">אקדמיית הכימיה</span><span class="t-en">Chemistry Academy</span></h3>
+          <span class="tile-status"><span class="dot"></span><span class="t-he">פיילוט</span><span class="t-en">Pilot</span></span>
+        </div>
       </div>
-      <div class="tile-title">
-        <h3><span class="t-he">אקדמיית הכימיה</span><span class="t-en">Chemistry Academy</span></h3>
-        <p class="tile-promise"><span class="t-he">בקרוב · בעבודה, עדיין אין מה לפתוח.</span><span class="t-en">Soon · in the works, nothing to open yet.</span></p>
+      <p class="tile-promise">
+        <span class="t-he">גוררים אלקטרון מאטום לאטום — והקשר, המטען והסריג מגיבים.</span>
+        <span class="t-en">Drag an electron from one atom to another — the bond, the charge, and the lattice respond.</span>
+      </p>
+      <!-- Electron moving from a metal atom to a nonmetal, the ionTransfer lesson's own gesture.
+           No numbers: the charge table lives in apps/chemistry/src/chemistry/ionic.ts.
+           Plot: viewBox 320×72. Atoms at (56, 36) and (264, 36). The electron rides M56 36 L264 36.
+           Static fallback is 38% along that line: x = 56 + 0.38×208 = 135, y = 36. -->
+      <svg class="tile-preview" viewBox="0 0 320 72" aria-hidden="true">
+        <line class="pv-bond" x1="56" y1="36" x2="264" y2="36"/>
+        <circle class="pv-atom" cx="56" cy="36" r="14"/>
+        <circle class="pv-atom" cx="264" cy="36" r="14"/>
+        <circle class="pv-dot" cx="135" cy="36" r="4.5"/>
+      </svg>
+      <div class="tile-foot">
+        <span class="tile-meta">
+          <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
+          <span class="meta-first"><span class="t-he">6 שיעורים · נושא אחד</span><span class="t-en">6 lessons · 1 topic</span></span>
+          <span class="meta-progress"><span class="t-he"></span><span class="t-en"></span></span>
+        </span>
+        <span class="tile-cta">
+          <span class="cta-start"><span class="t-he">להתחיל</span><span class="t-en">Start</span></span>
+          <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
+          <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
+          <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
       </div>
-    </div>
+    </a>
 
   </div>
 </section>
@@ -1346,14 +1376,17 @@ Notes for the implementer:
 - Lesson totals in `meta-first` are **content facts**, not design: Nitrox 11 = 5 (ch01) + 6
   (ch02) in `apps/nitrox/src/content/chapters/*.json` (the eight roadmap chapters have no
   lessons and are not counted — the app's own `lessonCount()` counts the same way, and its
-  dashboard shows "0 מתוך 11"); Math 6 = `apps/math/src/content/lessons/*.yaml` in 2 topics
-  (`topics.ts`); Physics 3 = `apps/physics/src/content/lessons/*.yaml`, one topic. They are
-  repeated as `total` in `hub.js` (§11.7) and both places must be updated together whenever
-  content is added — §11.9 checks them against the YAML/JSON.
+  dashboard shows "0 מתוך 11"). Nitrox is unlisted, so that 11 is not a hub tile. Math 6 =
+  `apps/math/src/content/lessons/*.yaml` in 2 topics (`topics.ts`); Physics 3 =
+  `apps/physics/src/content/lessons/*.yaml`, one topic; Chemistry 6 =
+  `apps/chemistry/src/content/lessons/*.yaml`, one topic. They are repeated as `total` in
+  `hub.js` (§11.7) and both places must be updated together whenever content is added —
+  §11.9 checks them against the YAML.
 - Both `meta-progress` spans start empty and are filled by `hub.js`. Digits inside a Hebrew
   sentence (`3 מתוך 11 שיעורים`) are **not** wrapped in `.num` (§3.3's rule).
-- The Chemistry strip is a `<div>`: no `href`, no `tabindex`, no "notify me". Its status
-  word is inside the promise so the strip has one line of text, not a chip row.
+- Chemistry is a live `<a class="tile">`, same anatomy as Physics. Its preview has no numbers.
+  The electron's static `cx`/`cy` is 38% along `M56 36 L264 36`. Hover and focus slide it to
+  78% on Chemistry's own path only — it does not use Math's parabola.
 - The whole tile is one `<a>`; the "pill" is a `<span>` (no nested interactive elements).
 
 ### 11.6 Copy — every new or changed string (HE first)
@@ -1373,7 +1406,8 @@ Notes for the implementer:
 | tile.physics.promise | גוררים נקודה על גרף תנועה — והמהירות והתאוצה מגיבות. | Drag a point along a motion graph — velocity and acceleration respond. |
 | tile.physics.meta | 3 שיעורים · נושא אחד | 3 lessons · 1 topic |
 | tile.chemistry.name | אקדמיית הכימיה | Chemistry Academy |
-| tile.chemistry.promise | בקרוב · בעבודה, עדיין אין מה לפתוח. | Soon · in the works, nothing to open yet. |
+| tile.chemistry.promise | גוררים אלקטרון מאטום לאטום — והקשר, המטען והסריג מגיבים. | Drag an electron from one atom to another — the bond, the charge, and the lattice respond. |
+| tile.chemistry.meta | 6 שיעורים · נושא אחד | 6 lessons · 1 topic |
 | tile.status.live / pilot | פעיל / פיילוט | Live / Pilot |
 | tile.cta.start | להתחיל | Start |
 | tile.cta.continue | להמשיך | Continue |
@@ -1382,7 +1416,8 @@ Notes for the implementer:
 
 Headline (§2.1), eyebrow (§2.3), section titles and the footer are unchanged. The "promise"
 lines claim only what each app does today: Nitrox's MOD/depth simulation (its Lab and
-Chapter 2), Math's tangent/secant and Riemann explorers, Physics's motion scrubber. "Free" is
+Chapter 2), Math's tangent/secant and Riemann explorers, Physics's motion scrubber,
+Chemistry's electron drag between two atoms. "Free" is
 still said only in the eyebrow and footer, both tied to the pilot. The English subject names
 are the apps' own `<title>`s; the Hebrew names likewise.
 
@@ -1400,6 +1435,7 @@ writes one key:
 | Nitrox | `nitrox-academy:v1` | `apps/nitrox/src/progress/store.ts` (`name`) |
 | Math | `academy-math:v1` | `apps/math/src/progress/store.ts` |
 | Physics | `academy-physics:v1` | `apps/physics/src/progress/store.ts` |
+| Chemistry | `academy-chemistry:v1` | `apps/chemistry/src/progress/store.ts` |
 
 The stored value is a **JSON string** of `{ "state": { … partialized fields … }, "version": 1 }`.
 Observed records from the probe (fields the hub reads in bold):
@@ -1412,7 +1448,7 @@ academy-physics:v1 {"state":{"settings":{…},"lessonsCompleted":{},"lastVisited
 
 The hub reads exactly two fields per record: **`state.lessonsCompleted`** (object: lesson id →
 completion timestamp) and **`state.lastVisited`** (Nitrox: `{chapterId, lessonId}` object or
-`null`; Math/Physics: lesson-id string or `null`). Nothing else — not settings, attempts,
+`null`; Math/Physics/Chemistry: lesson-id string or `null`). Nothing else — not settings, attempts,
 achievements, assessments or the Nitrox acknowledgement. The hub never writes, never deletes,
 never opens a `readwrite` transaction, and never upgrades the database.
 
@@ -1441,6 +1477,10 @@ function tileProgress() {
                lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
     physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
                lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
+               lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
+    // nitrox above is superseded (unlisted). Do not add it back. Chemistry is a live tile.
+    chemistry: { key: 'academy-chemistry:v1', total: 6, home: '/academy/subjects/chemistry/',
+               lessonUrl: function (id) { return '/academy/subjects/chemistry/#/lesson/' + id; },
                lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
   };
 
@@ -1565,19 +1605,19 @@ single 1500 ms guard. Run it after `reveal()` so the first paint never waits on 
 2. 390×844, HE and EN, no stored progress: the first tile's badge, name and status chip are
    fully visible without scrolling (header row bottom ≤ 844 px); the hero handle panel is
    still on the first screen (top ≤ 300 px).
-3. 1440×900: three live tiles in one row of equal height; the Chemistry strip spans the full
-   row beneath; no tile is orphaned on its own row; 640–899 px shows 2 + 1 tiles with the
-   strip spanning both columns.
+3. 1440×900: Math, Physics, and Chemistry are three live tiles in one row of equal height.
+   640–899 px is two columns, and the third tile spans both so it is not a half-width orphan.
+   A phone is one column. There is no Chemistry soon strip.
 4. No horizontal overflow at 360, 390, 1440 in either language; tile text never clips; the
    pill never wraps to two lines (check EN `Continue` and HE `להמשיך` at 360 px).
 5. Each live tile's preview is honest and matches its comment: Nitrox line from (16, 52.8) to
    (304, 8) with the dashed 1.4 limit at y = 15 and labels `EAN32`/`1.4` only; Math's six
    rectangle heights equal `((i+½)/3)² × 14` px (0.39, 3.5, 9.72, 19.06, 31.5, 47.06); Physics
-   shows no numbers. No other numbers anywhere on a tile except lesson counts.
-6. Lesson counts: `meta-first` texts and `SOURCES[*].total` read 11 / 6 / 3 and equal the
-   lesson counts in `apps/nitrox/src/content/chapters/ch01.json` + `ch02.json`,
-   `apps/math/src/content/lessons/*.yaml`, `apps/physics/src/content/lessons/*.yaml`
-   (`ls | wc -l`); Nitrox's roadmap chapters are not counted.
+   shows no numbers. Chemistry shows two atoms and an electron, and no numbers. No other
+   numbers anywhere on a tile except lesson counts.
+6. Lesson counts: `meta-first` texts and `SOURCES[*].total` read Math 6, Physics 3, Chemistry 6
+   and equal `ls apps/<subject>/src/content/lessons/*.yaml | wc -l` for each. Nitrox is not on
+   the hub and is not part of this count.
 7. Contrast (any WCAG tool, both themes): `--ct` on each tile's actual background ≥ 4.5:1;
    `--ink-2` on each tile ≥ 4.5:1; pill text on `--ct` ≥ 4.5:1; no `--muted` text and no
    `--c2` text anywhere on a tile.
@@ -1588,9 +1628,9 @@ single 1500 ms guard. Run it after `reveal()` so the first paint never waits on 
 9. Hover is defined only inside `@media (hover: hover)`; on a touch emulation (Chromium
    device mode, iPhone preset) tapping a tile navigates with no stuck lifted/glowing state
    after returning. `:focus-visible` shows a 3 px `--ct` outline, offset 3 px.
-10. Hover on the Nitrox and Math tiles slides the preview dot 50 % → 78 % along the curve
-    and back; hover on Physics draws the tangent in; the Chemistry strip has no hover or
-    focus effect and is not focusable (no `href`, no `tabindex`).
+10. Hover on the Math tile slides its preview dot 50 % → 78 % along its own curve and back;
+    hover on Physics draws the tangent in; hover on Chemistry slides its electron 50 % → 78 %
+    along `M56 36 L264 36` only. Chemistry is a focusable link. Nitrox is not on the hub.
 11. In a browser without `offset-path` support (or with the `@supports` block commented out),
     every dot sits on its curve at the static `cx/cy`.
 12. Fresh browser profile (never opened any subject app): load the hub, then run
