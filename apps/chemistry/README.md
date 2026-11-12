@@ -53,7 +53,7 @@ YAML stays the source of truth. The export is a one-way copy for a reader to mar
 | Content | `src/content/lessons/*.yaml` + `schema.ts` + `topics.ts` | YAML, Zod-validated at load. Never imports React. |
 | Components | `src/components/` | `ChemistryExplorer` dispatches on `explorers[].kind`. |
 | Features | `src/features/` | `home/HomePage`, `lesson/LessonPage`. `HashRouter`. |
-| Progress | `src/progress/` | IndexedDB key `academy-chemistry:v1` via idb-keyval. |
+| Progress | `src/progress/` | IndexedDB key `academy-chemistry:v1` via idb-keyval. A visit is stored only after hydration, and `mergePersisted` keeps it. Copy both into the next subject or Your courses stays empty. |
 | i18n | `src/i18n/locales/{en,he}.json` | UI chrome only. |
 
 Palette: amber `#e0922a` → teal `#14998a` on the favicon. Text uses the darker amber

@@ -48,7 +48,10 @@ reachable at any URL.
 ## Adding a subject
 
 1. `cp -r apps/math apps/<subject>` as a starting scaffold (or `apps/nitrox` if the new
-   subject needs offline/PWA support), then rewrite its content.
+   subject needs offline/PWA support), then rewrite its content. That Math copy records a
+   lesson visit before saved progress has loaded, so the hub's Your courses list never
+   shows the subject. Take the visit-after-hydration pattern from `apps/chemistry` (see
+   `CLAUDE.md`, "Progress system") before shipping.
 2. Update its `vite.config.ts`: `base: '/academy/subjects/<subject>/'`,
    `outDir: '../../docs/subjects/<subject>'`.
 3. Give it its own logo/icon (subject-specific is correct — only the hub page's mark must

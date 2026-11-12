@@ -18,16 +18,17 @@ export function LessonPage() {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const { lessonId } = useParams<{ lessonId: string }>();
+  const hydrated = useProgress((s) => s.hydrated);
   const visitLesson = useProgress((s) => s.visitLesson);
   const completeLesson = useProgress((s) => s.completeLesson);
   const recordAttempt = useProgress((s) => s.recordAttempt);
   const lesson = lessonId ? getLesson(lessonId) : undefined;
 
-  // Last-visited lesson, for the home dashboard's "continue where you left off" — recorded on
-  // open regardless of completion, same as a visit in Nitrox's progress store.
+  // Record the visit only after hydration. A visit before that is overwritten when the
+  // saved snapshot is merged in, and the hub then treats the course as never started.
   useEffect(() => {
-    if (lesson) visitLesson(lesson.id);
-  }, [lesson, visitLesson]);
+    if (hydrated && lesson) visitLesson(lesson.id);
+  }, [hydrated, lesson, visitLesson]);
 
   if (!lesson) return <Navigate to="/" replace />;
 

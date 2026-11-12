@@ -107,4 +107,27 @@ describe('mergePersisted', () => {
     );
     expect(merged.lessonsCompleted).toEqual({ 'area-under-curve': 1 });
   });
+
+  it('keeps a visit that happened before the saved snapshot was merged', () => {
+    const started: PersistedProgress = {
+      ...current,
+      lastVisited: 'ionic-bond',
+      lessonsCompleted: { 'ionic-bond': 2 },
+      attempts: [{ lessonId: 'ionic-bond', questionId: 'q1', correct: true, at: 3 }],
+    };
+    const merged = mergePersisted(undefined, started);
+    expect(merged.lastVisited).toBe('ionic-bond');
+    expect(merged.lessonsCompleted).toEqual({ 'ionic-bond': 2 });
+    expect(merged.attempts).toEqual(started.attempts);
+    expect(merged.settings).toEqual({ locale: 'en', theme: 'light' });
+  });
+
+  it('keeps the lesson just opened when the saved snapshot names an older one', () => {
+    const merged = mergePersisted(
+      { lastVisited: 'ionic-bond', lessonsCompleted: { 'ionic-bond': 1 } },
+      { ...current, lastVisited: 'covalent-bond' },
+    );
+    expect(merged.lastVisited).toBe('covalent-bond');
+    expect(merged.lessonsCompleted).toEqual({ 'ionic-bond': 1 });
+  });
 });

@@ -1677,7 +1677,9 @@ so §11.9 items 1–2 still hold. When it is visible, page order is hero → you
 
 ### 12.1 What it shows
 
-One row per started subject, Math then Physics then Chemistry. A subject is started when
+One row per started subject, Math then Physics then Chemistry. A later subject is another
+row in the same list, after those three, with its own `SOURCES` entry, `ORDER` ids, and
+YAML titles in `TITLES`. A subject is started when
 `tileProgress()`'s existing `hasProgress` is true (`lessonsCompleted` count > 0, or a
 `lastVisited` id that passes the kebab-case check). Each row:
 
@@ -1843,3 +1845,10 @@ and writes both titles. Run it in the same `readAll` callback as the tiles.
    `.yours-link` exist only inside `@media (hover: hover)`.
 10. A started Chemistry course is a third row, after Physics, with total 6. Its stopped
     title is the YAML title, and its link follows the same `ORDER.chemistry` rule.
+11. A subject added after these three follows the same row. Opening one of its lessons and
+    leaving the quiz unfinished must leave `state.lastVisited` set to that lesson id in
+    `academy-<subject>:v1`. If the app recorded the visit before hydration and the merge
+    wrote `null` back, this section stays hidden for that subject even though the learner
+    is in the lesson. The app-side pattern that avoids that is Chemistry's: `visitLesson`
+    only after `hydrated`, and `mergePersisted` keeps the in-memory visit
+    (`CLAUDE.md`, "Progress system").
