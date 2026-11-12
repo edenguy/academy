@@ -6,7 +6,7 @@ import { TOPICS, TOPIC_ORDER } from '@/content/topics';
 import { pick } from '@/content/localize';
 import { useLocale } from '@/app/providers';
 import { useProgress, type AchievementId } from '@/progress/store';
-import { useCourseProgress, useNextLesson, useQuizAccuracy } from '@/progress/selectors';
+import { useCourseProgress, useNextLesson, useQuizAccuracy, useTopicProgress } from '@/progress/selectors';
 import { Icon } from '@/components/ui/Icon';
 import { Card } from '@/components/ui/Card';
 import { LinkButton } from '@/components/ui/Button';
@@ -15,13 +15,17 @@ import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
 import { HERO_CURVE } from '@/math/heroCurve';
 import { lessonSignature } from '@/math/lessonSignature';
-import type { Lesson } from '@/content/schema';
+import type { Lesson, TopicId } from '@/content/schema';
+import type { NextLesson } from '@/progress/selectors';
 
-function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; isDone: boolean }) {
+function LessonCard({ lesson, index, isDone, here }: { lesson: Lesson; index: number; isDone: boolean; here: 'stopped' | 'next' | null }) {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const reduceMotion = useReducedMotion();
   const draw = lessonSignature(lesson);
+  const title = pick(lesson.title, locale);
+  const aria =
+    here === 'stopped' ? t('home.hereStoppedAria', { title }) : here === 'next' ? t('home.hereNextAria', { title }) : isDone ? t('home.reviewAria', { title }) : t('home.startAria', { title });
 
   return (
     <motion.div
@@ -31,7 +35,7 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
     >
       <Link
         to={`/lesson/${lesson.id}`}
-        aria-label={isDone ? t('home.reviewAria', { title: pick(lesson.title, locale) }) : t('home.startAria', { title: pick(lesson.title, locale) })}
+        aria-label={aria}
         className="elev-1 is-link group flex flex-col gap-3 p-4 md:p-5 min-h-[172px]"
       >
         <div className="flex items-center gap-2">
@@ -39,6 +43,12 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
             {isDone ? <Icon name="check" size={15} /> : lesson.order}
           </span>
           <span className="text-[12.5px] text-muted">{t('home.questionsCount', { count: lesson.quiz.length })}</span>
+          {here && (
+            <span className="ms-auto inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill text-[12.5px] font-semibold bg-accent-soft text-accent">
+              <span className="w-1.5 h-1.5 rounded-pill bg-accent" aria-hidden="true" />
+              {here === 'stopped' ? t('home.hereStopped') : t('home.hereNext')}
+            </span>
+          )}
           {isDone && <span className="ms-auto text-[12.5px] font-semibold text-good">{t('home.done')}</span>}
         </div>
         <div>
@@ -150,10 +160,46 @@ function ProgressSection() {
   );
 }
 
-export function HomePage() {
+function TopicSection({ topicId, next, completed }: { topicId: TopicId; next: NextLesson | null; completed: Record<string, number> }) {
   const { t } = useTranslation();
   const { locale } = useLocale();
+  const topic = TOPICS[topicId];
+  const lessons = lessonsByTopic(topicId);
+  const progress = useTopicProgress(topicId);
+
+  return (
+    <section>
+      <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1.5">
+        <div className="flex items-baseline gap-3 min-w-0">
+          <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{pick(topic.title, locale)}</h2>
+          <span className="text-[12.5px] font-semibold text-ink-2">
+            <span className="num">{progress.done}</span> {t('home.of')} <span className="num">{progress.total}</span>
+          </span>
+        </div>
+        <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-3 h-7 inline-flex items-center">
+          {pick(topic.curriculumBadge, locale)}
+        </span>
+      </div>
+      <p className="text-sm text-ink-2 mb-4">{pick(topic.description, locale)}</p>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {lessons.map((lesson, i) => (
+          <LessonCard
+            key={lesson.id}
+            lesson={lesson}
+            index={i}
+            isDone={Boolean(completed[lesson.id])}
+            here={next?.lesson.id === lesson.id ? (next.resumed ? 'stopped' : 'next') : null}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function HomePage() {
+  const { t } = useTranslation();
   const completed = useProgress((s) => s.lessonsCompleted);
+  const next = useNextLesson();
 
   return (
     <div className="space-y-10 md:space-y-14">
@@ -183,26 +229,9 @@ export function HomePage() {
 
       <ProgressSection />
 
-      {TOPIC_ORDER.map((topicId) => {
-        const topic = TOPICS[topicId];
-        const lessons = lessonsByTopic(topicId);
-        return (
-          <section key={topicId}>
-            <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1.5">
-              <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{pick(topic.title, locale)}</h2>
-              <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-3 h-7 inline-flex items-center">
-                {pick(topic.curriculumBadge, locale)}
-              </span>
-            </div>
-            <p className="text-sm text-ink-2 mb-4">{pick(topic.description, locale)}</p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {lessons.map((lesson, i) => (
-                <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={Boolean(completed[lesson.id])} />
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {TOPIC_ORDER.map((topicId) => (
+        <TopicSection key={topicId} topicId={topicId} next={next} completed={completed} />
+      ))}
 
       <footer className="text-xs text-muted max-w-3xl space-y-1 pb-4">
         <p>{t('footer.disclaimer')}</p>
