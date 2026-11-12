@@ -1,17 +1,19 @@
 # Subject-app skin ("Bench") — low-level design
 
-Scope: `apps/math` and `apps/physics` only. Both were scaffolded from the same `cp -r` and
-share one visual scaffold — `src/styles.css` tokens, `components/ui/{Card,Button,Icon}.tsx`,
-`app/Shell.tsx`, `features/home/HomePage.tsx`, `features/lesson/LessonPage.tsx`,
-`components/Quiz.tsx`, `components/FeedbackWidget.tsx`, and the explorer panels. This spec
-redesigns that shared scaffold. `apps/nitrox` is out of scope (it shares the same `.card`
-primitive and would read the same way, but CLAUDE.md treats it as a different tier; nothing
-here touches it).
+Scope: `apps/math`, `apps/physics`, and `apps/chemistry`. They were scaffolded from the same
+`cp -r` and share one visual scaffold — `src/styles.css` tokens,
+`components/ui/{Card,Button,Icon}.tsx`, `app/Shell.tsx`, `features/home/HomePage.tsx`,
+`features/lesson/LessonPage.tsx`, `components/Quiz.tsx`, `components/FeedbackWidget.tsx`, and
+the explorer panels. This spec redesigns that shared scaffold. `apps/nitrox` is out of scope
+(it shares the same `.card` primitive and would read the same way, but CLAUDE.md treats it as
+a different tier; nothing here touches it).
 
 Constraints that do not move: Rubik stays (subjects = "apps" with personality; the hub is the
 Plex/mono "OS"). Math keeps violet `#6250d6` → pink `#e87ba4`; Physics keeps indigo `#3457d1`
-→ cyan `#17a3e8`. The *system* (surfaces, depth, composition, motion, icons, type scale) is
-shared; the *palette* is per subject. Hebrew-first RTL, numbers/formulas as LTR islands.
+→ cyan `#17a3e8`; Chemistry uses amber `#e0922a` → teal `#14998a` on its favicon, with the
+darker amber `#8a4e08` as text (the bright amber fails as text on the paper). The *system*
+(surfaces, depth, composition, motion, icons, type scale) is shared; the *palette* is per
+subject. Hebrew-first RTL, numbers/formulas as LTR islands.
 Vite + Tailwind v4: everything below is CSS custom properties in `styles.css` + component
 classes — no framework change, no new runtime dependency (`motion` is already installed and
 is enough).
@@ -122,8 +124,8 @@ not a trophy).
 ## 2. Tokens
 
 `styles.css` in each app gets two clearly fenced blocks. Block A (**SKIN BASE**) is
-byte-identical in `apps/math/src/styles.css` and `apps/physics/src/styles.css` — mark it with
-`/* === SKIN BASE — identical in apps/math and apps/physics; keep in sync (diff them) === */`.
+byte-identical in `apps/math`, `apps/physics`, and `apps/chemistry` — mark it with
+`/* === SKIN BASE — identical in apps/math, apps/physics, and apps/chemistry; keep in sync (diff them) === */`.
 Block B (**PALETTE**) is per subject. Don't extract a shared package in this pass (CLAUDE.md:
 only once the duplication is proven and stable; this is its first iteration).
 
@@ -213,12 +215,70 @@ only once the duplication is proven and stable; this is its first iteration).
 }
 ```
 
-### 2.3 Color rules (both subjects)
+### 2.2a Palette — Chemistry (`apps/chemistry/src/styles.css`)
 
-- **`--accent-2` is never text on a light surface.** Cyan `#17a3e8` and pink `#e87ba4` are
-  2.8:1 / 2.7:1 on their pages. Use `--accent-2` for chip *backgrounds* (`--accent-2-soft`),
-  strokes, signature lines, the hero gradient and the logo tile; the text on a chip is
-  `--accent`. In dark mode both `--accent-2` values pass (8.1:1 / 6.7:1) and may be text.
+Favicon and hub tile gradient: amber `#e0922a` → teal `#14998a`. Text uses the darker amber,
+because `#e0922a` is 2.4:1 on the light tile tint. Teal is `--accent-2` only (3.5:1 on white),
+never light-mode text. `--series-b` is that same teal, and only inside plots, so the page
+stays two hues plus the semantic greens and reds. `--muted` `#6d5e4c` is 5.5:1 on `--bg`.
+
+```css
+:root {                                    /* light: warm paper */
+  --bg: #f7f0e4;          --bg-2: #f1e6d4;
+  --surface: #ffffff;     --surface-2: #fbf6ee;   --surface-3: #f3e9d8;
+  --line: rgba(138, 78, 8, 0.12);  --line-strong: rgba(138, 78, 8, 0.26);
+  --axis: rgba(138, 78, 8, 0.45);
+  --ink: #2a1c0c;  --ink-2: #4a3824;  --muted: #6d5e4c;   /* 5.5:1 on --bg */
+  --accent: #8a4e08;      --accent-ink: #ffffff;
+  --accent-deep: #6e3e05;
+  --accent-soft: rgba(138, 78, 8, 0.12);
+  --accent-2: #14998a;    --accent-2-soft: rgba(20, 153, 138, 0.16);
+  --hue-shadow: rgba(138, 78, 8, 0.22);
+  --glow: rgba(138, 78, 8, 0.30);
+  --series-a: #8a4e08;    --series-a-soft: rgba(138, 78, 8, 0.16);
+  --series-b: #14998a;    --series-b-soft: rgba(20, 153, 138, 0.16);
+  --highlight: #a15e0a;   --highlight-soft: rgba(161, 94, 10, 0.16);
+  --good: #0b7a4f;  --good-fill: #0ca36b;  --good-soft: rgba(12, 163, 107, 0.14);
+  --critical: #b93232;  --critical-fill: #d03b3b;  --critical-soft: rgba(208, 59, 59, 0.12);
+  --grid: rgba(138, 78, 8, 0.07);
+  color-scheme: light;
+}
+:root[data-theme='dark'] {                 /* dark: lit bench, warm */
+  --bg: #14100c;          --bg-2: #1c1610;
+  --surface: #241c14;     --surface-2: #2c2218;   --surface-3: #362a1e;
+  --line: rgba(240, 180, 90, 0.16);  --line-strong: rgba(240, 180, 90, 0.32);
+  --axis: rgba(240, 180, 90, 0.50);
+  --ink: #f8f1e6;  --ink-2: #e4d3bc;  --muted: #b5a48e;
+  --accent: #f0b45a;      --accent-ink: #1a120c;
+  --accent-deep: #d89a3e;
+  --accent-soft: rgba(240, 180, 90, 0.18);
+  --accent-2: #3ecfb8;    --accent-2-soft: rgba(62, 207, 184, 0.20);
+  --hue-shadow: rgba(0, 0, 0, 0.55);
+  --glow: rgba(240, 180, 90, 0.38);
+  --series-a: #f0b45a;    --series-a-soft: rgba(240, 180, 90, 0.20);
+  --series-b: #3ecfb8;    --series-b-soft: rgba(62, 207, 184, 0.20);
+  --highlight: #e0a830;   --highlight-soft: rgba(224, 168, 48, 0.20);
+  --good: #2fd69a;  --good-fill: #2fd69a;  --good-soft: rgba(47, 214, 154, 0.18);
+  --critical: #e66767;  --critical-fill: #e66767;  --critical-soft: rgba(230, 103, 103, 0.18);
+  --grid: rgba(240, 180, 90, 0.08);
+  color-scheme: dark;
+}
+```
+
+The hero signature plots `netDipole` from `src/chemistry/dipole.ts` (the vector sum of two
+equal bond dipoles versus the angle between them). The tag shows that result. Lesson-card
+signatures map the six chemistry explorer kinds (`ionTransfer`, `sharedPairs`, `dipole`,
+`electronSea`, `waterPair`, `materialProbe`) from `explorers[0]` and the same functions.
+Chemistry's home uses Math's topic-header anatomy (§5.4) for its one topic. The badge is the
+chapter name only (Structure and bonding / מבנה וקישור) — no grade, and no "5-unit" claim,
+because no Ministry chemistry source is cited in the repo.
+
+### 2.3 Color rules (every subject)
+
+- **`--accent-2` is never text on a light surface.** Cyan `#17a3e8`, pink `#e87ba4`, and
+  teal `#14998a` fail as text on their pages. Use `--accent-2` for chip *backgrounds*
+  (`--accent-2-soft`), strokes, signature lines, the hero gradient and the logo tile; the
+  text on a chip is `--accent`. In dark mode the lifted `--accent-2` values may be text.
 - **Semantic text vs fill split.** `--good` / `--critical` are *text* colors (verified
   5.4:1 / 5.9:1 on white; 4.7:1 on `--good-soft`). `--good-fill` / `--critical-fill` are for
   borders, icons and backgrounds. Never put `--good-fill` on white as text.
@@ -723,15 +783,16 @@ Directional icons (`arrow`) mirror with `rtl:-scale-x-100` (already the pattern)
 
 | layer | shared (identical in both apps) | per subject |
 |---|---|---|
-| tokens | §2.4 non-color tokens, `@theme inline` mapping, elevation classes, `.ledge`, slider CSS, body/graph-paper background, type scale | §2.1 / §2.2 palette blocks (`--accent*`, `--accent-2*`, `--hue-shadow`, `--glow`, `--grid`, series, surfaces) |
+| tokens | §2.4 non-color tokens, `@theme inline` mapping, elevation classes, `.ledge`, slider CSS, body/graph-paper background, type scale | §2.1 / §2.2 / §2.2a palette blocks (`--accent*`, `--accent-2*`, `--hue-shadow`, `--glow`, `--grid`, series, surfaces) |
 | components | `Card`, `Button`, `Icon` (same file contents), `Shell`, `Quiz`, `FeedbackWidget`, `HeroSignature`, `LessonSignature` *renderer* | `heroCurve.ts` (which real function + tag text), the `LessonSignature` *mapping* from explorer kind → drawing (different kinds per subject, §5.3 table), `Logo.tsx`, `favicon.svg` |
 | content | — | all copy (already per subject) |
 | home | hero structure, card anatomy, reveal | Math's topic sections (§5.4); Physics has none |
 | explorers | wrapper (`bench`), readout tiles, segmented control, plot grid, handle + value tag, slider fill | the explorers' own math and state (untouched) |
 
 Rule for the implementer: after finishing one app, `diff` the SKIN BASE blocks and the shared
-component files between `apps/math/src` and `apps/physics/src`; any difference must be
-explainable by the right-hand column above.
+component files between `apps/math/src`, `apps/physics/src`, and `apps/chemistry/src`; any
+difference must be explainable by the right-hand column above. Chemistry's `LessonSignature`
+mapping and `heroCurve.ts` are the per-subject column, not a fork of the renderer.
 
 ---
 
@@ -823,9 +884,10 @@ source (CLAUDE.md rule 4). Work on a branch, open a PR (rule 3).
 - [ ] No `uppercase`/`tracking-*` classes remain in either app (grep).
 - [ ] No horizontal overflow at 390 px in either language; numbers/formulas/value tags are LTR
       inside Hebrew; Hebrew chips with digits read in the right word order.
-- [ ] `diff -r apps/math/src/components/ui apps/physics/src/components/ui` is empty; the SKIN
-      BASE blocks of the two `styles.css` files are identical; `npm run check` passes in both
-      apps; `docs/subjects/{math,physics}` rebuilt and committed.
+- [ ] `diff -r apps/math/src/components/ui apps/physics/src/components/ui` is empty, and the
+      same diff against `apps/chemistry/src/components/ui` is empty; the SKIN BASE blocks of
+      the three `styles.css` files are identical; `npm run check` passes in each app that
+      changed; rebuilt `docs/subjects/` output for those apps is committed.
 
 ---
 

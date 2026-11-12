@@ -1,0 +1,135 @@
+{
+  "app": {
+    "name": "Chemistry Academy",
+    "unofficial": "An independent, unofficial study tool",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "common": {
+    "close": "Close"
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "music": "Calm background music"
+  },
+  "home": {
+    "eyebrowNew": "New pilot",
+    "heroTitle": "Come see",
+    "heroTitle2": "what holds matter together",
+    "heroBody": "Drag an electron, a bond angle, or a second water molecule, and watch the bond respond. Six lessons on structure and bonding.",
+    "lessonsTitle": "Lessons",
+    "lessonLabel": "Lesson {{n}}",
+    "start": "Start",
+    "continue": "Continue",
+    "review": "Review lesson",
+    "done": "Done",
+    "questionsCount": "{{count}} practice questions",
+    "startAria": "Start: {{title}}",
+    "reviewAria": "Review: {{title}}"
+  },
+  "hero": {
+    "signatureHint": "Slide your finger along the graph"
+  },
+  "dashboard": {
+    "progressTitle": "Your progress",
+    "lessonsDone": "{{done}} of {{total}} lessons",
+    "accuracyTitle": "Quiz accuracy",
+    "accuracyEmpty": "No questions answered yet",
+    "accuracyStat": "{{correct}} of {{total}} correct",
+    "achievementsTitle": "Achievements",
+    "achievementsEmpty": "Complete a lesson to earn your first badge",
+    "achievementUnlocked": "Achievement unlocked",
+    "continueTitle": "Continue where you left off",
+    "startTitle": "Ready to start?",
+    "startBody": "Pick a lesson below, or jump straight into the first one.",
+    "continueCta": "Continue",
+    "startCta": "Start learning",
+    "upNext": "Up next"
+  },
+  "achievements": {
+    "first-lesson": { "title": "First lesson", "body": "You completed your first lesson." },
+    "topic-complete": { "title": "Structure and bonding, done", "body": "You completed every lesson in this chapter." },
+    "ten-correct": { "title": "Ten correct", "body": "You answered 10 quiz questions correctly." },
+    "all-complete": { "title": "Chemistry Academy, complete", "body": "You finished every lesson." }
+  },
+  "lesson": {
+    "backHome": "All lessons",
+    "yes": "Yes",
+    "no": "No",
+    "varies": "Varies",
+    "formula": "Formula",
+    "conducts": "Conducts",
+    "pair": "Pair",
+    "state": "State",
+    "states": { "solid": "Solid", "melt": "Melt", "solution": "Solution" },
+    "electronsMoved": "Electrons moved",
+    "ionGraph": "An electron moving from a metal atom to a nonmetal atom",
+    "pairsCount": "Shared pairs",
+    "bondOrder": "Bond order",
+    "arrangement": "Arrangement",
+    "arrangements": { "molecular": "Molecules", "network": "Network" },
+    "sharedGraph": "Shared electron pairs, or a covalent network",
+    "netDipole": "Net dipole",
+    "polarity": "Molecule",
+    "polar": "Polar",
+    "nonpolar": "Nonpolar",
+    "angle": "Angle",
+    "dipoleGraph": "Two equal bond dipoles and their vector sum",
+    "holds": "Lattice holds",
+    "electronsDrift": "Electrons drifting",
+    "shear": "Shear",
+    "drift": "Drift",
+    "seaGraph": "Positive ions in a sea of electrons",
+    "hydrogenBond": "Hydrogen bond",
+    "separation": "Separation",
+    "rotation": "Turn",
+    "waterGraph": "Two water molecules. A dashed line is a hydrogen bond.",
+    "answer": "Answer",
+    "material": "Structure",
+    "materials": { "ionic": "Ionic", "molecular": "Molecular", "metallic": "Metallic", "network": "Network" },
+    "probe": "Probe",
+    "probes": { "conductSolid": "Conducts as a solid", "conductMelt": "Conducts when melted", "dissolve": "Dissolves", "meltEasy": "Melts easily" },
+    "probeGraph": "The structure you are probing",
+    "keyPointsTitle": "Key points",
+    "quizTitle": "Time to practice",
+    "prevLesson": "Previous lesson",
+    "nextLesson": "Next lesson",
+    "backToLessons": "Back to all lessons"
+  },
+  "quiz": {
+    "check": "Check answer",
+    "tryAgain": "Try again",
+    "correct": "Correct!",
+    "incorrect": "Not quite",
+    "explanation": "Why",
+    "numericPlaceholder": "Your answer",
+    "progress": "Question {{current}} of {{total}}",
+    "finished": "Nice work! You've finished this lesson's practice questions.",
+    "retake": "Retake",
+    "next": "Next question"
+  },
+  "footer": {
+    "disclaimer": "Chemistry Academy is an independent, unofficial study tool, not a substitute for classroom instruction.",
+    "credit": "Created by Guy Eden"
+  },
+  "feedback": {
+    "open": "Feedback",
+    "title": "Question, idea, or bug?",
+    "subtitle": "We'd love to hear it. Feel free to attach a screenshot.",
+    "typeQuestion": "Question",
+    "typeIdea": "Idea",
+    "typeFeature": "Feature request",
+    "typeBug": "Bug report",
+    "messageLabel": "What would you like to tell us?",
+    "fileLabel": "Screenshot (optional)",
+    "fileChoose": "Choose a file…",
+    "emailLabel": "Email, if you want a reply (optional)",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Thanks! We've got your message.",
+    "error": "Something went wrong. Please try again."
+  }
+}

@@ -1,0 +1,84 @@
+id: metallic-bond
+topic: structure-and-bonding
+order: 4
+
+title:
+  en: "Metallic bond: a sea of electrons"
+  he: "קשר מתכתי: ים של אלקטרונים"
+
+subtitle:
+  en: "The cations can slide. The sea stays, and it can drift."
+  he: "היונים החיוביים יכולים להחליק. הים נשאר, והוא יכול לזרום."
+
+intro:
+  - en: >-
+      In a metal the atoms' outer electrons are not stuck to one neighbor. They form a
+      **sea** around a lattice of positive ions. The attraction between that sea and the
+      ions is the metallic bond.
+    he: >-
+      במתכת האלקטרונים החיצוניים של האטומים לא תקועים אצל שכן אחד. הם יוצרים **ים** סביב
+      סריג של יונים חיוביים. המשיכה בין הים הזה ליונים היא הקשר המתכתי.
+  - en: >-
+      Drag the shear handle. The top row of cations slides over by one spacing, and all
+      six cations are still there. The sea did not snap. That is why a metal can be
+      **hammered and shaped** instead of cracking the way a brittle ionic crystal does.
+    he: >-
+      גררו את ידית הגזירה. שורת היונים העליונה מחליקה ברווח אחד, וכל ששת היונים עדיין
+      שם. הים לא נקרע. לכן אפשר **לרקע ולעצב** מתכת, במקום שהיא תיסדק כמו גביש יוני שביר.
+  - en: >-
+      The second handle drifts the sea. Electrons moving through the solid are why a metal
+      **conducts as a solid**. No temperature and no conductivity number are shown — only
+      whether the sea is drifting.
+    he: >-
+      הידית השנייה מזרימה את הים. אלקטרונים שנעים דרך המוצק הם הסיבה שמתכת **מוליכה כמוצק**.
+      לא מוצגת טמפרטורה ולא מספר מוליכות — רק אם הים זורם.
+
+explorers:
+  - kind: electronSea
+    shear: 0
+    drift: 0
+    caption:
+      en: "Shear the lattice, then drift the electron sea."
+      he: "גזרו את הסריג, ואז הזרימו את ים האלקטרונים."
+
+keyPoints:
+  - en: "A metal is a lattice of positive ions in a sea of electrons. That attraction is the metallic bond."
+    he: "מתכת היא סריג של יונים חיוביים בים של אלקטרונים. המשיכה הזו היא הקשר המתכתי."
+  - en: "The ions can slide past each other and the sea still holds them. That is malleability."
+    he: "היונים יכולים להחליק זה על פני זה והים עדיין מחזיק אותם. זו יכולת הריקוע."
+  - en: "The sea can drift through the solid, so a metal conducts without being melted."
+    he: "הים יכול לזרום דרך המוצק, ולכן מתכת מוליכה בלי שיותכו אותה."
+
+quiz:
+  - type: mcq
+    id: q1-conduct
+    prompt:
+      en: "Why can a metal conduct electricity while it is still solid?"
+      he: "למה מתכת יכולה להוליך חשמל כשהיא עדיין מוצקה?"
+    choices:
+      - en: "Its ions are free to walk through the crystal"
+        he: "היונים שלה חופשיים ללכת בתוך הגביש"
+      - en: "Electrons in the sea can drift through the solid"
+        he: "אלקטרונים בים יכולים לזרום דרך המוצק"
+      - en: "It has already melted on the inside"
+        he: "היא כבר הותכה מבפנים"
+    correctIndex: 1
+    explanation:
+      en: "The cations stay in the lattice. The mobile part is the electron sea, and it can move while the metal is solid."
+      he: "היונים החיוביים נשארים בסריג. החלק הנייד הוא ים האלקטרונים, והוא יכול לנוע בזמן שהמתכת מוצקה."
+  - type: mcq
+    id: q2-malleable
+    prompt:
+      en: "You shear a metal lattice and it bends instead of shattering. Why?"
+      he: "גוזרים סריג מתכתי והוא מתכופף במקום להתנפץ. למה?"
+    choices:
+      - en: "The ions slide, and the electron sea still surrounds them"
+        he: "היונים מחליקים, וים האלקטרונים עדיין עוטף אותם"
+      - en: "The bonds are ionic, so opposite charges lock the new position"
+        he: "הקשרים יוניים, ולכן מטענים הפוכים נועלים את המצב החדש"
+      - en: "Shearing removes the electrons, so nothing is left to break"
+        he: "הגזירה מסירה את האלקטרונים, ולכן לא נשאר מה שישבור"
+    correctIndex: 0
+    explanation:
+      en: "After the rows slide, the cations are still inside the sea. The metallic bond does not depend on one fixed neighbor."
+      he: "אחרי שהשורות מחליקות, היונים החיוביים עדיין בתוך הים. הקשר המתכתי לא תלוי בשכן קבוע אחד."

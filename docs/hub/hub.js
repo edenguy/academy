@@ -68,7 +68,7 @@
     var SUBJECTS = [
       { key: 'math', x: 120, live: true, url: '/academy/subjects/math/', nameHe: 'מתמטיקה', nameEn: 'MATH', statusHe: 'פיילוט', statusEn: 'PILOT' },
       { key: 'physics', x: 270, live: true, url: '/academy/subjects/physics/', nameHe: 'פיזיקה', nameEn: 'PHYSICS', statusHe: 'פיילוט', statusEn: 'PILOT' },
-      { key: 'chemistry', x: 420, live: false, url: null, nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'בקרוב', statusEn: 'SOON' },
+      { key: 'chemistry', x: 420, live: true, url: '/academy/subjects/chemistry/', nameHe: 'כימיה', nameEn: 'CHEM', statusHe: 'פיילוט', statusEn: 'PILOT' },
     ];
 
     var totalLength = curvePath.getTotalLength();
@@ -408,6 +408,10 @@
       physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
                  order: ['position-vs-time', 'velocity-slope', 'acceleration-area'],
                  lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
+                 lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
+      chemistry: { key: 'academy-chemistry:v1', total: 6, home: '/academy/subjects/chemistry/',
+                 order: ['ionic-bond', 'covalent-bond', 'bond-polarity', 'metallic-bond', 'intermolecular-forces', 'comparing-materials'],
+                 lessonUrl: function (id) { return '/academy/subjects/chemistry/#/lesson/' + id; },
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
     };
     // Titles copied from each lesson YAML `title` field (HUB_LLD.md §12.2). Unknown ids are not shown.
@@ -420,7 +424,13 @@
       'antiderivative': { en: 'The Magic Shortcut: The Antiderivative', he: 'הקיצור הקסום: הפונקציה הקדומה' },
       'position-vs-time': { en: 'Motion on a Line: Position vs. Time', he: 'תנועה על ציר: מיקום בזמן' },
       'velocity-slope': { en: 'Velocity: The Slope of the Curve', he: 'מהירות: השיפוע של העקומה' },
-      'acceleration-area': { en: 'Acceleration, and How It All Adds Up', he: 'תאוצה, ואיך הכל מצטבר' }
+      'acceleration-area': { en: 'Acceleration, and How It All Adds Up', he: 'תאוצה, ואיך הכל מצטבר' },
+      'ionic-bond': { en: 'Ionic bond: a metal hands an electron over', he: 'קשר יוני: מתכת מוסרת אלקטרון' },
+      'covalent-bond': { en: 'Covalent bond: a shared pair', he: 'קשר קוולנטי: זוג משותף' },
+      'bond-polarity': { en: 'Polarity: the shape decides', he: 'קוטביות: הצורה מחליטה' },
+      'metallic-bond': { en: 'Metallic bond: a sea of electrons', he: 'קשר מתכתי: ים של אלקטרונים' },
+      'intermolecular-forces': { en: 'Between molecules, a weaker pull', he: 'בין מולקולות, משיכה חלשה יותר' },
+      'comparing-materials': { en: 'Four kinds of material', he: 'ארבעה סוגי חומר' }
     };
 
     // 1. Open read-only; abort if the DB would be created; give up silently after 1500 ms.

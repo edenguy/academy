@@ -1,0 +1,89 @@
+id: comparing-materials
+topic: structure-and-bonding
+order: 6
+
+title:
+  en: "Four kinds of material"
+  he: "ארבעה סוגי חומר"
+
+subtitle:
+  en: "Same probes. The structure picks the answer."
+  he: "אותן בדיקות. המבנה בוחר את התשובה."
+
+intro:
+  - en: >-
+      The four structures in this chapter behave differently because the **particles** and
+      the **links** are different. Ionic: a lattice of ions. Molecular: separate molecules,
+      with weaker forces between them. Metallic: cations in an electron sea. Covalent
+      network: atoms bonded to their neighbors all the way through, like diamond.
+    he: >-
+      ארבעת המבנים בפרק הזה מתנהגים אחרת כי **החלקיקים** ו**הקשרים** אחרים. יוני: סריג של
+      יונים. מולקולרי: מולקולות נפרדות, עם כוחות חלשים יותר ביניהן. מתכתי: יונים חיוביים
+      בים אלקטרונים. סריג קוולנטי: אטומים קשורים לשכנים שלהם לאורך כל הדרך, כמו יהלום.
+  - en: >-
+      Pick a structure, then a probe: conduct as a solid, conduct when melted, dissolve,
+      melt easily. The word on the screen is looked up from one table, the school model
+      for these four. **Varies** is an answer, not a shrug. Not every ionic compound
+      dissolves easily. Metals do not share one melting point.
+    he: >-
+      בוחרים מבנה, ואז בדיקה: הולכה כמוצק, הולכה כשמותכים, המסה, היתוך בקלות. המילה על
+      המסך נלקחת מטבלה אחת, המודל הבית-ספרי לארבעת הסוגים. **משתנה** היא תשובה, לא משיכת
+      כתפיים. לא כל תרכובת יונית נמסה בקלות. למתכות אין טמפרטורת היתוך אחת משותפת.
+  - en: >-
+      The network row is **diamond**. It does not conduct. Graphite is also a covalent
+      network, and graphite does conduct, so "covalent network" is not the same claim as
+      "never conducts." This probe is about the diamond example.
+    he: >-
+      שורת הסריג היא **יהלום**. הוא לא מוליך. גם גרפיט הוא סריג קוולנטי, וגרפיט כן מוליך,
+      ולכן "סריג קוולנטי" אינו אותו טענה כמו "אף פעם לא מוליך". הבדיקה כאן היא על הדוגמה
+      של היהלום.
+
+explorers:
+  - kind: materialProbe
+    material: ionic
+    probe: conductSolid
+    caption:
+      en: "Choose a structure and a probe. The answer comes from the table."
+      he: "בחרו מבנה ובדיקה. התשובה באה מהטבלה."
+
+keyPoints:
+  - en: "Identify the material by its particles: ions, separate molecules, cations in an electron sea, or a covalent network."
+    he: "מזהים את החומר לפי החלקיקים שלו: יונים, מולקולות נפרדות, יונים חיוביים בים אלקטרונים, או סריג קוולנטי."
+  - en: "Ionic solids do not conduct; the melt does. Metals conduct as solids. Diamond's network does not."
+    he: "מוצקים יוניים לא מוליכים; ההתכה כן. מתכות מוליכות כמוצקים. הסריג של יהלום לא."
+  - en: "Solubility of ionic compounds, and the melting point of metals, are marked varies. Diamond is the network example, not graphite."
+    he: "המסיסות של תרכובות יוניות, וטמפרטורת ההיתוך של מתכות, מסומנות כמשתנה. יהלום הוא דוגמת הסריג, לא גרפיט."
+
+quiz:
+  - type: mcq
+    id: q1-ionic-solid
+    prompt:
+      en: "An ionic solid and a metal bar. Which one conducts while it is still solid?"
+      he: "מוצק יוני ומוט מתכת. מי מהם מוליך כשהוא עדיין מוצק?"
+    choices:
+      - en: "Both"
+        he: "שניהם"
+      - en: "Only the metal"
+        he: "רק המתכת"
+      - en: "Only the ionic solid"
+        he: "רק המוצק היוני"
+    correctIndex: 1
+    explanation:
+      en: "The metal's electron sea can drift in the solid. The ionic solid's ions cannot move until it is melted or dissolved."
+      he: "ים האלקטרונים של המתכת יכול לזרום במוצק. היונים של המוצק היוני לא יכולים לנוע עד שמותכים או ממיסים אותו."
+  - type: mcq
+    id: q2-diamond
+    prompt:
+      en: "The network probe in this lesson uses diamond. Which statement matches that example?"
+      he: "בדיקת הסריג בשיעור הזה משתמשת ביהלום. איזה משפט מתאים לדוגמה הזו?"
+    choices:
+      - en: "Diamond conducts, because every covalent network conducts"
+        he: "יהלום מוליך, כי כל סריג קוולנטי מוליך"
+      - en: "Diamond does not conduct and does not dissolve; graphite is a different network and does conduct"
+        he: "יהלום לא מוליך ולא נמס; גרפיט הוא סריג אחר, והוא כן מוליך"
+      - en: "Diamond is a molecular substance with weak forces between small molecules"
+        he: "יהלום הוא חומר מולקולרי עם כוחות חלשים בין מולקולות קטנות"
+    correctIndex: 1
+    explanation:
+      en: "The table's network row is diamond: no conduction, no dissolving, hard to melt. Graphite is also a covalent network, and it does conduct, so the lesson does not claim that every network behaves like diamond."
+      he: "שורת הסריג בטבלה היא יהלום: אין הולכה, אין המסה, קשה להתיך. גם גרפיט הוא סריג קוולנטי, והוא כן מוליך, ולכן השיעור לא טוען שכל סריג מתנהג כמו יהלום."
