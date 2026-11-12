@@ -29,7 +29,12 @@
     "done": "Done",
     "questionsCount": "{{count}} practice questions",
     "startAria": "Start: {{title}}",
-    "reviewAria": "Review: {{title}}"
+    "reviewAria": "Review: {{title}}",
+    "of": "of",
+    "hereStopped": "Stopped here",
+    "hereNext": "Next",
+    "hereStoppedAria": "Stopped here: {{title}}",
+    "hereNextAria": "Next: {{title}}"
   },
   "hero": {
     "signatureHint": "Slide your finger along the graph"

@@ -47,7 +47,11 @@
     "done": "הושלם",
     "questionsCount": "{{count}} שאלות תרגול",
     "startAria": "התחלה: {{title}}",
-    "reviewAria": "חזרה על השיעור: {{title}}"
+    "reviewAria": "חזרה על השיעור: {{title}}",
+    "hereStopped": "כאן עצרתם",
+    "hereNext": "הבא",
+    "hereStoppedAria": "כאן עצרתם: {{title}}",
+    "hereNextAria": "הבא: {{title}}"
   },
   "achievements": {
     "first-lesson": {

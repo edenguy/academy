@@ -16,11 +16,14 @@ import { lessonSignature } from '@/physics/lessonSignature';
 import { Link } from 'react-router-dom';
 import type { Lesson } from '@/content/schema';
 
-function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; isDone: boolean }) {
+function LessonCard({ lesson, index, isDone, here }: { lesson: Lesson; index: number; isDone: boolean; here: 'stopped' | 'next' | null }) {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const reduceMotion = useReducedMotion();
   const draw = lessonSignature(lesson);
+  const title = pick(lesson.title, locale);
+  const aria =
+    here === 'stopped' ? t('home.hereStoppedAria', { title }) : here === 'next' ? t('home.hereNextAria', { title }) : isDone ? t('home.reviewAria', { title }) : t('home.startAria', { title });
 
   return (
     <motion.div
@@ -30,7 +33,7 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
     >
       <Link
         to={`/lesson/${lesson.id}`}
-        aria-label={isDone ? t('home.reviewAria', { title: pick(lesson.title, locale) }) : t('home.startAria', { title: pick(lesson.title, locale) })}
+        aria-label={aria}
         className="elev-1 is-link group flex flex-col gap-3 p-4 md:p-5 min-h-[172px]"
       >
         <div className="flex items-center gap-2">
@@ -38,6 +41,12 @@ function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; 
             {isDone ? <Icon name="check" size={15} /> : lesson.order}
           </span>
           <span className="text-[12.5px] text-muted">{t('home.questionsCount', { count: lesson.quiz.length })}</span>
+          {here && (
+            <span className="ms-auto inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill text-[12.5px] font-semibold bg-accent-soft text-accent">
+              <span className="w-1.5 h-1.5 rounded-pill bg-accent" aria-hidden="true" />
+              {here === 'stopped' ? t('home.hereStopped') : t('home.hereNext')}
+            </span>
+          )}
           {isDone && <span className="ms-auto text-[12.5px] font-semibold text-good">{t('home.done')}</span>}
         </div>
         <div>
@@ -148,6 +157,7 @@ function ProgressSection() {
 export function HomePage() {
   const { t } = useTranslation();
   const completed = useProgress((s) => s.lessonsCompleted);
+  const next = useNextLesson();
 
   return (
     <div className="space-y-10 md:space-y-14">
@@ -178,7 +188,13 @@ export function HomePage() {
         <h2 className="text-[22px] md:text-[26px] font-bold text-ink mb-4">{t('home.lessonsTitle')}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LESSONS.map((lesson, i) => (
-            <LessonCard key={lesson.id} lesson={lesson} index={i} isDone={!!completed[lesson.id]} />
+            <LessonCard
+              key={lesson.id}
+              lesson={lesson}
+              index={i}
+              isDone={!!completed[lesson.id]}
+              here={next?.lesson.id === lesson.id ? (next.resumed ? 'stopped' : 'next') : null}
+            />
           ))}
         </div>
       </section>

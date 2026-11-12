@@ -455,6 +455,45 @@ section.subjects { margin-block: 26px 56px; }
 .tile.has-progress .cta-start, .tile:not(.has-progress) .cta-continue,
 .tile:not(.is-complete) .cta-review, .tile.is-complete .cta-continue { display: none; }
 
+/* ---------- Your courses (HUB_LLD.md §12) ---------- */
+.yours { margin-block: 8px 4px; }
+.yours h2 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 10px; }
+.yours-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; }
+.yours-link {
+  display: flex; align-items: center; gap: 12px; min-width: 0;
+  padding: 12px 14px; border-radius: 16px; text-decoration: none; color: inherit;
+  background: var(--panel); border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow);
+  transition: transform 180ms var(--ease);
+}
+.yours-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.yours-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.yours-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+.yours-stopped { font-size: 13px; color: var(--ink-2); }
+.yours-title { font-weight: 600; color: var(--ink); }
+.yours-stat { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; color: var(--ink-2); font-size: 13px; }
+.yours-pct { font-family: var(--mono); font-weight: 600; color: var(--ink); }
+.yours-row.is-started .tile-ring { display: block; }
+.yours .tile-ring .arc { stroke: var(--accent); }
+.yours .tile-ring .track { stroke: color-mix(in srgb, var(--accent) 22%, var(--panel-solid)); }
+.yours-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+  font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 999px;
+  background: var(--accent); color: #fff;
+}
+.yours-cta svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.yours-row:not(.is-complete) .cta-review, .yours-row.is-complete .cta-continue { display: none; }
+@media (hover: hover) {
+  .yours-link:hover { transform: translateY(-2px); }
+}
+@media (max-width: 639px) {
+  .yours-link { flex-wrap: wrap; }
+  .yours-stat { order: 3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yours-link, .yours .tile-ring .arc { transition: none !important; }
+}
+
 /* Method strip: two columns on desktop so it stops being a second screen of its own */
 @media (min-width: 900px) {
   .method-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
