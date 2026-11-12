@@ -402,11 +402,25 @@
     // `total` must equal the real lesson count (see §11.5 notes) — same numbers as the tiles' meta-first text.
     var SOURCES = {
       math:    { key: 'academy-math:v1',    total: 6,  home: '/academy/subjects/math/',
+                 order: ['rate-of-change', 'derivative-rules', 'extremum-points', 'area-under-curve', 'riemann-sums', 'antiderivative'],
                  lessonUrl: function (id) { return '/academy/subjects/math/#/lesson/' + id; },
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } },
       physics: { key: 'academy-physics:v1', total: 3,  home: '/academy/subjects/physics/',
+                 order: ['position-vs-time', 'velocity-slope', 'acceleration-area'],
                  lessonUrl: function (id) { return '/academy/subjects/physics/#/lesson/' + id; },
                  lastVisited: function (v) { return typeof v === 'string' && ID_RE.test(v) ? v : null; } }
+    };
+    // Titles copied from each lesson YAML `title` field (HUB_LLD.md §12.2). Unknown ids are not shown.
+    var TITLES = {
+      'rate-of-change': { en: 'Rate of Change: From Average Slope to the Derivative', he: 'קצב שינוי: מהשיפוע הממוצע לנגזרת' },
+      'derivative-rules': { en: 'Derivative Rules: Skipping the Limit Every Time', he: 'חוקי גזירה: לגזור בלי לחזור לגבול כל פעם' },
+      'extremum-points': { en: 'Where a Function Rises, Falls, and Stops', he: 'איפה הפונקציה עולה, יורדת ועוצרת' },
+      'area-under-curve': { en: 'How Much Area Is Under the Curve?', he: 'כמה שטח יש מתחת לעקומה?' },
+      'riemann-sums': { en: 'Riemann Sums: More Rectangles, Better Guess', he: 'סכומי רימן: יותר מלבנים, ניחוש טוב יותר' },
+      'antiderivative': { en: 'The Magic Shortcut: The Antiderivative', he: 'הקיצור הקסום: הפונקציה הקדומה' },
+      'position-vs-time': { en: 'Motion on a Line: Position vs. Time', he: 'תנועה על ציר: מיקום בזמן' },
+      'velocity-slope': { en: 'Velocity: The Slope of the Curve', he: 'מהירות: השיפוע של העקומה' },
+      'acceleration-area': { en: 'Acceleration, and How It All Adds Up', he: 'תאוצה, ואיך הכל מצטבר' }
     };
 
     // 1. Open read-only; abort if the DB would be created; give up silently after 1500 ms.
@@ -451,9 +465,57 @@
         var done = Math.min(src.total, Object.keys(completed).length);
         var lv = src.lastVisited(state.lastVisited);
         var lvId = lv && (typeof lv === 'string' ? lv : lv.lessonId);
-        var resume = lv && !completed[lvId];                   // the apps' own useNextLesson rule: last visited, if still incomplete
-        return { done: done, total: src.total, complete: done >= src.total, href: resume ? src.lessonUrl(lv) : src.home, hasProgress: done > 0 || !!lv };
+        var resume = lv && !completed[lvId];                   // tile rule: last visited, if still incomplete; otherwise the course home
+        return {
+          done: done, total: src.total, complete: done >= src.total,
+          href: resume ? src.lessonUrl(lv) : src.home,
+          hasProgress: done > 0 || !!lv,
+          completed: completed,
+          lastVisited: typeof lv === 'string' ? lv : null
+        };
       } catch (e) { return null; }
+    }
+
+    function countHtml(done, total, he) {
+      var d = '<span class="num">' + done + '</span>';
+      var t = '<span class="num">' + total + '</span>';
+      return he ? d + ' מתוך ' + t + ' שיעורים' : d + ' of ' + t + ' lessons';
+    }
+
+    // Your-courses link follows the app's computeNextLesson (HUB_LLD.md §12.1). Tiles keep `p.href`.
+    function yoursHref(src, p) {
+      if (p.complete) return src.home;
+      if (p.lastVisited && TITLES[p.lastVisited] && !p.completed[p.lastVisited]) return src.lessonUrl(p.lastVisited);
+      for (var i = 0; i < src.order.length; i++) {
+        if (!p.completed[src.order[i]]) return src.lessonUrl(src.order[i]);
+      }
+      return src.home;
+    }
+
+    function applyYours(row, p, src) {
+      if (!p || !p.hasProgress) return;
+      row.hidden = false;
+      row.classList.add('is-started');
+      if (p.complete) row.classList.add('is-complete');
+      var section = document.getElementById('yours'); if (section) section.hidden = false;
+      var link = row.querySelector('.yours-link'); if (link) link.href = yoursHref(src, p);
+      var pct = Math.round(100 * (p.total ? p.done / p.total : 0));
+      var pctEl = row.querySelector('.yours-pct'); if (pctEl) pctEl.textContent = pct + '%';
+      var he = row.querySelector('.yours-count .t-he'), en = row.querySelector('.yours-count .t-en');
+      if (he) he.innerHTML = countHtml(p.done, p.total, true);
+      if (en) en.innerHTML = countHtml(p.done, p.total, false);
+      var arc = row.querySelector('.tile-ring .arc');
+      if (arc) arc.style.strokeDashoffset = String(97.39 * (1 - (p.total ? p.done / p.total : 0)));
+      var ring = row.querySelector('.tile-ring'); if (ring) ring.setAttribute('aria-label', pct + '%');
+      var title = p.lastVisited && TITLES[p.lastVisited];
+      var stopped = row.querySelector('.yours-stopped');
+      if (title && stopped) {
+        stopped.hidden = false;
+        var heTitle = stopped.querySelector('.yours-title .t-he');
+        var enTitle = stopped.querySelector('.yours-title .t-en');
+        if (heTitle) heTitle.textContent = title.he;
+        if (enTitle) enTitle.textContent = title.en;
+      }
     }
 
     // 4. Apply to the DOM. Both languages are written; CSS shows one.
@@ -477,6 +539,10 @@
         tiles.forEach(function (tile) {
           var src = SOURCES[tile.dataset.subject]; if (!src) return;
           apply(tile, parse(values[src.key], src));
+        });
+        document.querySelectorAll('.yours-row').forEach(function (row) {
+          var src = SOURCES[row.dataset.subject]; if (!src) return;
+          applyYours(row, parse(values[src.key], src), src);
         });
       });
     });

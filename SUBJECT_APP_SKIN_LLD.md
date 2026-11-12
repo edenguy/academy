@@ -826,3 +826,72 @@ source (CLAUDE.md rule 4). Work on a branch, open a PR (rule 3).
 - [ ] `diff -r apps/math/src/components/ui apps/physics/src/components/ui` is empty; the SKIN
       BASE blocks of the two `styles.css` files are identical; `npm run check` passes in both
       apps; `docs/subjects/{math,physics}` rebuilt and committed.
+
+---
+
+## 12. Your place on the path (Math and Physics home)
+
+The home already has a continue card, a course ring, and lesson cards. This adds the
+missing track marks. No new stored fields. Lessons stay `<Link>`s; the mark is a chip,
+never a lock. Do not touch `apps/nitrox`. Copy the chip into both apps; do not extract a
+shared package.
+
+### 12.1 Topic fraction (Math only)
+
+`useTopicProgress` in `apps/math/src/progress/selectors.ts` is already the pure count.
+Show it on every topic header in `HomePage.tsx`, including `0` of `3`, between the `<h2>`
+and the curriculum badge. The badge stays a badge.
+
+Digits are `.num` islands. The word between them is a locale string, not part of the
+island (wrapping the whole Hebrew phrase in `dir="ltr"` reverses it):
+
+```tsx
+<span className="text-[12.5px] font-semibold text-ink-2">
+  <span className="num">{done}</span> {t('home.of')} <span className="num">{total}</span>
+</span>
+```
+
+`home.of`: EN `of`, HE `מתוך`.
+
+### 12.2 "You are here" chip (both apps)
+
+On the single card whose `lesson.id` is `useNextLesson()?.lesson.id`:
+
+- `resumed === true` (that card is the unfinished `lastVisited`): chip text
+  `home.hereStopped` — EN `Stopped here`, HE `כאן עצרתם`. The link's `aria-label` is
+  `home.hereStoppedAria` — EN `Stopped here: {{title}}`, HE `כאן עצרתם: {{title}}`.
+- `resumed === false` (the next not-yet-done lesson): `home.hereNext` — EN `Next`,
+  HE `הבא`. Aria: `home.hereNextAria` — EN `Next: {{title}}`, HE `הבא: {{title}}`.
+
+When `useNextLesson()` is null (every lesson done), no card gets the chip. A done card
+keeps `reviewAria`. The chip cannot land on a completed lesson, because `computeNextLesson`
+only returns an incomplete one.
+
+Chip, in the card's header row, `ms-auto` (the done label already uses `ms-auto` and will
+not share the row with this chip):
+
+```tsx
+<span className="ms-auto inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill text-[12.5px] font-semibold bg-accent-soft text-accent">
+  <span className="w-1.5 h-1.5 rounded-pill bg-accent" aria-hidden="true" />
+  {label}
+</span>
+```
+
+No uppercase, no tracking, no lock icon. Physics has no topic fraction; it gets only
+this chip, on the same three-card sequence, using its own `computeNextLesson`.
+
+Strings go in both `src/i18n/locales/en.json` and `he.json` of each app, same keys.
+
+### 12.3 Acceptance
+
+- First visit, both apps, HE and EN: the first lesson in order wears `Next` / `הבא`.
+  Math topic headers read `0 of 3` / `0 מתוך 3` with the digits in numeric order.
+  Every card is still a link.
+- Leave a lesson unfinished and return home: that card says `Stopped here` /
+  `כאן עצרתם`, and it is the same lesson the continue card names.
+- Finish that lesson: the chip moves to the next incomplete lesson and says Next.
+  Math's topic fraction increments. Finishing an integrals lesson can point the chip
+  back at an unfinished derivatives lesson (`TOPIC_ORDER`).
+- Finish every lesson: no chip. Physics shows no topic fraction.
+- 390 and 1440, light and dark: the chip does not overflow the card; no new hover-only
+  meaning.

@@ -29,7 +29,12 @@
     "done": "הושלם",
     "questionsCount": "{{count}} שאלות תרגול",
     "startAria": "התחלה: {{title}}",
-    "reviewAria": "חזרה על השיעור: {{title}}"
+    "reviewAria": "חזרה על השיעור: {{title}}",
+    "of": "מתוך",
+    "hereStopped": "כאן עצרתם",
+    "hereNext": "הבא",
+    "hereStoppedAria": "כאן עצרתם: {{title}}",
+    "hereNextAria": "הבא: {{title}}"
   },
   "hero": {
     "signatureHint": "הזיזו את האצבע על הגרף"

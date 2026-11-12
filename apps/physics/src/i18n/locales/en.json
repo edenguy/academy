@@ -47,7 +47,11 @@
     "done": "Done",
     "questionsCount": "{{count}} practice questions",
     "startAria": "Start: {{title}}",
-    "reviewAria": "Review: {{title}}"
+    "reviewAria": "Review: {{title}}",
+    "hereStopped": "Stopped here",
+    "hereNext": "Next",
+    "hereStoppedAria": "Stopped here: {{title}}",
+    "hereNextAria": "Next: {{title}}"
   },
   "achievements": {
     "first-lesson": {

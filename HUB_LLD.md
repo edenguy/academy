@@ -1623,3 +1623,171 @@ single 1500 ms guard. Run it after `reveal()` so the first paint never waits on 
 23. `CLAUDE.md` ("The hub page" and "Visual design system (hub)") and `README.md` step 3
     describe tiles, the relaxed colour rule and the progress read; `HUB_LLD.md` §1.4, §2.4,
     §3.1 #3, §3.2, §4, §5.2 step 3, §5.6 carry their *superseded by §11* notes.
+
+---
+
+## 12. "Your courses" — started courses, percent, where you stopped (spec)
+
+Scope: `docs/index.html`, `docs/hub/hub.css`, `docs/hub/hub.js` only. Nothing under `apps/`
+or `docs/subjects/`. No new storage, no write to IndexedDB, no Nitrox, no Chemistry row.
+The catalog tiles in §11 stay, including courses the learner has not opened. This section
+sits between the hero and `#subjects`. On a first visit it is `hidden` and takes no space,
+so §11.9 items 1–2 still hold. When it is visible, page order is hero → your courses → tiles.
+
+### 12.1 What it shows
+
+One row per started subject, Math then Physics. A subject is started when
+`tileProgress()`'s existing `hasProgress` is true (`lessonsCompleted` count > 0, or a
+`lastVisited` id that passes the kebab-case check). Each row:
+
+- Subject name, the same Hebrew/English pair as the tile's `<h3>`.
+- A visible percent: `Math.round(100 * done / total)`, plus the same 36 px ring as a tile
+  (`stroke-dasharray: 97.39`, offset `97.39 * (1 - done/total)`). `done` and `total` are
+  the tile's numbers (`total` 6 / 3, `done` clamped to `total`). The percent is a `.num`
+  LTR island (`33%`), not a sentence.
+- The count, digits isolated: HE `<span class="num">2</span> מתוך <span class="num">6</span> שיעורים`,
+  EN `<span class="num">2</span> of <span class="num">6</span> lessons`.
+- Where they stopped: the bilingual title of `lastVisited`, copied from the lesson YAML
+  into `TITLES` below. If `lastVisited` is missing or not in `TITLES`, omit the line.
+  Never print a raw id.
+- The link. If `done >= total`, label Review and `href` is the course home. Otherwise, if
+  `lastVisited` is in `TITLES` and not completed, `href` is that lesson. Otherwise `href`
+  is the first id in `ORDER` that is not completed. This is the app's `computeNextLesson`
+  rule. The catalog tile's own href (home when `lastVisited` is already complete) does
+  not change.
+
+Hub chrome only: `--ink`, `--ink-2`, `--panel`, `--accent`. No per-subject `--c1`/`--c2`
+on this list (that colour stays on the tiles, the hero nodes, and the demos).
+
+### 12.2 Title map
+
+Titles are the `title.en` / `title.he` fields of the YAML, not reworded. Order is Math
+`TOPIC_ORDER` (derivatives, then integrals) then each topic's `order`, and Physics lesson
+`order`.
+
+| id | en | he |
+|---|---|---|
+| `rate-of-change` | Rate of Change: From Average Slope to the Derivative | קצב שינוי: מהשיפוע הממוצע לנגזרת |
+| `derivative-rules` | Derivative Rules: Skipping the Limit Every Time | חוקי גזירה: לגזור בלי לחזור לגבול כל פעם |
+| `extremum-points` | Where a Function Rises, Falls, and Stops | איפה הפונקציה עולה, יורדת ועוצרת |
+| `area-under-curve` | How Much Area Is Under the Curve? | כמה שטח יש מתחת לעקומה? |
+| `riemann-sums` | Riemann Sums: More Rectangles, Better Guess | סכומי רימן: יותר מלבנים, ניחוש טוב יותר |
+| `antiderivative` | The Magic Shortcut: The Antiderivative | הקיצור הקסום: הפונקציה הקדומה |
+| `position-vs-time` | Motion on a Line: Position vs. Time | תנועה על ציר: מיקום בזמן |
+| `velocity-slope` | Velocity: The Slope of the Curve | מהירות: השיפוע של העקומה |
+| `acceleration-area` | Acceleration, and How It All Adds Up | תאוצה, ואיך הכל מצטבר |
+
+`ORDER.math` is the first six ids. `ORDER.physics` is the last three.
+
+### 12.3 Markup (in `docs/index.html`, after `</section>` of the hero, before `#subjects`)
+
+```html
+<section class="yours" id="yours" hidden aria-labelledby="yours-title">
+  <h2 id="yours-title"><span class="t-he">הקורסים שלך</span><span class="t-en">Your courses</span></h2>
+  <ul class="yours-list">
+    <li class="yours-row" data-subject="math" hidden>
+      <a class="yours-link" href="/academy/subjects/math/">
+        <span class="yours-main">
+          <span class="yours-name"><span class="t-he">אקדמיית המתמטיקה</span><span class="t-en">Math Academy</span></span>
+          <span class="yours-stopped" hidden>
+            <span class="t-he">עצרתם ב</span><span class="t-en">Stopped at</span>
+            <span class="yours-title"><span class="t-he"></span><span class="t-en"></span></span>
+          </span>
+        </span>
+        <span class="yours-stat">
+          <svg class="tile-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="track" cx="18" cy="18" r="15.5"/><circle class="arc" cx="18" cy="18" r="15.5"/></svg>
+          <span class="yours-pct num"></span>
+          <span class="yours-count"><span class="t-he"></span><span class="t-en"></span></span>
+        </span>
+        <span class="yours-cta">
+          <span class="cta-continue"><span class="t-he">להמשיך</span><span class="t-en">Continue</span></span>
+          <span class="cta-review"><span class="t-he">לחזור</span><span class="t-en">Review</span></span>
+          <svg class="icon-dir" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
+      </a>
+    </li>
+    <!-- physics row: same shape, data-subject="physics", href /academy/subjects/physics/,
+         name אקדמיית הפיזיקה / Physics Academy -->
+  </ul>
+</section>
+```
+
+The ring is `display: none` until `.yours-row.is-started` (same rule idea as `.tile.has-progress`).
+Review is hidden until `.is-complete`; Continue is hidden when complete. Both start in the
+markup so JS only fills text, `href`, and classes.
+
+### 12.4 CSS (add to `hub.css`)
+
+```css
+.yours { margin-block: 8px 4px; }
+.yours h2 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 10px; }
+.yours-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; }
+.yours-link {
+  display: flex; align-items: center; gap: 12px; min-width: 0;
+  padding: 12px 14px; border-radius: 16px; text-decoration: none; color: inherit;
+  background: var(--panel); border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--panel-edge), var(--shadow);
+}
+.yours-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.yours-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.yours-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+.yours-stopped { font-size: 13px; color: var(--ink-2); }
+.yours-title { font-weight: 600; color: var(--ink); }
+.yours-stat { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; color: var(--ink-2); font-size: 13px; }
+.yours-pct { font-family: var(--mono); font-weight: 600; color: var(--ink); }
+.yours-row.is-started .tile-ring { display: block; }
+.yours-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+  font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 999px;
+  background: var(--accent); color: #fff;
+}
+.yours-row:not(.is-complete) .cta-review, .yours-row.is-complete .cta-continue { display: none; }
+@media (hover: hover) {
+  .yours-link:hover { transform: translateY(-2px); }
+}
+@media (max-width: 639px) {
+  .yours-link { flex-wrap: wrap; }
+  .yours-stat { order: 3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yours-link, .yours .tile-ring .arc { transition: none !important; }
+}
+```
+
+`.yours[hidden]` and `.yours-row[hidden]` and `.yours-stopped[hidden]` stay `display: none`
+(the UA `[hidden]` rule; do not override it). No hover rule outside `@media (hover: hover)`.
+
+### 12.5 `hub.js`
+
+Extend the one `openExisting` + `readAll` already inside `tileProgress()`. Do not open
+IndexedDB a second time. `parse()` also returns `completed` (id → true) and `lastVisited`
+(the validated id or null). Tile `href` stays the §11 rule.
+
+`applyYours(row, parsed)` no-ops when `!parsed || !parsed.hasProgress`. Otherwise unhides
+the row and `#yours`, sets `href`, toggles `is-started` / `is-complete`, writes the percent
+and both count strings (digits wrapped in `<span class="num">`), sets the ring offset and
+`aria-label` to the percent, and if `TITLES[lastVisited]` exists unhides `.yours-stopped`
+and writes both titles. Run it in the same `readAll` callback as the tiles.
+
+### 12.6 Acceptance (390×844 and 1440×900, HE and EN, light and dark)
+
+1. Fresh profile: `#yours` stays hidden, `await indexedDB.databases()` has no `keyval-store`,
+   the first tile is still on the first screen, no console error.
+2. Open Math, leave `rate-of-change` unfinished, return: one row, Math, `0%`, `0 מתוך 6`,
+   stopped title is that lesson's YAML title in the active language, href is
+   `/academy/subjects/math/#/lesson/rate-of-change`. Physics row stays hidden. The Math
+   tile still shows its own Continue state.
+3. Complete `rate-of-change` and open `derivative-rules` without finishing: percent `17%`
+   (1/6), stopped title is Derivative Rules, href is that lesson.
+4. Complete `rate-of-change` and go home without opening another: `lastVisited` is complete,
+   so href is the next incomplete id in `ORDER.math` (`derivative-rules`), and the stopped
+   line still names Rate of Change.
+5. Complete all six Math lessons: `100%`, Review, href `/academy/subjects/math/`.
+6. A `lastVisited` of `"../../evil"` or an unknown kebab id: no stopped line, no raw id,
+   href is the first incomplete catalog lesson (or home if `done >= total`).
+7. `"not json"` and `{"state":null}` leave the section hidden. 99 `lessonsCompleted`
+   entries: `done` clamps to `total`, Review, href is the course home.
+8. Switching language flips the name, the stopped title, the count, and the pill without
+   a stale aria-label. Digits in the Hebrew count stay in numeric order.
+9. The hub still never writes. Nitrox is not queried and not listed. Hover rules for
+   `.yours-link` exist only inside `@media (hover: hover)`.
