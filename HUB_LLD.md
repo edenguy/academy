@@ -1524,9 +1524,8 @@ function tileProgress() {
       }
       var done = Math.min(src.total, Object.keys(completed).length);
       var lv = src.lastVisited(state.lastVisited);
-      var lvId = lv && (typeof lv === 'string' ? lv : lv.lessonId);
-      var resume = lv && !completed[lvId];                   // the apps' own useNextLesson rule: last visited, if still incomplete
-      return { done: done, total: src.total, complete: done >= src.total, href: resume ? src.lessonUrl(lv) : src.home, hasProgress: done > 0 || !!lv };
+      // First press opens the course home, the syllabus (§13). It does not open a lesson.
+      return { done: done, total: src.total, complete: done >= src.total, href: src.home, hasProgress: done > 0 || !!lv };
     } catch (e) { return null; }
   }
 
@@ -1641,8 +1640,8 @@ single 1500 ms guard. Run it after `reveal()` so the first paint never waits on 
     `להמשיך` / `Continue`, `href` = `/academy/subjects/nitrox/#/learn/ch01/ch01-l02`. Math
     and Physics tiles are unchanged.
 14. Complete a Math lesson, then open a second one: Math tile ring ≈ 17 % (1/6), `1 מתוך 6
-    שיעורים`, pill → `/academy/subjects/math/#/lesson/<second id>`. Complete it too and go
-    back to the first: pill → `/academy/subjects/math/` (last-visited is complete → app home).
+    שיעורים`, pill `להמשיך` / `Continue`, href stays `/academy/subjects/math/` (the syllabus,
+    §13). The lesson is the second press, on that page.
 15. Complete all three Physics lessons: ring 100 %, pill `לחזור` / `Review` → app home.
 16. Reset progress inside an app (its settings/reset), reload hub → that tile is back to
     first-visit.
@@ -1693,11 +1692,10 @@ YAML titles in `TITLES`. A subject is started when
 - Where they stopped: the bilingual title of `lastVisited`, copied from the lesson YAML
   into `TITLES` below. If `lastVisited` is missing or not in `TITLES`, omit the line.
   Never print a raw id.
-- The link. If `done >= total`, label Review and `href` is the course home. Otherwise, if
-  `lastVisited` is in `TITLES` and not completed, `href` is that lesson. Otherwise `href`
-  is the first id in `ORDER` that is not completed. This is the app's `computeNextLesson`
-  rule. The catalog tile's own href (home when `lastVisited` is already complete) does
-  not change.
+- The link. The first press opens the course home, the syllabus (`src.home`, §13). It
+  does not open a lesson. Continue and Review stay as labels: Review when `done >= total`,
+  Continue otherwise. Both hrefs are the course home. The stopped line still names
+  `lastVisited`. The catalog tile's href is the same home.
 
 Hub chrome only: `--ink`, `--ink-2`, `--panel`, `--accent`. No per-subject `--c1`/`--c2`
 on this list (that colour stays on the tiles, the hero nodes, and the demos).
@@ -1827,16 +1825,15 @@ and writes both titles. Run it in the same `readAll` callback as the tiles.
    the first tile is still on the first screen, no console error.
 2. Open Math, leave `rate-of-change` unfinished, return: one row, Math, `0%`, `0 מתוך 6`,
    stopped title is that lesson's YAML title in the active language, href is
-   `/academy/subjects/math/#/lesson/rate-of-change`. Physics row stays hidden. The Math
-   tile still shows its own Continue state.
+   `/academy/subjects/math/`. Physics row stays hidden. The Math tile still shows its own
+   Continue state, and its href is the same home.
 3. Complete `rate-of-change` and open `derivative-rules` without finishing: percent `17%`
-   (1/6), stopped title is Derivative Rules, href is that lesson.
-4. Complete `rate-of-change` and go home without opening another: `lastVisited` is complete,
-   so href is the next incomplete id in `ORDER.math` (`derivative-rules`), and the stopped
-   line still names Rate of Change.
+   (1/6), stopped title is Derivative Rules, href is `/academy/subjects/math/`.
+4. Complete `rate-of-change` and go home without opening another: the stopped line still
+   names Rate of Change, and href is `/academy/subjects/math/`.
 5. Complete all six Math lessons: `100%`, Review, href `/academy/subjects/math/`.
 6. A `lastVisited` of `"../../evil"` or an unknown kebab id: no stopped line, no raw id,
-   href is the first incomplete catalog lesson (or home if `done >= total`).
+   href is the course home.
 7. `"not json"` and `{"state":null}` leave the section hidden. 99 `lessonsCompleted`
    entries: `done` clamps to `total`, Review, href is the course home.
 8. Switching language flips the name, the stopped title, the count, and the pill without
@@ -1844,7 +1841,7 @@ and writes both titles. Run it in the same `readAll` callback as the tiles.
 9. The hub still never writes. Nitrox is not queried and not listed. Hover rules for
    `.yours-link` exist only inside `@media (hover: hover)`.
 10. A started Chemistry course is a third row, after Physics, with total 6. Its stopped
-    title is the YAML title, and its link follows the same `ORDER.chemistry` rule.
+    title is the YAML title, and its href is `/academy/subjects/chemistry/`.
 11. A subject added after these three follows the same row. Opening one of its lessons and
     leaving the quiz unfinished must leave `state.lastVisited` set to that lesson id in
     `academy-<subject>:v1`. If the app recorded the visit before hydration and the merge
@@ -1852,3 +1849,40 @@ and writes both titles. Run it in the same `readAll` callback as the tiles.
     is in the lesson. Math, Physics, and Chemistry avoid that by calling `visitLesson`
     only after `hydrated`, and by keeping the in-memory visit in `mergePersisted`
     (`CLAUDE.md`, "Progress system").
+
+## 13. First press opens the syllabus (spec)
+
+The first press on a course — a subject tile, a Your courses row, or a hero node — opens
+that subject's home. It does not open a lesson. The home is the syllabus.
+
+Scope: `docs/hub/hub.js` for the links, and each live subject's home
+(`apps/math`, `apps/physics`, `apps/chemistry` `src/features/home/HomePage.tsx` plus both
+locale files). No new storage. The hub still only reads.
+
+### 13.1 The page
+
+After the existing hero, before the progress cards:
+
+- A heading, `home.syllabusTitle`: HE `הסילבוס`, EN `Syllabus`.
+- One line, `home.syllabusLead`: HE `מה הקורס הזה מכסה. שיעור שכבר סיימתם מסומן כהושלם.`
+  EN `What this course covers. A lesson you already finished is marked done.`
+- The lessons already on that home, in their existing order. Math and Chemistry keep the
+  topic title, the topic description, and the curriculum badge above each group. Physics
+  keeps its three lesson cards. Titles and subtitles stay the YAML strings.
+- A lesson in `lessonsCompleted` shows the existing done mark (`home.done`, the check in
+  place of the order number). A lesson that is not completed shows its order number and
+  no done mark. Nothing is locked. Pressing a lesson is the second press and opens it.
+
+A course with no saved progress shows the same syllabus with no done marks. A started
+course shows a done mark on each finished lesson. The progress cards stay on the page,
+below the syllabus.
+
+### 13.2 Acceptance
+
+1. A hub tile, a Your courses row, and a hero node for Math, Physics, and Chemistry each
+   href the subject home, including after a lesson has been started or finished.
+2. That home shows the syllabus heading in the active language, then every lesson title.
+3. With `lessonsCompleted` empty, no lesson shows the done mark.
+4. With one lesson id in `lessonsCompleted`, that card shows the done mark and the others
+   do not.
+5. Hebrew digits and the done label stay in reading order. No lesson is locked.

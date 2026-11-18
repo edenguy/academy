@@ -182,10 +182,9 @@ export function HomePage() {
         </div>
       </section>
 
-      <ProgressSection />
-
       <section>
-        <h2 className="text-[22px] md:text-[26px] font-bold text-ink mb-4">{t('home.lessonsTitle')}</h2>
+        <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.syllabusTitle')}</h2>
+        <p className="text-sm text-ink-2 mt-1 mb-4 max-w-[52ch]">{t('home.syllabusLead')}</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LESSONS.map((lesson, i) => (
             <LessonCard
@@ -198,6 +197,8 @@ export function HomePage() {
           ))}
         </div>
       </section>
+
+      <ProgressSection />
 
       <footer className="text-xs text-muted max-w-3xl space-y-1 pb-4">
         <p>{t('footer.disclaimer')}</p>

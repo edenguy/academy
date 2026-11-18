@@ -227,11 +227,17 @@ export function HomePage() {
         </div>
       </section>
 
-      <ProgressSection />
+      <section className="space-y-10 md:space-y-14">
+        <header>
+          <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.syllabusTitle')}</h2>
+          <p className="text-sm text-ink-2 mt-1 max-w-[52ch]">{t('home.syllabusLead')}</p>
+        </header>
+        {TOPIC_ORDER.map((topicId) => (
+          <TopicSection key={topicId} topicId={topicId} next={next} completed={completed} />
+        ))}
+      </section>
 
-      {TOPIC_ORDER.map((topicId) => (
-        <TopicSection key={topicId} topicId={topicId} next={next} completed={completed} />
-      ))}
+      <ProgressSection />
 
       <footer className="text-xs text-muted max-w-3xl space-y-1 pb-4">
         <p>{t('footer.disclaimer')}</p>

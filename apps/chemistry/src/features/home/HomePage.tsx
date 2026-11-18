@@ -179,6 +179,11 @@ export function HomePage() {
         </div>
       </section>
 
+      <header>
+        <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.syllabusTitle')}</h2>
+        <p className="text-sm text-ink-2 mt-1 max-w-[52ch]">{t('home.syllabusLead')}</p>
+      </header>
+
       {TOPIC_ORDER.map((topicId) => {
         const topic = TOPICS[topicId];
         const lessons = lessonsByTopic(topicId);

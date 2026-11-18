@@ -40,6 +40,8 @@
     "allDoneTitle": "You've finished every lesson",
     "allDoneBody": "Nice work — revisit any lesson any time, or retake a quiz to sharpen your accuracy.",
     "lessonsTitle": "Lessons",
+    "syllabusTitle": "Syllabus",
+    "syllabusLead": "What this course covers. A lesson you already finished is marked done.",
     "lessonLabel": "Lesson {{n}}",
     "start": "Start",
     "continue": "Continue",

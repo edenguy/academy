@@ -474,11 +474,11 @@
         }
         var done = Math.min(src.total, Object.keys(completed).length);
         var lv = src.lastVisited(state.lastVisited);
-        var lvId = lv && (typeof lv === 'string' ? lv : lv.lessonId);
-        var resume = lv && !completed[lvId];                   // tile rule: last visited, if still incomplete; otherwise the course home
+        // The first press opens the course home (the syllabus), never a lesson. The home
+        // lists every lesson and marks the ones in `completed`.
         return {
           done: done, total: src.total, complete: done >= src.total,
-          href: resume ? src.lessonUrl(lv) : src.home,
+          href: src.home,
           hasProgress: done > 0 || !!lv,
           completed: completed,
           lastVisited: typeof lv === 'string' ? lv : null
@@ -492,13 +492,9 @@
       return he ? d + ' מתוך ' + t + ' שיעורים' : d + ' of ' + t + ' lessons';
     }
 
-    // Your-courses link follows the app's computeNextLesson (HUB_LLD.md §12.1). Tiles keep `p.href`.
-    function yoursHref(src, p) {
-      if (p.complete) return src.home;
-      if (p.lastVisited && TITLES[p.lastVisited] && !p.completed[p.lastVisited]) return src.lessonUrl(p.lastVisited);
-      for (var i = 0; i < src.order.length; i++) {
-        if (!p.completed[src.order[i]]) return src.lessonUrl(src.order[i]);
-      }
+    // Your-courses and the tiles both open the syllabus (HUB_LLD.md §13). The stopped
+    // title still names lastVisited; the lesson itself is the second press, on that page.
+    function yoursHref(src) {
       return src.home;
     }
 
@@ -508,7 +504,7 @@
       row.classList.add('is-started');
       if (p.complete) row.classList.add('is-complete');
       var section = document.getElementById('yours'); if (section) section.hidden = false;
-      var link = row.querySelector('.yours-link'); if (link) link.href = yoursHref(src, p);
+      var link = row.querySelector('.yours-link'); if (link) link.href = yoursHref(src);
       var pct = Math.round(100 * (p.total ? p.done / p.total : 0));
       var pctEl = row.querySelector('.yours-pct'); if (pctEl) pctEl.textContent = pct + '%';
       var he = row.querySelector('.yours-count .t-he'), en = row.querySelector('.yours-count .t-en');

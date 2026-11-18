@@ -22,6 +22,8 @@
     "heroBody": "Playful lessons with a live simulation: instead of memorizing a formula, grab a handle and watch it happen — an integral born from plain rectangles, a derivative born from a tangent line.",
     "curriculumNote": "Lessons are matched to topics from Israel's official 5-unit math curriculum — a study aid, not a certified prep course.",
     "lessonsTitle": "Lessons",
+    "syllabusTitle": "Syllabus",
+    "syllabusLead": "What this course covers. A lesson you already finished is marked done.",
     "lessonLabel": "Lesson {{n}}",
     "start": "Start",
     "continue": "Continue",
