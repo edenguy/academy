@@ -21,6 +21,8 @@
     "heroTitle2": "what holds matter together",
     "heroBody": "Drag an electron, a bond angle, or a second water molecule, and watch the bond respond. Six lessons on structure and bonding.",
     "lessonsTitle": "Lessons",
+    "syllabusTitle": "Syllabus",
+    "syllabusLead": "What this course covers. A lesson you already finished is marked done.",
     "lessonLabel": "Lesson {{n}}",
     "start": "Start",
     "continue": "Continue",
