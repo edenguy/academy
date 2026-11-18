@@ -1849,6 +1849,6 @@ and writes both titles. Run it in the same `readAll` callback as the tiles.
     leaving the quiz unfinished must leave `state.lastVisited` set to that lesson id in
     `academy-<subject>:v1`. If the app recorded the visit before hydration and the merge
     wrote `null` back, this section stays hidden for that subject even though the learner
-    is in the lesson. The app-side pattern that avoids that is Chemistry's: `visitLesson`
-    only after `hydrated`, and `mergePersisted` keeps the in-memory visit
+    is in the lesson. Math, Physics, and Chemistry avoid that by calling `visitLesson`
+    only after `hydrated`, and by keeping the in-memory visit in `mergePersisted`
     (`CLAUDE.md`, "Progress system").

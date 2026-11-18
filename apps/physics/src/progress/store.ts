@@ -118,6 +118,11 @@ function readLegacyCompleted(): Record<string, number> {
   }
 }
 
+/** Same object the store starts from, so a hydration merge can tell a live completion
+ * apart from this one-time legacy seed. A new `readLegacyCompleted()` call would mint
+ * fresh timestamps and look like progress the learner just made. */
+const legacyCompletedAtStart = readLegacyCompleted();
+
 export const useProgress = create<ProgressState>()(
   persist(
     (set, get) => ({
@@ -129,7 +134,7 @@ export const useProgress = create<ProgressState>()(
       // store from the old flat `completed lesson ids` array so a returning learner's
       // progress survives the move into this store. Once IndexedDB has its own record,
       // rehydration overrides this with the real persisted value via `merge` below.
-      lessonsCompleted: readLegacyCompleted(),
+      lessonsCompleted: legacyCompletedAtStart,
 
       setLocale: (locale) => set((s) => ({ settings: { ...s.settings, locale } })),
       setTheme: (theme) => set((s) => ({ settings: { ...s.settings, theme } })),
@@ -170,7 +175,7 @@ export const useProgress = create<ProgressState>()(
       storage: createJSONStorage(() => idbStorage),
       /** Sanitise whatever came out of storage: a bad record would throw inside a selector. */
       migrate: (persisted) => sanitisePersisted(persisted),
-      merge: (persisted, current) => ({ ...current, ...sanitisePersisted(persisted) }),
+      merge: (persisted, current) => mergePersisted(persisted, current),
       onRehydrateStorage: () => (_state, error) => {
         // On a storage error zustand never fires onFinishHydration, so finish here.
         if (error) useProgress.setState({ hydrated: true, storageError: true });
@@ -211,6 +216,43 @@ export function sanitisePersisted(input: unknown): Partial<ProgressState> {
   const achievements = Object.fromEntries(Object.entries(obj(p.achievements)).filter(([, v]) => Number.isFinite(v))) as Partial<Record<AchievementId, number>>;
   const lastVisited = typeof p.lastVisited === 'string' ? p.lastVisited : null;
   return { settings, lessonsCompleted, lastVisited, attempts, achievements };
+}
+
+/**
+ * Hydration can finish after the learner has already opened a lesson. The snapshot from
+ * IndexedDB is then older than `current`. Keep the newer visit, completion, attempt, or
+ * achievement, or the visit is written back as "never started" and the hub's Your courses
+ * row stays hidden.
+ *
+ * `current.lessonsCompleted` also holds the legacy seed from startup. Those ids are not
+ * session progress: a saved record (including an empty one after reset) replaces them.
+ * Settings stay with the sanitised snapshot, which already re-reads the pre-paint locale
+ * and theme when the blob has none.
+ */
+export function mergePersisted<T extends ProgressState>(persisted: unknown, current: T, legacyCompleted: Record<string, number> = legacyCompletedAtStart): T {
+  const sanitized = sanitisePersisted(persisted);
+  const sessionLessons = Object.fromEntries(
+    Object.entries(current.lessonsCompleted).filter(([id, at]) => legacyCompleted[id] !== at),
+  );
+  const lessonsCompleted = { ...(sanitized.lessonsCompleted ?? {}), ...sessionLessons };
+  const achievements = { ...(sanitized.achievements ?? {}), ...current.achievements };
+  const seen = new Set<string>();
+  const attempts = [...(sanitized.attempts ?? []), ...current.attempts]
+    .filter((attempt) => {
+      const key = `${attempt.lessonId}:${attempt.questionId}:${attempt.at}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(-2000);
+  return {
+    ...current,
+    ...sanitized,
+    lessonsCompleted,
+    lastVisited: current.lastVisited ?? sanitized.lastVisited ?? null,
+    attempts,
+    achievements,
+  };
 }
 
 useProgress.persist.onFinishHydration(() => useProgress.setState({ hydrated: true }));
