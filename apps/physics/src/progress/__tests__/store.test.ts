@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { sanitisePersisted, useProgress } from '../store';
+import { mergePersisted, sanitisePersisted, useProgress } from '../store';
 
 function reset() {
   useProgress.setState({
@@ -125,5 +125,59 @@ describe('sanitisePersisted', () => {
       achievements: { 'first-lesson': 1000 },
     };
     expect(sanitisePersisted(input)).toEqual(input);
+  });
+});
+
+describe('mergePersisted', () => {
+  const current = {
+    ...useProgress.getState(),
+    settings: { locale: 'en' as const, theme: 'light' as const },
+    lessonsCompleted: {},
+    lastVisited: null,
+    attempts: [],
+    achievements: {},
+  };
+
+  it('keeps a visit that happened before the saved snapshot was merged', () => {
+    const started = {
+      ...current,
+      lastVisited: 'position-vs-time',
+      lessonsCompleted: { 'position-vs-time': 2 },
+      attempts: [{ lessonId: 'position-vs-time', questionId: 'q1', correct: true, at: 3 }],
+      achievements: { 'first-lesson': 4 as number },
+    };
+    const merged = mergePersisted(undefined, started, {});
+    expect(merged.lastVisited).toBe('position-vs-time');
+    expect(merged.lessonsCompleted).toEqual({ 'position-vs-time': 2 });
+    expect(merged.attempts).toEqual(started.attempts);
+    expect(merged.achievements).toEqual({ 'first-lesson': 4 });
+  });
+
+  it('keeps the lesson just opened when the saved snapshot names an older one', () => {
+    const merged = mergePersisted(
+      { lastVisited: 'position-vs-time', lessonsCompleted: { 'position-vs-time': 1 } },
+      { ...current, lastVisited: 'velocity-slope' },
+      {},
+    );
+    expect(merged.lastVisited).toBe('velocity-slope');
+    expect(merged.lessonsCompleted).toEqual({ 'position-vs-time': 1 });
+  });
+
+  it('lets a saved record replace the legacy seed, including a reset to empty', () => {
+    const legacy = { 'position-vs-time': 1 };
+    const merged = mergePersisted({ lessonsCompleted: {}, lastVisited: null }, { ...current, lessonsCompleted: legacy }, legacy);
+    expect(merged.lessonsCompleted).toEqual({});
+    expect(merged.lastVisited).toBeNull();
+  });
+
+  it('keeps a completion made this session on top of the saved record', () => {
+    const legacy = { 'position-vs-time': 1 };
+    const merged = mergePersisted(
+      { lessonsCompleted: { 'position-vs-time': 9 }, lastVisited: 'position-vs-time' },
+      { ...current, lessonsCompleted: { ...legacy, 'velocity-slope': 5 }, lastVisited: 'velocity-slope' },
+      legacy,
+    );
+    expect(merged.lessonsCompleted).toEqual({ 'position-vs-time': 9, 'velocity-slope': 5 });
+    expect(merged.lastVisited).toBe('velocity-slope');
   });
 });

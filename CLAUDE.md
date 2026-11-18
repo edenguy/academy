@@ -167,15 +167,16 @@ self-unregistering service worker pattern.
     saved snapshot (empty on a first open, or an older lesson after that) replaced
     `lastVisited` with `null` or the old id, and the hydration write stored the wipe.
     The hub treats a missing `lastVisited` and an empty `lessonsCompleted` as never
-    started, so the row stays hidden while the learner is inside a lesson. Chemistry
-    waits for `hydrated` before `visitLesson`
-    (`apps/chemistry/src/features/lesson/LessonPage.tsx`), and `mergePersisted`
-    (`apps/chemistry/src/progress/sanitize.ts`) keeps a `lastVisited`, completion,
-    attempt, or achievement already in memory. Copy that pair. Math and Physics still
-    record the visit on mount; a subject copied from them will not appear in Your
-    courses until this is applied. Check: open one lesson, finish nothing, and read
-    `academy-<subject>:v1` — `state.lastVisited` must be that lesson id. The hub row
-    then shows 0% and that lesson's YAML title.
+    started, so the row stays hidden while the learner is inside a lesson. Math,
+    Physics, and Chemistry wait for `hydrated` before `visitLesson`
+    (`apps/<subject>/src/features/lesson/LessonPage.tsx`). Math and Chemistry
+    `mergePersisted` (`src/progress/sanitize.ts`) keeps a `lastVisited`, completion,
+    attempt, or achievement already in memory. Physics does the same in
+    `mergePersisted` (`apps/physics/src/progress/store.ts`) and still lets a saved
+    record replace the legacy `academy-physics:completed` seed. Keep that pair when
+    you rewrite a lesson page or a merge. Check: open one lesson, finish nothing, and
+    read `academy-<subject>:v1` — `state.lastVisited` must be that lesson id. The hub
+    row then shows 0% and that lesson's YAML title.
 - **The hub reads this storage.** Each app's record is `{state, version}` as a JSON string at
   an idb-keyval key in the default `keyval-store`/`keyval` store: `nitrox-academy:v1`,
   `academy-math:v1`, `academy-physics:v1`, `academy-chemistry:v1`. The hub reads only `lessonsCompleted` and
@@ -323,10 +324,10 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
    different explorer shapes, update `src/i18n/locales/{en,he}.json` for the app's own copy.
    Rename the progress store key (`academy-<subject>:v1`) and the pre-paint script's
    localStorage keys; rewrite achievements for the subject. Never copy another subject's lesson
-   text or facts. The Math scaffold still records a lesson visit before hydration, which
-   hides the new subject from Your courses. Replace that with Chemistry's pair: `visitLesson`
-   only after `hydrated`, and `mergePersisted` that keeps in-memory progress (see "Progress
-   system" above). Do this before the first build you ship.
+   text or facts. The Math scaffold already records `visitLesson` only after `hydrated`
+   and keeps that progress in `mergePersisted`. If you rewrite the lesson page or the
+   merge, keep that pair (see "Progress system" above) or the new subject stays hidden
+   in Your courses.
 3. `vite.config.ts`: `base: '/academy/subjects/<subject>/'`, `outDir: '../../docs/subjects/<subject>'`.
 4. Give it its own logo mark and a subject palette (extend the Bench tokens; keep the system
    shared, the palette per subject).
