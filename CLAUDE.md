@@ -107,7 +107,7 @@ academy/                         (this repo)
 ├── README.md                     setup, Pages config, "adding a subject" walkthrough
 ├── HUB_LLD.md                    hub design spec (incl. §11 "inviting landing", implemented)
 ├── SUBJECT_APP_SKIN_LLD.md       Math/Physics "Bench" skin spec (implemented)
-├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (spec, not built yet)
+├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (engine + Math built; the rest per its §13)
 ├── scripts/                      hub-level tooling (render-og-cards.mjs, check-paper-sync.mjs, ...)
 ├── apps/                         SOURCE — never served, never deployed directly
 │   ├── nitrox/                    see apps/nitrox/CLAUDE.md
@@ -481,7 +481,9 @@ layout bug. Don't commit temp scripts.
     than this file and may lag (e.g. Math's README still describes the integral-only pilot and an
     old `docs/math` build path) — this file wins; fix them when you touch those apps.
   - The recent history's Claude-authored commits (rule 5).
-- **Specified, not built:** the Paper layer (`BACKGROUND_LLD.md`): Phase 0 engine, then Math,
-  Physics, Chemistry and the hub; Nitrox bubbles gated on Guy's go-ahead.
+- **Paper layer (`BACKGROUND_LLD.md`):** built so far: Phase 0 (the engine, `check-paper-sync.mjs`)
+  and Phase 1a (Math: stage, gutters, pause button, 11 payloads). Still to build: Physics,
+  Chemistry and the hub; Nitrox bubbles gated on Guy's go-ahead. Needs the real-device check
+  (§14 item 12) before 1a merges.
 - **Not started:** a shared package for the Math/Physics/Chemistry scaffold; Nitrox is
   unchanged by the Bench/dashboard work (it is the reference, by design).
