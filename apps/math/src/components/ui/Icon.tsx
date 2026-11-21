@@ -2,7 +2,7 @@ import type { ReactNode, SVGProps } from 'react';
 
 export type IconName =
   | 'check' | 'x' | 'arrow' | 'sun' | 'moon' | 'globe' | 'alert' | 'refresh' | 'speaker'
-  | 'speakerMute' | 'paperclip' | 'handle' | 'pin' | 'envelope' | 'target' | 'lock' | 'trophy' | 'play';
+  | 'speakerMute' | 'paperclip' | 'handle' | 'pin' | 'envelope' | 'target' | 'lock' | 'trophy' | 'play' | 'pause';
 
 const paths: Record<IconName, string> = {
   check: 'm5 12 5 5L20 7',
@@ -23,6 +23,7 @@ const paths: Record<IconName, string> = {
   lock: 'M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z',
   trophy: 'M8 4h8v5a4 4 0 0 1-8 0V4Zm0 1H5a2 2 0 0 0 0 4h1M16 5h3a2 2 0 0 1 0 4h-1M10 16v2a2 2 0 0 0 4 0v-2M9 21h6',
   play: 'M7 4.5v15l12-7.5-12-7.5Z',
+  pause: 'M8 5v14M16 5v14',
 };
 
 /** A second, filled element some icons need (a dot on `handle`/`pin`/`target`) — Icon.tsx

@@ -13,7 +13,9 @@
   "settings": {
     "language": "שפה",
     "theme": "מצב תצוגה",
-    "music": "מוזיקת רקע רגועה"
+    "music": "מוזיקת רקע רגועה",
+    "paperPause": "השהיית תנועת הרקע",
+    "paperPlay": "הפעלת תנועת הרקע"
   },
   "home": {
     "eyebrowNew": "פיילוט חדש",

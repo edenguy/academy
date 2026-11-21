@@ -13,6 +13,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
+import { PaperStage } from '@/paper/Paper';
 import { HERO_CURVE } from '@/math/heroCurve';
 import { lessonSignature } from '@/math/lessonSignature';
 import type { Lesson, TopicId } from '@/content/schema';
@@ -203,6 +204,7 @@ export function HomePage() {
 
   return (
     <div className="space-y-10 md:space-y-14">
+      <PaperStage />
       <section className="grid grid-cols-1 min-[900px]:grid-cols-[1.1fr_1fr] gap-8 min-[900px]:gap-10 items-center">
         <div>
           <div className="inline-flex h-7 items-center gap-1.5 px-3 rounded-pill bg-accent-2-soft text-accent text-[12.5px] font-semibold">

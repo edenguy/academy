@@ -13,7 +13,9 @@
   "settings": {
     "language": "Language",
     "theme": "Theme",
-    "music": "Calm background music"
+    "music": "Calm background music",
+    "paperPause": "Pause background motion",
+    "paperPlay": "Play background motion"
   },
   "home": {
     "eyebrowNew": "New pilot",

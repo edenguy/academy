@@ -6,6 +6,7 @@ import { Icon } from '@/components/ui/Icon';
 import { Logo } from '@/components/Logo';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { AchievementToast } from './AchievementToast';
+import { PaperGutters } from '@/paper/Paper';
 import { useAmbient } from '@/audio/useAmbient';
 import { useLocale, useThemeToggle } from './providers';
 
@@ -79,6 +80,7 @@ export function Shell() {
 
   return (
     <div className="min-h-dvh flex flex-col">
+      <PaperGutters />
       <a
         href="#content"
         onClick={(e) => {
