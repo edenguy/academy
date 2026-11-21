@@ -309,19 +309,20 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
 Guy asked for the moving background of his glucose project here: napkins of graph paper that
 float and draw themselves, carrying math graphs and formulas in Math, motion graphs, vectors
 and equations in Physics, molecules and formulas in Chemistry, a mix on the hub, and rising
-bubbles in Nitrox. `BACKGROUND_LLD.md` has two revisions. **Revision 1 is built** (the engine,
-and in Math a stage band on the home page plus two margin gutters). **Revision 2 is the
-current design and is not built yet:** after seeing Revision 1 on his phone Guy asked for
-napkins over the whole page, larger and more of them, translucent cards, much wilder paper and
-a large shuffled catalog. Build from Revision 2 (sections R0–R11 of that file). The rules that
-are easy to break:
+bubbles in Nitrox. `BACKGROUND_LLD.md` has two revisions. **Revision 2 is the current design
+and is built in the engine and in Math** (Physics, Chemistry and the hub are not): after
+seeing Revision 1 on his phone Guy asked for napkins over the whole page, larger and more of
+them, translucent cards, much wilder paper and a large shuffled catalog. Revision 1's stage
+band and gutters remain only as engine flows (`'x'`, `'y'`). Build from Revision 2 (sections
+R0–R11 of that file). The rules that are easy to break:
 
 - **No text stands on the field.** The napkins fill the whole page on one fixed canvas behind
   everything, on every page. Every piece of text sits on a glass surface (a card, a bench, or
   a `.plate` for text that used to stand on the page) or on a solid one. Text straight on a
   napkin is unreadable; that was measured in Revision 1 and still holds.
-- **The glass alphas are measured, not chosen by eye.** Pane 0.72 light / 0.78 dark, bench and
-  reading sheet 0.86 / 0.88, with a 14 px blur; without blur 0.90 / 0.93. They hold the
+- **The glass alphas are measured, not chosen by eye.** As built in Math: pane 0.76 light / 0.82
+  dark (the spec's 0.72 / 0.78 sampled at 4.36-4.45:1 and was raised), bench and reading sheet
+  0.86 / 0.88, wells 0.97, with a 14 px blur; without blur 0.90 / 0.94 for panes. They hold the
   weakest text colour at 4.5:1 over the densest napkin by a thin margin. Do not lower one, add
   an ink or darken a napkin token without re-running the contrast sampling
   (`BACKGROUND_LLD.md` R9 item 6).
@@ -494,11 +495,10 @@ layout bug. Don't commit temp scripts.
     than this file and may lag (e.g. Math's README still describes the integral-only pilot and an
     old `docs/math` build path) — this file wins; fix them when you touch those apps.
   - The recent history's Claude-authored commits (rule 5).
-- **Paper layer (`BACKGROUND_LLD.md`):** built so far, to Revision 1: Phase 0 (the engine,
-  `check-paper-sync.mjs`) and Phase 1a (Math: stage, gutters, pause button, 11 payloads).
-  Next, to Revision 2: Phase 1a-v2 (Math rebuilt: full-page field, glass cards and plates,
-  wild surfaces, 51 payloads), then Physics, Chemistry and the hub on the same model; Nitrox
-  bubbles still gated on Guy's go-ahead. 1a-v2 needs the real-device check (R9 item 14)
-  before it merges.
+- **Paper layer (`BACKGROUND_LLD.md`):** built: the engine (Phase 0, extended to Revision 2) and
+  Phase 1a-v2 in Math (full-page field, glass cards and plates, wild surfaces, three-state
+  button, 50 of the 51 payloads: M35 waits for the `tan` / `tg` notation to be confirmed).
+  Next: Physics, Chemistry and the hub on the same model; Nitrox bubbles still gated on Guy's
+  go-ahead. 1a-v2 needs the real-device check (R9 item 14) before it merges.
 - **Not started:** a shared package for the Math/Physics/Chemistry scaffold; Nitrox is
   unchanged by the Bench/dashboard work (it is the reference, by design).

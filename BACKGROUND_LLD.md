@@ -1,7 +1,13 @@
 # The Paper layer — floating napkins (and bubbles) — low-level design
 
-Status: **Revision 2 is the current design (spec, not built). Revision 1 is what is built**
-(Phase 0: the engine; Phase 1a: Math's stage band and gutters, both on `main`).
+Status: **Revision 2 is the current design. Built so far: the engine (Phase 0, extended for
+Revision 2) and Math (Phase 1a-v2: full-page field, glass cards, 50 of 51 payloads — M35 is held
+back until its `tan`/`tg` notation is confirmed, R7.1 rule 9) on branch `guy/paper-bg-math-v2`;
+Revision 1's stage band and gutters are gone from Math. Physics, Chemistry and the hub are not
+built.** The real-device check (R9 item 14) has not been done. As built in Math the pane alphas
+are 0.76 light / 0.82 dark, the dark clear pane 0.94 and wells 0.97, above R4.1's numbers: the
+8-seed re-sampling of R9 item 6 gave 4.36-4.45:1 for the weakest text colour at the spec's
+values and 4.50-4.74:1 at these.
 Scope: the hub, Math, Physics, Chemistry (Phase 1) and Nitrox (Phase 2, gated).
 Where this file and an older spec disagree, this file wins for the Paper layer only; every
 other rule in `CLAUDE.md`, `HUB_LLD.md` and `SUBJECT_APP_SKIN_LLD.md` still applies. Inside
