@@ -33,11 +33,22 @@
   --paper-ink-1: #6250d6;  --paper-ink-2: #b83a72;  --paper-ink-3: #2a78d6;  --paper-text: #4a3a63;
   --paper-ink-alpha: 0.95;  --napkin-cells: 12;
   --paper-font: 'JetBrains Mono Variable', ui-monospace, monospace;
-  /* Glass (R4.1): each theme's --surface / --surface-2 / --bg as an RGB triplet, with the alphas. Pane (light .72 -> .76, dark .78 -> .82), dark clear pane (.93 -> .94)
-     and wells (.94 -> .97) are above the spec's: re-sampling at 8 seeds under it came out at 4.36-4.45:1 for the weakest text colour, and the spec asks for 4.5. */
+  /* Glass (R4.1, R12): each theme's --surface / --surface-2 / --bg as an RGB triplet, then the tuning knobs.
+     GLASS TUNING: every --g-* is one tier's fill alpha, LOWER = MORE SEE-THROUGH; --g-blur is the frost radius (higher = softer napkin under text).
+     Each value was set to the lowest the contrast sampling allows (BACKGROUND_LLD.md R12); re-sample before going lower. */
   --glass-rgb: 255, 255, 255;  --well-rgb: 248, 241, 253;  --bar-rgb: 245, 236, 251;
   --glass-edge: rgba(255, 255, 255, 0.85);
-  --g-pane: 0.76;  --g-bench: 0.86;  --g-pane-clear: 0.90;  --g-bench-clear: 0.94;  --g-well: 0.97;
+  --g-pane: 0.50;         /* cards: lesson list, dashboard, hero copy, headings (frosted) */
+  --g-bench: 0.64;        /* explorer panel, reading sheet, key points, quiz panel (frosted) */
+  --g-bar: 0.62;          /* top bar (frosted) */
+  --g-well: 0.90;         /* plot areas, readouts, quiz choices, inputs (no blur: graphs stay crisp) */
+  --g-chip: 0.86;         /* loose one-line headings and links (no blur) */
+  --g-pane-clear: 0.84;   /* pane when the engine drops the blur or the browser cannot: stays more opaque than --g-pane */
+  --g-bench-clear: 0.88;  /* bench, same fallback */
+  --g-bar-clear: 0.90;    /* bar, same fallback */
+  --g-blur: 18px;         /* frost radius on pane, bench, bar */
+  /* the weakest text colours, one step stronger, used only on glass (BACKGROUND_LLD.md R12) */
+  --muted-g: #675780;  --accent-g: #5b4ac8;  --good-g: #096c46;  --critical-g: #af2f2f;
   color-scheme: light;
 }
 :root[data-theme='dark'] {                 /* dark: "lit bench" */
@@ -63,7 +74,9 @@
   --paper-ink-1: #a99ff0;  --paper-ink-2: #ee7fa9;  --paper-ink-3: #5a9cf0;  --paper-text: #cdbdee;
   --glass-rgb: 31, 20, 64;  --well-rgb: 39, 26, 77;  --bar-rgb: 20, 10, 40;
   --glass-edge: rgba(255, 255, 255, 0.08);
-  --g-pane: 0.82;  --g-bench: 0.88;  --g-pane-clear: 0.94;  --g-bench-clear: 0.95;  --g-well: 0.97;
+  --g-pane: 0.54;  --g-bench: 0.64;  --g-bar: 0.62;  --g-well: 0.90;  --g-chip: 0.86;
+  --g-pane-clear: 0.84;  --g-bench-clear: 0.88;  --g-bar-clear: 0.86;
+  --muted-g: #a99eca;  --accent-g: #a39bec;  --good-g: #2fd69a;  --critical-g: #ea8989;
   color-scheme: dark;
 }
 
@@ -364,27 +377,30 @@ input[type='range'].slider:active::-webkit-slider-thumb { transform: scale(1.12)
 /* wells, chips, bar. The bar is opaque when no field is mounted (it used to be transparent until scrolled). */
 .glass-bar { background: var(--bg); border-bottom: 1px solid var(--line); }
 :root[data-paper] .elev-0     { background: rgba(var(--well-rgb), var(--g-well)); }
-:root[data-paper] .plate-chip { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
-:root[data-paper] .glass-bar  { background: rgba(var(--bar-rgb), 0.74); }
+:root[data-paper] .plate-chip { background: rgba(var(--glass-rgb), var(--g-chip)); }
+:root[data-paper] .glass-bar  { background: rgba(var(--bar-rgb), var(--g-bar)); }
+/* the weakest text colours get one step more contrast on a see-through tier. Custom properties, not classes, so a :hover colour still wins; --accent is also a fill, so it is a rule on .text-accent instead */
+:root[data-paper] :is(.elev-0, .elev-1, .elev-2, .plate, .plate-chip, .read, .glass-bar) { --muted: var(--muted-g); --good: var(--good-g); --critical: var(--critical-g); }
+:root[data-paper] :is(.elev-0, .elev-1, .elev-2, .plate, .plate-chip, .read, .glass-bar) .text-accent { color: var(--accent-g); }
 
 /* frost */
 :root[data-paper='frost'] :is(.elev-1, .elev-2, .plate, .read, .glass-bar) {
-  -webkit-backdrop-filter: blur(14px) saturate(1.35); backdrop-filter: blur(14px) saturate(1.35);
+  -webkit-backdrop-filter: blur(var(--g-blur)) saturate(1.35); backdrop-filter: blur(var(--g-blur)) saturate(1.35);
 }
 /* clear: the engine stepped down, or the browser cannot blur, or the reader asked for less transparency */
 :root[data-paper='clear'] :is(.elev-1, .plate)  { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
 :root[data-paper='clear'] :is(.elev-2, .read)   { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
-:root[data-paper='clear'] .glass-bar            { background: rgba(var(--bar-rgb), 0.92); }
+:root[data-paper='clear'] .glass-bar            { background: rgba(var(--bar-rgb), var(--g-bar-clear)); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root[data-paper] :is(.elev-1, .plate) { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
   :root[data-paper] :is(.elev-2, .read)  { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
-  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), 0.92); }
+  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), var(--g-bar-clear)); }
 }
 @media (prefers-reduced-transparency: reduce) {
   :root[data-paper] :is(.elev-1, .elev-2, .plate, .read, .glass-bar) { -webkit-backdrop-filter: none; backdrop-filter: none; }
   :root[data-paper] :is(.elev-1, .plate) { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
   :root[data-paper] :is(.elev-2, .read)  { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
-  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), 0.92); }
+  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), var(--g-bar-clear)); }
 }
 /* opt out: modals and toasts stay opaque. After the frost rule on purpose: the spec put this before it, and the blur came back on a .solid.elev-2 */
 :root[data-paper] .solid { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
