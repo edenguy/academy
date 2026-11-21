@@ -839,21 +839,25 @@ Copy traps:
   efficacy statistic, any fact about the story that isn't on the Nitrox about page
 - mixing Hebrew and English inline; translating EN marketing idioms word-for-word into HE
 
-### 7.1 The one exception: the Paper layer (spec in `BACKGROUND_LLD.md`, not built yet)
+### 7.1 The one exception: the Paper layer (spec in `BACKGROUND_LLD.md`, Revision 2; not built on the hub yet)
 
 Guy asked for the moving background of his glucose project: napkins of graph paper that drift
 and draw a graph, a vector diagram or a molecule with its formula. It loops for as long as it
 is on screen and its napkins float, which the list above forbids ("infinite bobbing/floating
 elements", and §3.1 #7). The exception is this system and nothing else:
 
-- It lives only in a stage band at the top of the hero and in the two page margins from
-  1272 px. No text, panel, tile or control is ever over it, except its own pause button.
+- It is one fixed canvas behind the whole page (`BACKGROUND_LLD.md` Revision 2; Revision 1
+  confined it to a band and the margins, and the owner asked for the whole page). No text
+  stands on it: every text block is on one of the hub's glass panels or on a plate, and the
+  panel alphas are re-measured against the field before it ships (that file, R4 and R9
+  item 6). This is not the "blobs behind a glass card" this section bans: what is behind the
+  glass is the subjects' own drawings on paper, not a colour wash.
 - No glow (§3.1 #5 stands: nothing static glows, and this is not something you can move), no
   parallax, no pointer reaction, no particles, no page-wide grid. Its graph paper exists only
   on the napkins.
 - Its inks are the hub's own spectrum hues. A napkin is not painted in a subject's colours.
-- It can be paused, stands still under `prefers-reduced-motion` and on weak or low-battery
-  devices, and stops in a hidden tab.
+- It can be calmed or stopped from the top bar, stands still under `prefers-reduced-motion`
+  and on weak or low-battery devices, and stops in a hidden tab.
 - Everything written on a napkin is a correct, sourced formula (`BACKGROUND_LLD.md` §10).
 
 Every other item in this section still applies, to the Paper layer too (no sparkles, no

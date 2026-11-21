@@ -1,11 +1,1061 @@
 # The Paper layer — floating napkins (and bubbles) — low-level design
 
-Status: **spec, not built.** Written for an implementer who has not seen the discussion.
+Status: **Revision 2 is the current design (spec, not built). Revision 1 is what is built**
+(Phase 0: the engine; Phase 1a: Math's stage band and gutters, both on `main`).
 Scope: the hub, Math, Physics, Chemistry (Phase 1) and Nitrox (Phase 2, gated).
 Where this file and an older spec disagree, this file wins for the Paper layer only; every
-other rule in `CLAUDE.md`, `HUB_LLD.md` and `SUBJECT_APP_SKIN_LLD.md` still applies.
+other rule in `CLAUDE.md`, `HUB_LLD.md` and `SUBJECT_APP_SKIN_LLD.md` still applies. Inside
+this file, Revision 2 (sections R0–R11) wins over Revision 1 (sections 0–16).
 
-Contents: 0 the request and how it is read · 1 decisions at a glance · 2 what was measured ·
+---
+
+# REVISION 2 — napkins everywhere, glass cards, wild paper, a large random catalog
+
+Status: **spec, not built.** What is on `main` today is Revision 1 (Phase 0 + Phase 1a: a stage
+band and two margin gutters in Math). This revision replaces Revision 1's main decisions. It is
+written for an implementer who has not seen the discussion.
+
+**How to read this file.** Sections R0–R11 below are current. Sections 0–16 after them are
+Revision 1. A Revision 1 passage that this revision replaces carries a line starting
+"**Superseded by Revision 2**"; everything in Revision 1 without that line still applies
+(the pen, the sprite renderer, the motion key, the automatic stops, the Nitrox bubbles, the
+sync script, the facts rule). Where the two disagree, Revision 2 wins.
+
+Contents: R0 the direction · R1 decisions · R2 what was measured · R3 the full-page layer ·
+R4 glass and legibility · R5 performance, the quality ladder, calm mode · R6 the wild surface ·
+R7 catalogs and random order · R8 integration into Math · R9 acceptance · R10 phases ·
+R11 risks and cut order.
+
+---
+
+## R0. The direction
+
+Guy looked at Math Academy with Revision 1 live on his phone and said (translated):
+
+> I would like the napkins to be larger. I want more of them. I want the cards to be
+> translucent so that the napkins behind them are semi-visible. And I want the napkins to be
+> on the entire page and not only on the upper top of the page. And I want the napkins to be
+> more curved and more crazy shaped, with more curvature, like a saddle, but not really a
+> classic saddle — waves and all kinds of wrinkles in all three dimensions. And I want more
+> than just two formulas: all kinds of formulas, shown in random.
+
+He also said the napkins look too pale: small, washed out, and cut by the top edge of the band.
+
+So:
+
+1. Napkins fill the **whole page** on every page type (home, lesson, quiz), on one fixed layer
+   behind everything.
+2. They are **larger** and there are **more** of them.
+3. Cards are **translucent glass**; napkins show through, softened.
+4. The paper is **far wilder**: bumps, ripples, a twist, a bend, a curled corner.
+5. The catalog is **large and shuffled**: 51 payloads in Math instead of 11.
+
+Revision 1 rejected a full-page layer because text straight on napkins was unreadable. That
+finding still holds, and this revision does not ignore it: **no text ever stands straight on
+the field. Every piece of text sits on a glass surface whose worst case was measured** (R4).
+That one rule is what makes the owner's direction workable.
+
+Costs, stated once: it draws four to six times more pixels than Revision 1; glass over a
+moving canvas makes the browser re-blur on every drawn frame; and a graph on strongly curved
+paper looks bent (the grid bends with it, so it reads as paper, but it is less of a clean
+plot). R5 and R11 say what is done about each and what goes first if a budget is missed.
+
+---
+
+## R1. Decisions
+
+| # | Decision | Replaces |
+|---|---|---|
+| E1 | One `position: fixed` full-viewport canvas (the **field**) behind everything, on every page of an app and on the hub. No stage band, no gutters, no edge fog. | D4, D5, §3, §5.4 |
+| E2 | Napkin count by viewport width: 6 under 700 px, 7 from 700, 9 from 1100, 11 from 1800. A napkin is 0.82–1.10 of the viewport width on a phone and 400–690 px on a desktop. | §3 counts, §5.3 |
+| E3 | Stronger paper: white napkins, edge, shadow, grid and ink alpha raised (R3.4); depth range halved and depth fog floor raised from 0.45 to 0.78. | §7 (Math row), §5.2 |
+| E4 | **No text on the field.** Every text block sits on glass: cards become translucent, and text that used to stand on the page (hero copy, section headings, lesson header and prose, footer, loose links) gets a glass **plate**. | "Nothing is ever placed over the Paper layer" in §3 |
+| E5 | Three glass strengths with measured worst-case contrast: pane 0.72 / 0.78 (light / dark), bench and reading sheet 0.86 / 0.88, wells 0.94. Blur 14 px. A **clear** fallback without blur at 0.90 / 0.93. | — |
+| E6 | The engine tells CSS what it can afford through `data-paper` on `<html>`: `frost`, `clear`, or absent (no field: every card is solid, exactly as today). | — |
+| E7 | A five-step quality ladder driven by measured frame gaps: resolution, blur, count, frame rate, still frame (R5.2). | §8.4 |
+| E8 | The button has three states: moving, **calm**, still. It lives in the top bar. | §8.5 placement |
+| E9 | Surface: 5–8 bumps, 2–3 ripples, twist, bend, one curled corner, relief 0.85–1.10 half-widths, slope capped at 1.5. The rim is wild, the middle is calmer so the drawing stays readable. | §5.2 relief row, "flatter, steadier napkins" in §0 |
+| E10 | Math catalog 51 payloads in 9 families. A seeded shuffle bag deals them: no repeat within a bag, never two neighbours of one family. | §5.2 payload index rule, §10.1 count |
+| E11 | Still true: no glow, no scroll parallax, no pointer reaction, symbols only on napkins, every payload a checked fact, one motion key for all apps, still frame for reduced motion. | D6, D8, D9 stand |
+
+---
+
+## R2. What was measured before writing this
+
+A throwaway prototype (never committed) patched the shipped engine with the page flow, the
+surface of R6 and the placement of R3, added the glass CSS of R4 and the plates to the real
+Math app, built it, and served the build. Everything below is from that build.
+
+Method, as in §2.1: Playwright, bundled Chromium, headless, **software rasteriser, no GPU**.
+Frame rate = `requestAnimationFrame` gaps over 4 s after 3 s of warm-up, governor disabled so
+each level is measured alone. "÷4" = `Emulation.setCPUThrottlingRate = 4`. "JS" = time inside
+the engine's own `draw()` (p50 / p95).
+
+**Read these numbers as pessimistic and relative.** Filling a canvas and blurring a backdrop
+are GPU work on a real phone or laptop; here they run on the CPU, and the throttle slows them
+too. The harness cannot say what a real phone does. It can say which lever matters most, and
+it sets the gate for the real-device check (R9 item 14).
+
+### R2.1 Frame rate
+
+Phone, 390×844 at device pixel ratio 3, 6 napkins. Levels are those of R5.2.
+
+| Case | fps, no throttle | fps, ÷4 | JS ms, ÷4 |
+|---|---|---|---|
+| Revision 1 stage, 2 napkins (from §2.1, for comparison) | 59.8 | 55.4 | 1.9 / 3.4 |
+| Home, L0: frost glass, canvas 780×1688 (1.32 MP) | 50.5 (58.8 with 5 napkins) | 14.6 | 6.8 / 11.7 |
+| Home, same but clear glass (no blur) | 60.0 (5 napkins) | 10.5–18.3 (noisy) | 6.0 / 9.1 |
+| Home, frost, canvas capped at 0.7 MP | — | 20.2 | 5.4 / 13.8 |
+| Home, frost, canvas at ratio 1 (0.33 MP) | — | 42.6 | 5.2 / 9.3 |
+| Home, clear, canvas at ratio 1 | — | 42.3 | 5.4 / 8.5 |
+| Home, L2: clear, 0.6 MP | — | 21.6 | 8.0 / 13.1 |
+| Home, L3: clear, 0.6 MP, 4 napkins | — | 30.5 | 5.7 / 7.9 |
+| Home, L4: L3 at half rate | — | page 41.7, 21 draws/s | 5.9 / 12.8 |
+| Lesson page, L0 | 56.8 | 15.6 | 6.2 / 11.8 |
+| Lesson page, L3 | — | 25.3 | 7.2 / 8.8 |
+
+Desktop, 1440×900 at ratio 2, 9 napkins (canvas 1497×935, 1.4 MP cap).
+
+| Case | fps, no throttle | fps, ÷4 | JS ms |
+|---|---|---|---|
+| Home, L0: frost | 24.8 (31.9 with 8 napkins) | 7.8 | 3.1 / 5.0 unthrottled |
+| Home, clear glass | 54.3 (60.0 with 8 napkins) | 11.6 | 2.4 / 4.1 unthrottled |
+| Home, frost with blur 8 px instead of 14 | 29.0 | — | — |
+| Home, L3: clear, 6 napkins | — | 14.1 | 9.4 / 11.8 at ÷4 |
+| Home, L4: L3 at half rate | — | page 27.5, 13.8 draws/s | — |
+| Lesson page, L0: frost | 28.9 (20.6 in one run) | — | 2.4 / 3.0 |
+| Lesson page, clear | 56.0 | — | 2.0 / 3.1 |
+
+Hidden tab: 0 frames in 600 ms. Reduced motion: 0 engine frames in 1.5 s, the same still frame
+on two loads (canvas bytes identical at 390 and 1440 px), no pause button. No console error,
+no horizontal overflow on home or lesson at either width.
+
+What the numbers say:
+
+1. **On a phone the cost is pixels, not blur.** Frost against clear is within noise at every
+   size; canvas resolution moves ÷4 from 15 to 43 fps. So the first step down is resolution.
+2. **On a wide screen the cost is blur.** The frosted area is large (plates, cards, the bench):
+   25 fps with it, 54 without, and a smaller radius does not help (29). So the second step
+   down is blur.
+3. **The engine's own JavaScript is not the problem** (2–3 ms a frame unthrottled with the new
+   surface and 6–9 napkins), though it is 3–4 times Revision 1.
+4. **A machine like "÷4 without a GPU" cannot run this.** It ends on the still frame, by
+   design. Nothing above L3 reaches 30 fps there.
+5. Honest summary: in this harness a phone-sized page is smooth unthrottled (50–59 fps) and a
+   desktop-sized page is smooth only without blur. Whether a real mid-range phone is smooth
+   **is not known** and must be measured on the device before Phase 1a-v2 merges.
+
+### R2.2 Legibility through glass (the numbers behind R4)
+
+Method: on the built app, hide the content, cover the viewport with one probe element
+carrying the glass recipe, screenshot at ratio 1, and take the single worst pixel (darkest in
+light, lightest in dark) over 8 seeds × 3 payload sets (the shuffled catalog, every napkin
+carrying the bar chart M1, every napkin carrying the filled triangle M2: the densest inks)
+× 390 and 1440 px, with the tokens of R3.4. Then the WCAG contrast of each of the app's six
+text colours against that pixel. The weakest colour decides: `--good` in light, `--muted` in
+dark. On today's solid surface they have 5.37 and 5.23.
+
+| Glass | Light: worst pixel, weakest text | Dark: worst pixel, weakest text |
+|---|---|---|
+| alpha 0.62, blur 14 | `rgb(234,229,240)`, **4.34 fails** | `rgb(51,37,88)`, **4.17 fails** |
+| alpha 0.70, blur 14 | `rgb(239,234,244)`, 4.54 | `rgb(47,33,83)`, **4.41 fails** |
+| alpha 0.76–0.78, blur 14 | `rgb(243,240,247)`, 4.76 | `rgb(44,30,79)`, 4.59 |
+| alpha 0.86, blur 14 | `rgb(247,245,250)`, 4.96 | `rgb(39,26,73)`, 4.85 |
+| alpha 0.90, no blur | `rgb(239,236,240)`, 4.58 | `rgb(46,36,82)`, **4.33 fails** |
+| alpha 0.93, no blur | `rgb(244,241,244)`, 4.79 | `rgb(42,32,76)`, 4.58 |
+| top bar, alpha 0.74, blur 14 | not sampled (see R4.2) | `rgb(37,24,63)`, 5.03 |
+
+The no-blur rows agree with arithmetic: the darkest ink a napkin can show is the label colour
+`#4a3a63` at ink alpha 0.95 on a white napkin; under 0.90 white glass that is
+`rgb(239,236,240)`, and `--good` `#0b7a4f` on it is 4.58:1. `--ink` and `--ink-2`, which carry
+all body text, never fall below 7.8:1 in any row.
+
+### R2.3 What was looked at
+
+Screenshots at 390 and 1440 px, light and dark, home and a lesson, top and scrolled:
+
+- Napkins read as sheets of paper all over the page; behind a pane they are soft coloured
+  shapes with a visible edge and the heavier strokes, and they are sharp between and around
+  the cards.
+- The hero headline, the lesson prose and the key points read as before. The explorer's
+  chart is crisp (it sits in a well on the bench: under 1 % of the field comes through).
+- At relief 1.3 with slope cap 2.0 a sine curve stopped looking like one and labels hung off
+  folded paper. At relief 0.85–1.10, slope cap 1.5 and a calmer middle (R6) the napkins are
+  visibly crumpled and wavy with ragged outlines, and every formula was readable.
+- A regular grid of start positions left the middle of a wide page empty. The low-discrepancy
+  sequence of R3.2 covers the page.
+- In light mode the Revision 1 tokens were as pale as the owner said. With R3.4 the sheets
+  stand off the page.
+
+---
+
+## R3. The full-page layer
+
+### R3.1 Where
+
+One host per page, `<div class="paper-field">`, `position: fixed`, covering the viewport,
+`z-index: -1` inside the app's `#root` (which is `isolation: isolate`), so it is above the page
+background and below all content. One canvas inside it. It is on every route. The hub gets the
+same host as the first child of `<body>` with `z-index: 0` and `.wrap` above it (Phase 1d-v2).
+
+The host is `inset: 0 0 auto 0; height: 100lvh` (the *large* viewport), not
+`inset: 0`: on a phone the browser's address bar slides away while scrolling, and a host tied
+to the visible viewport would resize the canvas at that moment.
+
+Engine, `flow: 'page'`:
+
+- No edge fog. A napkin leaves by drifting past the edge and by its own fade at the ends of
+  its life; nothing clips it along a line.
+- A resize does not deal new napkins. Positions and travel are stored as fractions of the
+  host's width and height and are rescaled; only the canvas is resized. (Revision 1 threw the
+  napkins away on any size change.)
+- The IntersectionObserver is kept but always reports visible; the loop still stops for a
+  hidden tab, idle, pause, and the cases of §8.3.
+- The app's page background keeps its light and gradient. The 24 px graph rule on `body` and
+  the `#root::before` fade are switched off while a field is mounted (R8.2): the napkins are
+  the graph paper now and a second grid behind them is noise.
+
+### R3.2 Count, size, placement
+
+| Viewport width | Napkins | Sheet width `b` (its own size, before perspective) | On screen at its nearest |
+|---|---|---|---|
+| under 700 px | 6 | `0.96 × w × (0.85…1.15)`: 318–430 px at 390 | 0.6–1.0 of the viewport width |
+| 700–1099 | 7 | `clamp(0.36 w, 400, 600) × (0.85…1.15)`: 340–460 px | 250–410 px |
+| 1100–1799 | 9 | same: 440–600 px at 1440 | 320–530 px |
+| from 1800 | 11 | same, 510–690 px | 370–610 px |
+
+The caller may pass `count`; without it the engine uses this table. (Revision 1 on a phone:
+2 napkins of 130–180 px.)
+
+```js
+// flow === 'page'; w, h = host size; i = slot, g = its generation; rnd = this napkin's seeded source
+const phone = w < 700, base = phone ? w * 0.96 : clamp(w * 0.36, 400, 600);
+const b = base * (0.85 + rnd() * 0.3);
+hw = b / 2; hh = hw * (0.62 + rnd() * 0.2);
+// where its path is centred: the R2 low-discrepancy sequence, so any run of napkins covers the page
+const k = i + g * count + seed * 3;
+mx = w * (0.04 + 0.92 * ((0.5 + k * 0.7548776662) % 1));
+my = h * (0.06 + 0.88 * ((0.5 + k * 0.5698402910) % 1));
+// its travel over its life: any direction; a "crossing" napkin (40 %) goes far
+const th = rnd() * TAU, far = Math.min((crossing ? 0.55 : 0.22) * Math.max(w, h), MAX_DRIFT * LIFE_S);
+dx = Math.cos(th) * far; dy = Math.sin(th) * far;
+zNear = 0.12 + rnd() * 0.25;  zEnd = crossing ? 0.6 + rnd() * 0.4 : Z_FAR;
+```
+
+`LIFE_S = 44` for the page flow, `MAX_DRIFT = 20` px/s as before, so `far` is at most 880 px.
+Napkins overlap; they are drawn far to near as before.
+
+### R3.3 Depth and fog, so they are not pale
+
+| | Revision 1 | Revision 2 (page flow) |
+|---|---|---|
+| `Z_FAR` | 2 (a far napkin is a third of its size) | 1.25 (never under 44 %) |
+| Depth fog, `fog = fade × (floor + (1 − floor) × near)` | floor 0.45 | floor 0.78 |
+| Fade at the ends of a life | first and last 7 % | same |
+| Rigid turn `rot`, `spin` | ±0.25, ±0.15 rad | ±0.55, ±0.30 rad |
+| Tilt amplitudes | 0.55, 0.60 rad | 0.42, 0.46 rad (the surface itself now carries the shape) |
+| Canvas pixel cap | 0.9 MP | 1.4 MP at level L0 (a phone gets ratio 2; 1440×900 gets 1.04) |
+
+### R3.4 Tokens
+
+`--paper-ink-alpha` is 0.95 everywhere (was 0.8). `--napkin-cells` stays 12. Inks and
+`--paper-text` are unchanged from §7. Numbers after an ink are its contrast at 0.95 on the new
+napkin.
+
+| | `--napkin` | `--napkin-edge` | `--napkin-shadow` | `--paper-grid` / `--paper-grid5` | ink 1 | ink 2 | ink 3 | text |
+|---|---|---|---|---|---|---|---|---|
+| **Math light** | `#ffffff` | `rgba(98,42,182,.5)` | `rgba(60,30,120,.26)` | `rgba(98,42,182,.17)` / `rgba(98,42,182,.36)` | 5.22 | 4.97 | 4.07 | 8.74 |
+| **Math dark** | `#2b1c55` | `rgba(173,150,255,.55)` | `rgba(0,0,0,.55)` | `rgba(173,150,255,.2)` / `rgba(173,150,255,.42)` | 5.89 | 5.45 | 4.94 | 7.95 |
+| Physics light | `#ffffff` | `rgba(31,68,173,.5)` | `rgba(20,40,110,.26)` | `rgba(31,68,173,.17)` / `rgba(31,68,173,.36)` | 5.53 | 4.06 | 4.07 | 7.57 |
+| Physics dark | `#1b2957` | `rgba(140,170,255,.55)` | `rgba(0,0,0,.55)` | `rgba(140,170,255,.2)` / `rgba(140,170,255,.42)` | 5.42 | 6.24 | 6.39 | 7.59 |
+| Chemistry light | `#fffefb` | `rgba(138,78,8,.5)` | `rgba(90,60,20,.26)` | `rgba(138,78,8,.17)` / `rgba(138,78,8,.36)` | 5.86 | 4.54 | 7.35 | 7.35 |
+| Chemistry dark | `#30251a` | `rgba(240,180,90,.55)` | `rgba(0,0,0,.55)` | `rgba(240,180,90,.2)` / `rgba(240,180,90,.42)` | 7.46 | 7.08 | 8.37 | 8.37 |
+| Hub light | `#ffffff` | `rgba(60,40,140,.5)` | `rgba(23,16,43,.26)` | `rgba(60,40,140,.17)` / `rgba(60,40,140,.36)` | 5.60 | 4.15 | 4.44 | 8.59 |
+| Hub dark | `#1d1650` | `rgba(173,160,255,.55)` | `rgba(0,0,0,.55)` | `rgba(173,160,255,.2)` / `rgba(173,160,255,.42)` | 5.07 | 8.09 | 6.48 | 8.47 |
+
+The Math rows were rendered and looked at. Napkin against page: 1.15:1 in light (was 1.10) and
+1.27:1 in dark (was 1.19); the sheet is carried by its edge, shadow and grid, which are about
+twice as strong as before. The other six rows follow the same rule and their contrast is
+computed, but they have not been rendered: each is confirmed by R9 items 5 and 6 in its own
+phase, and R4's alphas are re-sampled for that subject's palette before it ships.
+
+---
+
+## R4. Glass and legibility
+
+### R4.1 The rule
+
+**Every piece of text is on glass or on a solid surface. Nothing is on the field.** Three
+kinds of surface:
+
+| Tier | What uses it | Light | Dark | Blur |
+|---|---|---|---|---|
+| **Pane** | `.elev-1` (lesson cards, dashboard cards) and `.plate` (hero copy, section and topic headings, footer) | `rgba(255,255,255,.72)` | `rgba(31,20,64,.78)` | `blur(14px) saturate(1.35)` |
+| **Bench** | `.elev-2` (explorer panel, hero signature panel, "continue" card) and `.read` (the lesson's reading sheet, key points, the quiz panel) | `rgba(255,255,255,.86)` | `rgba(31,20,64,.88)` | same |
+| **Well** | `.elev-0` (plot area, readout tiles, quiz choices, inputs, the toggle pill) | `rgba(248,241,253,.94)` | `rgba(39,26,77,.94)` | none |
+| **Bar** | the top bar, always (not only when scrolled) | `rgba(245,236,251,.74)` | `rgba(20,10,40,.74)` | same as pane |
+| **Chip** | `.plate-chip` (a loose link or a heading that is one line: "all lessons", the quiz heading, the hero hint) | `rgba(255,255,255,.90)` | `rgba(31,20,64,.93)` | none |
+| **Solid** | `.solid` (the feedback sheet, the achievement toast), every button, the feedback button | unchanged, opaque | unchanged | none |
+
+The colours are each theme's `--surface` (panes, benches, chips), `--surface-2` (wells) and
+`--bg` (bar) with an alpha. They are written as `rgba(var(--glass-rgb), var(--g-pane))` so a
+subject only sets three RGB triplets.
+
+Edge: the existing `1px solid var(--line)` border, plus `inset 0 1px 0 var(--glass-edge)`
+(`rgba(255,255,255,.85)` light, `rgba(255,255,255,.08)` dark) so a pane has a lit top edge. The
+existing outer shadows of `.elev-1` and `.elev-2` stay; the hue stripe on `.elev-2` stays. The
+dark theme's `linear-gradient(...)` sheen on `.elev-1` / `.elev-2` is dropped while a field is
+mounted (it was painted over an opaque surface).
+
+Why three strengths:
+
+- A **pane** holds a few lines: a card title, a count, a heading. It is where the owner's
+  "semi-visible" is delivered: about a quarter of the field comes through, softened.
+- A **bench** holds long prose or a live graph. 12–14 % comes through: a napkin is still
+  there as a faint moving shape, and around the sheet it is fully visible.
+- A **well** inside a bench carries the chart. Field reaching the chart: 0.14 × 0.06 = under
+  1 %. Explorer graphs stay as crisp as today.
+
+### R4.2 Worst case
+
+From R2.2, with the weakest text colour of each theme (`--good` light, `--muted` dark):
+
+| Surface | Light | Dark | Requirement |
+|---|---|---|---|
+| Pane, frost | 4.54 at 0.70, 4.76 at 0.78; **0.72 chosen, about 4.6** | 4.59 at 0.76; **0.78 chosen, about 4.6** | 4.5 body |
+| Bench, frost | 4.96 | 4.85 at 0.86; 0.88 chosen | 4.5 |
+| Pane and chip, clear (no blur) | 4.58 at 0.90 | 4.58 at 0.93 | 4.5 |
+| Bench, clear: 0.94 / 0.95 | above the 0.93 row: ≥ 4.79 | ≥ 4.58 | 4.5 |
+| Well alone on the field, 0.94 | ≥ 4.79 | ≥ 4.58 | 4.5 |
+| Bar, frost 0.74 | not sampled in light; the only text there is `--ink` and `--ink-2` (17 and 10:1 on the solid bar); R9 item 6 samples it | 5.03 for the weakest colour | 4.5 |
+| `--ink`, `--ink-2` on any tier | ≥ 8.17 | ≥ 7.83 | 4.5 |
+| Large text and graphics (hero headline in `--accent`, icons, progress rings) on a pane | `--accent` 4.88 at 0.70 | `--accent` 4.59 at 0.70, 4.78 at 0.76 | 3.0 |
+
+The margin on a frosted pane is thin (4.6 against 4.5) because the app's own `--muted`,
+`--accent`, `--good` and `--critical` have only 5.2–5.9 on a solid surface today. Two
+consequences:
+
+1. Do not lower a pane's alpha below 0.72 / 0.78 without re-running R9 item 6.
+2. If the owner wants clearer glass, the way is to deepen those four text colours by one step
+   in the palette (to about 7:1 on the solid surface), then re-sample; a pane could then go to
+   about 0.60. That is a palette change with its own review and is not part of this revision.
+
+Not covered by these numbers, and unchanged by this work: small chips that already put
+`--accent` or `--accent-2` text on a tinted fill. They sit on a pane, so their fill is at
+worst a few percent darker than today. R9 item 6 samples them and reports; fix any that falls
+under 4.5 by using `--ink-2` for that chip's text.
+
+### R4.3 The three states of `data-paper`
+
+The engine sets one attribute on `<html>` while a page-flow canvas is mounted and removes it
+when none is:
+
+| `data-paper` | When | CSS |
+|---|---|---|
+| absent | no field: script not loaded, `getContext` failed, print | every surface exactly as before this revision, opaque |
+| `frost` | field mounted, quality level L0 or L1 | R4.1 table, with `backdrop-filter` |
+| `clear` | level L2 or lower, **or** no `backdrop-filter` support, **or** `prefers-reduced-transparency: reduce` | no `backdrop-filter`; pane 0.90 / 0.93, bench 0.94 / 0.95, bar 0.92 |
+
+`@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))` and
+`@media (prefers-reduced-transparency: reduce)` apply the `clear` values in CSS as well, so
+they hold even if the attribute says `frost`. `@media (prefers-contrast: more)` makes every
+tier opaque. `@media print` hides the field and makes every tier opaque.
+
+Honest note on `clear`: at 0.90–0.93 a napkin behind a card is a faint tint. The owner's
+"semi-visible" is delivered by `frost`; `clear` keeps the napkins everywhere around the cards
+and keeps the text safe. Which one a real phone ends up in is decided by R5.2.
+
+### R4.4 What may not be done
+
+- No text, icon or control on the field. R9 item 7 checks it mechanically.
+- No glass inside glass with a second blur: a well and a chip never blur; a plate never
+  contains a card. At most 10 frosted elements may be on screen at once (home at 1440 has 9).
+- No `backdrop-filter` on anything that scrolls horizontally or animates continuously.
+- The field never gets brighter or more saturated than its tokens to "show through" better.
+
+---
+
+## R5. Performance, the quality ladder, calm mode
+
+### R5.1 Budget
+
+| | Budget |
+|---|---|
+| Target | 60 fps at L0 where the device can; otherwise the ladder's floors (R5.2); never a field redraw in the same frame as a learner's drag (R5.3) |
+| JS inside `draw()` | p95 ≤ 5 ms on a mid phone at L0 (prototype: 3.3 ms unthrottled, 11.7 at ÷4) |
+| Canvases | exactly one per page |
+| Canvas pixels | L0: ≤ 1.4 MP. L1 and lower: ≤ 0.6 MP |
+| Frosted elements on screen | ≤ 10 |
+| Start | first frame is the still frame after first paint; motion starts 600 ms after `load` and not before idle, as in §8.1 |
+| Added download | engine ≤ 16 KB, Math catalog ≤ 30 KB unminified; no font, image or dependency |
+
+### R5.2 The ladder
+
+The governor of §8.4 is replaced. While moving, it averages the gaps between drawn frames over
+60 frames (skipping the first 30 after any start or level change, and any gap over 250 ms).
+If the mean is over **22 ms** it steps down one level. It never steps up in a session. The
+level is stored in `sessionStorage['academy:paper-level']` so the next page starts where this
+one ended instead of stuttering again; `academy:paper-slow` is kept as the name for "reached
+L5".
+
+| Level | Canvas cap | Glass | Napkins | Drawn frames | Why this step, from R2.1 |
+|---|---|---|---|---|---|
+| **L0** | 1.4 MP | frost | full (6 / 7 / 9 / 11) | every frame | — |
+| **L1** | 0.6 MP | frost | full | every frame | phone ÷4: 14.6 → 20.2 fps at 0.7 MP, 42.6 at 0.33 MP; nearly invisible on moving paper |
+| **L2** | 0.6 MP | clear | full | every frame | desktop: 25 → 54 fps unthrottled |
+| **L3** | 0.6 MP | clear | two thirds (4 / 5 / 6 / 7) | every frame | phone ÷4: 21.6 → 30.5; desktop ÷4: 11.6 → 14.1 |
+| **L4** | 0.6 MP | clear | two thirds | every second frame | page stays responsive: 41.7 fps for the page, 21 draws/s |
+| **L5** | 0.6 MP | clear | two thirds | **still frame** for the session | at L4 the mean gap between draws is over 50 ms |
+
+A display already held to 30 Hz (an iPhone in Low Power Mode) must not be mistaken for a slow
+device: if at L0 the mean gap is between 28 and 40 ms while the engine's own `draw()` p95 is
+under 5 ms, the governor judges against 44 ms from then on and drops no level for that
+reading. (The engine therefore times its own `draw()` always, not only in debug.)
+
+Order: resolution first because it costs the eye least and is the largest lever on a phone;
+blur second because it is the largest lever on a wide screen and the napkins stay sharp
+around the cards; count third; frame rate fourth because at 20 px/s drift 30 fps is hard to
+tell from 60; standing still last.
+
+Changing the count mid-flight: the slots with the highest index finish their current life and
+are not dealt again; nothing disappears abruptly.
+
+### R5.3 Interaction hold
+
+While a pointer is down inside `#content` (a slider, a chart handle, a quiz choice) and for
+300 ms after it lifts, the engine skips its draws. The frame callback keeps running and does
+nothing. A dragged handle therefore never shares a frame with a field redraw, whatever the
+level. The napkins stand for that moment; at their drift speed the pause is not noticed. This
+was not measured in the prototype; R9 item 12 measures it.
+
+### R5.4 The button: moving, calm, still
+
+One button, three states, cycling in that order. State is the same key,
+`localStorage['academy:paper-motion']`: `'on'` (default), `'calm'`, `'off'`.
+
+| State | What it does | Icon |
+|---|---|---|
+| moving | as specified | `pause` (two bars) |
+| **calm** | the same napkins at 0.35 of the speed (drift, turn, tilt, ripples, bump drift, drawing-in), a draw on every third frame (20 a second), glass as the level allows | `calm` (a single wave: `M3 12c3-4 6-4 9 0s6 4 9 0`) |
+| still | one still frame, no animation frames | `play` |
+
+Calm is for a reader who likes the paper but finds the movement busy next to a paragraph, and
+it roughly thirds the drawing work. Under §8.3 (reduced motion, Save-Data, weak or
+low-battery device, L5) the button is hidden, as before.
+
+| | Hebrew | English |
+|---|---|---|
+| label while moving | הרגעת תנועת הרקע | Calm the background motion |
+| label while calm | עצירת תנועת הרקע | Stop background motion |
+| label while still | הפעלת תנועת הרקע | Play background motion |
+
+Keys `settings.paperCalm`, `settings.paperStop`, `settings.paperPlay` (the old
+`settings.paperPause` is removed). The label names what a press will do. `aria-pressed` is not
+used any more (three states); the label carries the state.
+
+Placement: R8.3.
+
+### R5.5 What is honest to promise
+
+- Unthrottled in the harness: phone-sized pages 50–59 fps at L0; desktop-sized pages 25–32 fps
+  at L0 and 54–60 fps from L2.
+- A laptop without a usable GPU will settle at L2 within about three seconds and look fine
+  there, without frosted glass.
+- A slow phone will settle between L1 and L5. If the real-device check shows a mid-range
+  phone at L4 or L5, apply R11's cut order before merging; do not ship a field that is a still
+  picture for most visitors without telling the owner.
+- Battery: one full-screen canvas redrawn 60 times a second costs more than Revision 1's band
+  for as long as the page is open (Revision 1 stopped once the band scrolled away; this never
+  scrolls away). The idle stop (5 minutes), the hidden-tab stop, the low-battery still frame
+  and calm mode are what limit it.
+
+---
+
+## R6. The wild surface
+
+### R6.1 The height function
+
+A napkin's surface is `z = hw × gain × (H(u, w, t) − mid)`, with `u`, `w` in −1…1 as before.
+
+```
+H = Σ large bumps  +  twist·u·w  +  bend·(u·cos ψ + w·sin ψ)²        ← the big shape, everywhere
+  + E(u, w) × ( Σ small bumps + Σ ripples + curl·max(0, u·cos χ + w·sin χ − k₀)² )   ← the wrinkles
+
+E(u, w) = 0.35 + 0.65 × smoothstep(0.25, 0.95, max(|u|, |w|))
+```
+
+`E` is the "wild rim, readable heart" rule: wrinkles are at full strength along the edges and
+at 35 % in the middle half of the sheet, where the drawing and the formula are. The outline is
+what makes a napkin look crumpled; the middle is what has to be read.
+
+All from the napkin's own seeded source:
+
+| Part | How many | Parameters | How it moves |
+|---|---|---|---|
+| Large bumps | 3 | Gaussian `a·exp(−d²/2r²)`; `r` 0.34–0.56; `a` ±(0.6–1.0), signs alternating; centre on a ring: angle `turn + (j ± 0.25)·2π/n`, distance 0.2–0.95 from a point within ±0.2 of the middle | centre drifts ±0.16 at 0.11 and 0.09 rad/s (as in Revision 1) |
+| Small bumps | 2–5 (so 5–8 bumps in all) | `r` 0.16–0.30; `a` ±(0.33–0.55), signs continuing the alternation; placed on the same ring | same drift |
+| Long ripple | 1 | `a·sin(k·(u·cos θ + w·sin θ) + φ)`; 0.6–1.2 waves across the sheet (`k` = that × π); `a` 0.30–0.55; `θ` any | 60 %: travelling, phase speed ±(0.25–0.55) rad/s. 40 %: standing, amplitude × `cos(ω t + φ₂)`, `ω` 0.2–0.4 rad/s |
+| Short ripples | 1–2 | 1.3–2.4 waves across; `a` 0.16–0.30; own `θ` | same choice, independently |
+| Twist | 1 | `τ·u·w`, `τ` ±(0.5–1.0) | × `sin(0.06 t + 3φ)` |
+| Bend | 1 | `β·(u·cos ψ + w·sin ψ)²`, `β` ±(0.3–0.8), `ψ` any | × `cos(0.05 t + 5φ)` |
+| Curl | 1 corner | `κ·c²` where `c = u·cos χ + w·sin χ − k₀ > 0`; `χ` one of the four diagonals; `k₀` 0.85–1.10; `κ` ±(1.5–4.0) | × `(0.6 + 0.4·sin(0.08 t + φ))` |
+
+`twist·u·w` alone is the classic saddle. It is one voice of seven here, and it changes sign
+over about 100 s, so no napkin sits as a saddle.
+
+In calm mode every time `t` above runs at 0.35 of the clock.
+
+### R6.2 Normalising: relief and slope
+
+Each frame, sample `H` on a 13 × 13 lattice (169 samples, reused array). From it:
+
+```js
+gain = Math.min(relief / (hi - lo), SLOPE_MAX / steepest);   mid = (hi + lo) / 2;
+```
+
+- `relief` = 0.85 + rnd × 0.25 half-widths, peak to trough (Revision 1: 0.28–0.40; the glucose
+  page: 0.54–0.70).
+- `steepest` = the largest finite difference between neighbouring samples, in real proportions
+  (a difference along `w` is multiplied by `hw / hh`).
+- `SLOPE_MAX = 1.5` (about 56°).
+
+The relief term sets how deep the sheet is; the slope term stops a short ripple from standing
+up as a wall when the relief is all spent on it. Both are continuous in time, so the scale
+never jumps.
+
+### R6.3 Over-tilt and self-overlap
+
+- The rigid tilt is at most about 35° off the screen plane (amplitudes 0.42 and 0.46 rad).
+- In the middle of the sheet the wrinkles are at 35 %, so the local slope there stays well
+  under the cap and the heart never turns its back to the viewer.
+- At the rim, 56° of slope on 35° of tilt can pass 90°: a corner or an edge wave can fold
+  over itself. **This is allowed.** It is what a crumpled corner looks like, it was in the
+  prototype screenshots, and it is confined to the outer quarter. The sheet is filled as one
+  outline polygon, so a fold-over shows as the outline crossing itself, not as a hole.
+- Not allowed: a fold in the middle. R9 item 5 looks for it (a grid line crossing itself
+  inside the graph box). If one appears, lower `SLOPE_MAX` to 1.3 before touching anything else.
+
+### R6.4 Projecting what is drawn
+
+- **Grid and outline:** as before, point by point, but in more pieces: `SEG = 10` (was 7), so
+  a grid line is 20 straight pieces and a short ripple has at least 8 pieces per wave.
+- **Pen lines:** `seg`, `dash` and an `arrow`'s shaft are 8 pieces (was 5). `curve` keeps its
+  cap of 56 steps. New: `para` (R7.2), 56 steps.
+- **Text sprites:** the renderer and both clamps of §6.4 are unchanged, with three additions:
+  1. A label's anchor must lie in the heart: `|u| ≤ 0.8`, `|w| ≤ 0.8`.
+  2. The tangent plane is taken over a wider stencil, `e = 0.12` instead of 0.04, so a label
+     follows the average lie of the paper under it and not one wrinkle.
+  3. A label whose letters would be under 9 px is not drawn (was about 7 px).
+  A label is still flat within itself. With the calm heart this read as writing on paper in
+  the prototype; strip-warping stays rejected.
+- **Truth of a graph on bent paper:** the curve is still sampled from the real function and
+  bends exactly as the grid under it bends. A parabola on a wave does not look like a clean
+  parabola from every angle. This is accepted as the price of the owner's direction; the
+  heart rule is what keeps it recognisable.
+
+### R6.5 Cost
+
+Per napkin and frame: 169 lattice samples, about 44 outline points, about 420 grid points and
+230 depth probes, plus the payload (≤ 220 points, R7.2). Each point is one `H`: up to 8
+`exp`, 3 `sin`. Measured in the prototype: 2.1 / 3.3 ms (p50 / p95) for 6 napkins on the phone
+size and 3.1 / 5.0 ms for 9 on the desktop size, unthrottled. If the JS budget is missed on a
+real phone: evaluate `H` once per frame on a 25 × 25 lattice and interpolate bilinearly inside
+`P()`; nothing else in the engine changes.
+
+### R6.6 Three examples
+
+Illustrative parameter sets, to show the range (the engine draws its own from the seed):
+
+| | "Wave" | "Crumple" | "Fold" |
+|---|---|---|---|
+| Bumps (r, a) | 3 large: (0.50, +0.9) (0.42, −0.7) (0.38, +0.6); 2 small | 3 large; 5 small: (0.18, −0.5) (0.22, +0.4) (0.16, −0.35) (0.27, +0.5) (0.20, −0.4) | 3 large: (0.55, −1.0) (0.36, +0.8) (0.40, −0.6); 3 small |
+| Long ripple | 1.1 waves, a 0.52, travelling +0.4 rad/s, θ 20° | 0.7 waves, a 0.32, standing | 0.9 waves, a 0.40, travelling −0.3 |
+| Short ripples | one: 1.6 waves, a 0.18 | two: 2.3 waves a 0.28; 1.5 waves a 0.22 | one: 2.0 waves, a 0.20, standing |
+| Twist τ / bend β | +0.5 / −0.3 | −0.7 / +0.5 | +1.0 / +0.8 at ψ 60° |
+| Curl κ, k₀ | +1.5, 1.10 | −3.0, 0.90 | +4.0, 0.85 |
+| relief | 0.90 | 1.05 | 1.10 |
+| Reads as | a sheet with a swell running across it | paper that was balled up and opened | a sheet bent down the middle with one corner lifted |
+
+---
+
+## R7. Catalogs and random order
+
+### R7.1 Rules (in addition to §10's four)
+
+5. Every payload has a **family**. The scheduler never puts two of one family next to each
+   other (R7.4).
+6. A payload is one of two layouts. **Graph:** label band on top, graph box below, as in
+   §6.3. **Formula:** no graph; the main line centred at `(0, −0.12)` with `em = 0.26`, an
+   optional second line at `(0, 0.30)` with `em = 0.20`, an optional small condition at
+   `(0, 0.62)` with `em = 0.15`. A formula napkin may add one small drawing (M30's square).
+7. A label is at most 36 characters after the markup is removed. Longer facts are two lines.
+8. Conditions that make an identity true are on the napkin (`n ≠ −1`, `q ≠ 1`, `|q| < 1`,
+   `a, b > 0`), as symbols.
+9. Notation is the one the lessons use (`f′(x)`, `Δy/Δx`, `√x`) and, for sequences, the
+   Israeli school letters `a_{1}`, `d`, `q`, `S_{n}`. Trigonometric names are written `sin`,
+   `cos`, `tan`. Whether the Israeli 5-unit formula sheet prints `tan` or `tg` was not checked:
+   the specialist reviewer of the content round trip confirms it before M35 ships, and M35 is
+   left out if there is doubt. Everything on a napkin is left to right, as before.
+10. `check()` is required for every row and recomputes the stated fact numerically. Where a
+    subject function exists it is used; elsewhere `Math.*`. A derivative is checked against a
+    central difference with `h = 1e−5` to within `1e−6`. All 40 new checks below were run in
+    Node while writing this and are true.
+
+### R7.2 Additions to the pen and the contract
+
+```ts
+export interface Payload {
+  id: string; tier: 'A' | 'B';
+  family: string;                 // new: 'INT' | 'DER' | 'EXT' | 'ALG' | 'TRIG' | 'EXP' | 'ABS' | 'GEO' | 'SER' in Math
+  draw(pen: Pen): void; check(): boolean;
+}
+export interface Pen {
+  // ... everything in §6.2, and:
+  /** A parametric curve (u(s), w(s)) for s in s0..s1, drawn up to `part`; steps ≤ 56. For circles, ellipses, sideways curves. */
+  para(fu: (s: number) => number, fw: (s: number) => number, s0: number, s1: number, part?: number, steps?: number, dashed?: boolean): void;
+}
+```
+
+`curve` already takes `dashed` (the shipped `engine.d.ts`). Per-napkin budget (§6.5) becomes:
+220 projected points, 16 stroke or fill calls, 4 labels.
+
+A curve with a pole (M23, M35, M42) is drawn as separate `curve` calls per branch and clipped
+to the graph box by its domain, never by joining across the pole. Asymptotes are `dash` in
+`pen.ink(2)` at alpha 0.5.
+
+### R7.3 Math Academy — 51 payloads
+
+M1–M11 are §10.1's rows, unchanged, with these families: M1–M4 `INT`; M5–M8, M10 `DER`; M9
+`EXT`; M11 `TRIG`. The 40 new rows:
+
+**INT — integrals and sums (with M1–M4: 9)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M12 | `x²` on [0, 3]; 6 left-endpoint bars in ink 1 under the curve and 6 right-endpoint bars in ink 2 over it (`rectangles(..., 'left' / 'right')`), then the curve | `L_{6} < ∫ < R_{6}` | A. Lesson `02-riemann-sums`, key point: for an increasing curve the left sum underestimates and the right sum overestimates | `riemannSum(parabola, 0, 3, 6, 'left') < powerIntegral(2, 0, 3) && powerIntegral(2, 0, 3) < riemannSum(parabola, 0, 3, 6, 'right')` |
+| M13 | `x²` on [0, 3.2], the area from 1 to 3 filled, small labels `a`, `b` under the axis | `∫_{a}^{b} f(x) dx = F(b) − F(a)` | B. Textbook: the fundamental theorem of calculus, which lesson `03-antiderivative` names in its key points | `Math.abs(powerIntegral(2, 1, 3) - (27 / 3 - 1 / 3)) < 1e-12` |
+| M14 | formula | `∫ x^{n} dx = x^{n+1}/(n+1) + C` · condition `n ≠ −1` | B. Textbook: the power rule for antiderivatives, the indefinite form of M4 | derivative of `x⁴/4` at 1.7 equals `1.7³` |
+| M15 | `y = x` (ink 1) and `y = x²` (ink 0) on [0, 1.15]; the region between them on [0, 1] filled | `∫_{0}^{1} (x − x^{2}) dx = 1/6` | B. Computed with the subject's own function: ½ − ⅓ | `Math.abs(powerIntegral(1, 0, 1) - powerIntegral(2, 0, 1) - 1 / 6) < 1e-12` |
+| M16 | `x³` on [−1.2, 1.2] (`FUNCTIONS.cubic.fn`); the area on [0, 1] filled in ink 1 and on [−1, 0] in ink 2 | `∫_{−1}^{1} x^{3} dx = 0` | B. Computed: an odd function over a symmetric interval | `Math.abs(powerIntegral(3, -1, 1)) < 1e-12` |
+
+**DER — the derivative (with M5–M8, M10: 12)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M17 | formula | `f′(x) = lim_{h→0} (f(x+h) − f(x))/h` | B. Textbook definition; the same limit lesson `04-rate-of-change` describes in words (the average rate as x₂ approaches x₁) | for `½x²` at 2 with `h = 1e−6`: within `1e−5` of 2 |
+| M18 | `f = ½x²` (ink 1) and `3f` (ink 0) on [0, 2.4], a tangent to each at x = 1 | `(c·f)′ = c·f′` | A. Lesson `05-derivative-rules`, key point: constant-multiple rule | `evalDerivativeTerm({ coeff: 3, power: 2 }, 1) === 6` (that lesson's quiz) |
+| M19 | formula | `(f·g)′ = f′·g + f·g′` | B. Textbook: product rule | checked on `x²·sin x` at 0.8 |
+| M20 | formula | `(f/g)′ = (f′·g − f·g′)/g^{2}` | B. Textbook: quotient rule | checked on `sin x / x²` at 0.8 |
+| M21 | formula | `(f(g(x)))′ = f′(g(x))·g′(x)` | B. Textbook: chain rule | checked on `sin(x²)` at 0.8 |
+| M22 | `x²` on [−2.2, 2.2] (`FUNCTIONS.parabola.fn`); a tangent sliding from −1.5 to 1.5 and back, slope `2x`. Still: x = 1 | `(x^{2})′ = 2x` | A. Lesson `05-derivative-rules`: the power rule with n = 2 | `evalDerivativeTerm({ coeff: 1, power: 2 }, 3) === 6` |
+| M23 | `1/x` on [0.3, 4] (one branch, `evalTerm({ coeff: 1, power: -1 }, x)`), tangent at x = 1 | `(1/x)′ = −1/x^{2}` | B. Textbook; the power rule with n = −1, through the subject's `derivativeTerm` | `evalDerivativeTerm({ coeff: 1, power: -1 }, 1) === -1` |
+
+**EXT — increase, decrease, extrema (with M9: 4)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M24 | `x³ − 3x` on [−2.2, 2.2] (`CURVES.cubicWave`), the rising parts in ink 0 and the falling part in ink 1 (split at its extrema); small labels `f′ > 0`, `f′ < 0`, `f′ > 0` over the three parts | none in the band | A. Lesson `06-extremum-points`, key point: f′ > 0 increasing, f′ < 0 decreasing | `slopeSign(CURVES.cubicWave, -2) === 'inc' && slopeSign(CURVES.cubicWave, 0) === 'dec' && slopeSign(CURVES.cubicWave, 2) === 'inc'` |
+| M25 | same curve; a hollow dot at (0, 0); the part left of it in ink 0 and right of it in ink 1 | `f″(0) = 0` | B. Textbook: f″(x) = 6x changes sign at 0, an inflection point. Not in the lessons | `CURVES.cubicWave.derivative` is smallest at 0: `d(±0.01) > d(0)` |
+| M26 | `y = x² − 4x + 3` on [−0.3, 4.3]; a dot at the vertex (2, −1); the axis of symmetry dashed | `x = −b/(2a)` | B. Textbook: vertex of a parabola. Here a = 1, b = −4 | `-(-4) / 2 === 2`, `f(2) === -1`, `f(1.9) > f(2)`, `f(2.1) > f(2)` |
+
+**ALG — algebra (5)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M27 | the same parabola; dots at its roots x = 1 and x = 3 | `x^{2} − 4x + 3 = (x − 1)(x − 3)` | B. Checked by expansion | `f(1) === 0 && f(3) === 0 && f(5) === (5 - 1) * (5 - 3)` |
+| M28 | formula | `x = (−b ± √(b^{2} − 4ac))/(2a)` · second line `ax^{2} + bx + c = 0` · condition `a ≠ 0` | B. Textbook: quadratic formula | for (1, −4, 3) it gives 3 and 1 |
+| M29 | formula | `a^{2} − b^{2} = (a − b)(a + b)` | B. Textbook identity | `49 - 9 === (7 - 3) * (7 + 3)` |
+| M30 | formula, with a drawing under it: a square of side `a + b` cut into `a²` (filled ink 1), `b²` (filled ink 2) and two `ab` rectangles; small labels `a`, `b` on two sides | `(a + b)^{2} = a^{2} + 2ab + b^{2}` | B. Textbook identity; the drawing is its standard area proof. Draw with a : b = 3 : 2 | `(7 + 3) ** 2 === 49 + 2 * 21 + 9` |
+| M31 | `y = ½x + 1` on [−1, 5]; a slope triangle between x = 2 and x = 4 with small labels `Δx`, `Δy` | `y = mx + b` | B. Textbook: a line; `m = Δy/Δx` as in lesson `04-rate-of-change` | `(0.5 * 4 + 1) - (0.5 * 2 + 1) === 0.5 * 2` |
+
+**TRIG — trigonometry (with M11: 6)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M32 | `cos x` on [0, 2π] from `Math.cos`, to scale | `y = cos x` | B. As M11 | `Math.cos(0) === 1` |
+| M33 | no axes box: a unit circle (`para`), both axes through its centre, a radius at 50°, its two legs dashed, an `arc` for the angle; small labels `1`, `sin x`, `cos x` | `sin^{2}x + cos^{2}x = 1` | B. Textbook identity (Pythagoras in the unit circle) | at 0.7: within `1e−12` of 1 |
+| M34 | `sin x` (ink 1, thin) and `sin 2x` (ink 0) on [0, 2π] | `sin 2x = 2 sin x cos x` | B. Textbook: double-angle identity | at 0.7: within `1e−12` |
+| M35 | `tan x` on (−π/2, π/2), clipped to ±3; the two asymptotes dashed | `tan x = sin x / cos x` | B. Textbook definition. See R7.1 rule 9 on `tan` / `tg` | at 0.5: within `1e−12` |
+| M36 | `sin x` (ink 0) and `cos x` (ink 1, dashed) on [0, 2π] | `(sin x)′ = cos x` | B. Textbook derivative. Not in the lessons | central difference of `Math.sin` at 0.9 against `Math.cos(0.9)` |
+
+**EXP — exponentials and logarithms (5)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M37 | `eˣ` on [−2, 1.6] from `Math.exp`; a dot at (0, 1) and the tangent there (slope 1) | `(e^{x})′ = e^{x}` | B. Textbook | central difference at 0.4; `Math.exp(0) === 1` |
+| M38 | `ln x` on [0.15, 5] from `Math.log`; a dot at (1, 0) and the tangent there (slope 1) | `(ln x)′ = 1/x` | B. Textbook; x > 0 is the drawn domain | central difference at 2 against 0.5; `Math.log(1) === 0` |
+| M39 | formula | `a^{m}·a^{n} = a^{m+n}` · second line `(a^{m})^{n} = a^{mn}` | B. Textbook: laws of exponents | `2**3 * 2**4 === 2**7 && (2**3)**4 === 2**12` |
+| M40 | formula | `log(ab) = log a + log b` · second line `log(a^{n}) = n·log a` · condition `a, b > 0` | B. Textbook: laws of logarithms, any base | with `Math.log` on 2 and 3 |
+| M41 | formula | `e = lim_{n→∞} (1 + 1/n)^{n}` | B. Textbook definition of e | `Math.abs((1 + 1e-6) ** 1e6 - Math.E) < 1e-5` |
+
+**ABS — rational, absolute value, piecewise (3)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M42 | `1/x` on [−4, −0.28] and [0.28, 4], two branches; the axes are its asymptotes | `y = 1/x` | B. The label states only what the curve is | `1 / 2 === 0.5 && 1 / -2 === -0.5` |
+| M43 | `|x|` on [−3, 3]; the left half in ink 1 and the right half in ink 0; a filled dot at the origin | `|x| = x  (x ≥ 0)` · second line `|x| = −x  (x < 0)` | B. Textbook definition, a piecewise function | `Math.abs(-3) === 3 && Math.abs(3) === 3` |
+| M44 | `x² − 1` on [−1.8, 1.8] dashed in ink 2, and `|x² − 1|` over it in ink 0 | `y = |x^{2} − 1|` | B. The label states only what the curve is | `Math.abs(0 - 1) === 1 && Math.abs(4 - 1) === 3 && Math.abs(1 - 1) === 0` |
+
+**GEO — curves and the plane (3)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M45 | a circle about the origin (`para`: `r cos s`, `r sin s`), one radius, small label `r` | `x^{2} + y^{2} = r^{2}` | B. Textbook: circle centred at the origin | the parametrisation satisfies it at 0.9 |
+| M46 | an ellipse with a : b = 2 : 1 (`para`), its two semi-axes drawn, small labels `a`, `b` | `x^{2}/a^{2} + y^{2}/b^{2} = 1` | B. Textbook: canonical ellipse | `(2cos s, sin s)` satisfies it at 1.1 |
+| M47 | two dots at (1, 1) and (4, 5), the segment between them, a dashed right triangle under it | `d = √((x_{2} − x_{1})^{2} + (y_{2} − y_{1})^{2})` | B. Textbook: distance between two points | `Math.sqrt(3 ** 2 + 4 ** 2) === 5` |
+
+**SER — limits and series (4)**
+
+| id | Drawn | Label markup | Tier, correctness | `check()` |
+|---|---|---|---|---|
+| M48 | `sin x / x` on [−9, 9] with a hollow dot at (0, 1) (the function is not defined at 0: draw two branches up to ±0.05) | `lim_{x→0} sin x / x = 1` | B. Textbook limit | `Math.abs(Math.sin(1e-6) / 1e-6 - 1) < 1e-9` |
+| M49 | a staircase of unit squares, columns of height 1 to 5, filling in one column at a time | `1 + 2 + … + n = n(n+1)/2` | B. Textbook: sum of an arithmetic series | `15 === 5 * 6 / 2 && 5050 === 100 * 101 / 2` |
+| M50 | formula | `S_{n} = a_{1}(q^{n} − 1)/(q − 1)` · condition `q ≠ 1` | B. Textbook: sum of a geometric series, Israeli school letters | a₁ = 1, q = 2, n = 10 gives 1023 |
+| M51 | bars of height 1, ½, ¼, ⅛, 1/16 of equal width, and a dashed line at height 2 that their running total (a thin stepped line) approaches | `S = a_{1}/(1 − q)` · condition `|q| < 1` | B. Textbook: sum of an infinite geometric series | 60 terms of ½ᵏ within `1e−9` of 2 |
+
+Totals: INT 9, DER 12, EXT 4, ALG 5, TRIG 6, EXP 5, ABS 3, GEO 3, SER 4 = 51. Tier A: 14
+(M1–M10, M12, M18, M22, M24). Tier B: 37 (M11 and 36 new rows); each
+is a standard school identity, and most are beyond what the six lessons teach. They are
+ornament, not teaching (§0 item 4 stands): nothing in a lesson relies on a learner having
+seen one.
+
+A reviewer who prefers lesson-only content on napkins can ask for tier B to be cut; the
+catalog then has 14 payloads and the owner's "all kinds of formulas" is not met. That is the
+owner's call, not the implementer's.
+
+### R7.4 Random order: the shuffle bag
+
+Per canvas, replacing the index formula of §5.2:
+
+```js
+// state: bag = [], epoch = 0
+function deal(view, slot) {
+  const avoid = new Set(nearestTwo(view, slot).map((n) => family(n.pi)));   // families of the two live napkins whose centres are nearest to this slot's
+  let k = view.bag.findIndex((p) => !avoid.has(family(p)));
+  if (k < 0) {                                         // only those families are left: open the next bag behind the remainder
+    view.bag = view.bag.concat(shuffled(view.seed * 977 + view.epoch++));
+    k = view.bag.findIndex((p) => !avoid.has(family(p)));
+    if (k < 0) k = 0;
+  }
+  return view.bag.splice(k, 1)[0];
+}
+// shuffled(s): Fisher–Yates over [0 … payloads.length − 1] with the engine's own random(s)
+// the first call finds bag empty, so it opens bag 0 the same way
+```
+
+A napkin calls `deal` when it is born and at each new drawing cycle (every 12.6 s), as today.
+
+Properties (simulated over 20 000 deals with Math's family sizes, 6 and 9 napkins):
+
+- every payload is dealt exactly once per bag, so all 51 are seen before any is seen twice,
+  except at the seam between two bags, where at most the last few of one bag (8 at most in
+  the simulation) are still waiting while the next has opened;
+- two neighbouring napkins never carried the same family (0 cases in 20 000);
+- with `only` set (debug), `deal` is bypassed.
+
+**Deterministic still frame:** the still frame is drawn from a fresh state: bag 0 from the
+canvas's seed, slots dealt in slot order 0, 1, 2 …, each napkin placed at `now = 9` and
+checked against the napkins already placed. Same seed and same viewport size give the same
+picture, to the byte (R2.1). Moving frames are not reproducible across loads and do not need
+to be.
+
+A resize keeps the bag (R3.1). A theme change keeps the bag.
+
+### R7.5 The other catalogs: size targets
+
+Same engine, same contract, same scheduler. Each is specified row by row, as R7.3 is, in its
+own phase before it is built; these are the targets so the scheduler's assumptions hold (at
+least 6 families, no family over a third of the catalog, at least 3 per family).
+
+| Catalog | Target | Families (working list) |
+|---|---|---|
+| Physics | at least 36 (11 exist in §10.2) | position–time graphs · velocity–time graphs · acceleration · kinematics equations (formula napkins) · motion diagrams · vectors and components · units-free ratios. Still no forces until a lesson teaches dynamics |
+| Chemistry | at least 30 (8 exist in §10.3) | ionic pairs · covalent molecules (single, double, triple) · polarity and dipoles · intermolecular forces · metallic lattice · network solids · formula napkins (the formulas the lessons name). Still no reaction equations in the app |
+| Hub | at least 36: 12 from each subject, re-drawn by hand as in §10.4 | family = subject first (never two neighbours from one subject), then that subject's own family as a tie-break |
+| Nitrox | none (bubbles, §12) | — |
+
+---
+
+## R8. Integration into Math (Phase 1a-v2)
+
+The engine copy rule is unchanged: edit `docs/hub/paper-engine.js`, run
+`node scripts/check-paper-sync.mjs --write`, rebuild every app that has a copy.
+
+### R8.1 Engine (`docs/hub/paper-engine.js`, then the copy)
+
+| Change | Where |
+|---|---|
+| `flow: 'page'`: placement R3.2, no fog, fractions on resize, `LIFE_S` 44, `Z_FAR` 1.25, fog floor 0.78, turn and tilt of R3.3 | `napkin()`, `lifeOf()`, `fogs()`, `resize()`, `sheet()` |
+| Surface R6: `height()`, `settle()` with the 13 × 13 lattice, relief and slope; `SEG` 10; pen pieces 8 | surface block, pen |
+| Label rules of R6.4 (stencil 0.12, 9 px floor) | `text()` |
+| `PEN.para` | pen |
+| Shuffle bag R7.4; `family` read from each payload | `napkins()` |
+| Quality ladder R5.2, `sessionStorage['academy:paper-level']`, the 30 Hz rule | scheduler |
+| Interaction hold R5.3 (`pointerdown` / `pointerup` / `pointercancel` on `document`, capture, passive; target inside `#content` or `[data-paper-hold]`) | scheduler |
+| Motion state `'on' | 'calm' | 'off'`; calm clock ×0.35 and every third frame | scheduler, API |
+| `data-paper` on `<html>`: set to `frost` or `clear` when the first page-flow view mounts and on every level change; removed when the last one is destroyed | `mount()`, `destroy()`, governor |
+| Default count from R3.2 when `count` is omitted | `mount()` |
+| `flow: 'x'` and `'y'` (stage, gutter) keep working exactly as shipped: the hub's Phase 1d may still be built on either model, and the gallery uses them | — |
+
+API additions (`engine.d.ts`): `flow: 'x' | 'y' | 'page'`; `count?: number`;
+`MotionState = 'on' | 'calm' | 'off'`; `AcademyPaper.level(): 0 | 1 | 2 | 3 | 4 | 5`;
+`Payload.family`; `Pen.para`.
+
+### R8.2 `apps/math/src/styles.css`
+
+PALETTE block: replace the Paper tokens with the Math rows of R3.4 (light and dark),
+`--paper-ink-alpha: 0.95`, and add:
+
+```css
+:root                    { --glass-rgb: 255, 255, 255; --well-rgb: 248, 241, 253; --bar-rgb: 245, 236, 251;
+                           --glass-edge: rgba(255, 255, 255, 0.85); --g-pane: 0.72; --g-bench: 0.86; --g-pane-clear: 0.90; --g-bench-clear: 0.94; }
+:root[data-theme='dark'] { --glass-rgb: 31, 20, 64;    --well-rgb: 39, 26, 77;    --bar-rgb: 20, 10, 40;
+                           --glass-edge: rgba(255, 255, 255, 0.08); --g-pane: 0.78; --g-bench: 0.88; --g-pane-clear: 0.93; --g-bench-clear: 0.95; }
+```
+
+SKIN BASE block: **remove** the whole "Paper layer" block that Phase 1a added
+(`.paper-stage`, `.paper-gutter`, `.paper-toggle` and its print rule) and put this in its
+place. Everything is scoped under `:root[data-paper]`, so the block does nothing in an app
+that has no field; it can therefore be copied into Physics and Chemistry in the same change
+and the three SKIN BASE blocks stay identical.
+
+```css
+/* ---------- Paper layer, Revision 2 (BACKGROUND_LLD.md R3, R4) ---------- */
+.paper-field { position: fixed; inset: 0 0 auto 0; height: 100vh; height: 100lvh;
+               z-index: -1; pointer-events: none; direction: ltr; }
+.academy-paper { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; contain: strict; }
+
+/* the napkins are the graph paper now: no page rule, no fade */
+:root[data-paper] body { background:
+    radial-gradient(1100px 620px at var(--light-x, 0%) -10%, var(--accent-soft), transparent 62%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); }
+:root[data-paper] #root::before { display: none; }
+
+/* text that stood on the page gets a plate */
+.plate { border-radius: var(--r-lg); padding: 16px 18px; }
+@media (min-width: 768px) { .plate { padding: 20px 24px; } }
+.plate-chip { border-radius: var(--r-pill); padding: 6px 14px; }
+:root[data-paper] :is(.plate, .plate-chip) { border: 1px solid var(--line); }
+
+/* panes */
+:root[data-paper] :is(.elev-1, .plate) {
+  background: rgba(var(--glass-rgb), var(--g-pane));
+  box-shadow: inset 0 1px 0 var(--glass-edge), 0 1px 2px rgba(16, 27, 54, 0.05), 0 14px 32px -18px var(--hue-shadow);
+}
+/* benches and reading sheets */
+:root[data-paper] :is(.elev-2, .read) { background: rgba(var(--glass-rgb), var(--g-bench)); }
+/* wells, chips, bar */
+:root[data-paper] .elev-0     { background: rgba(var(--well-rgb), 0.94); }
+:root[data-paper] .plate-chip { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
+:root[data-paper] .glass-bar  { background: rgba(var(--bar-rgb), 0.74); border-bottom: 1px solid var(--line); }
+/* opt out: modals and toasts stay opaque */
+:root[data-paper] .solid      { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* frost */
+:root[data-paper='frost'] :is(.elev-1, .elev-2, .plate, .read, .glass-bar) {
+  -webkit-backdrop-filter: blur(14px) saturate(1.35); backdrop-filter: blur(14px) saturate(1.35);
+}
+/* clear: the engine stepped down, or the browser cannot blur, or the reader asked for less transparency */
+:root[data-paper='clear'] :is(.elev-1, .plate)  { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
+:root[data-paper='clear'] :is(.elev-2, .read)   { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
+:root[data-paper='clear'] .glass-bar            { background: rgba(var(--bar-rgb), 0.92); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-paper] :is(.elev-1, .plate) { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
+  :root[data-paper] :is(.elev-2, .read)  { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
+  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), 0.92); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-paper] :is(.elev-1, .elev-2, .plate, .read, .glass-bar) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  :root[data-paper] :is(.elev-1, .plate) { background: rgba(var(--glass-rgb), var(--g-pane-clear)); }
+  :root[data-paper] :is(.elev-2, .read)  { background: rgba(var(--glass-rgb), var(--g-bench-clear)); }
+  :root[data-paper] .glass-bar           { background: rgba(var(--bar-rgb), 0.92); }
+}
+@media (prefers-contrast: more) {
+  :root[data-paper] :is(.elev-1, .elev-2, .plate, .plate-chip, .read) { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  :root[data-paper] .elev-0 { background: var(--surface-2); }
+  :root[data-paper] .glass-bar { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media print {
+  .paper-field { display: none; }
+  :root[data-paper] :is(.elev-1, .elev-2, .plate, .plate-chip, .read) { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+```
+
+The dark-theme rule `:root[data-theme='dark'] .elev-1, :root[data-theme='dark'] .elev-2
+{ background: linear-gradient(...), var(--surface); ... }` has the same specificity as the
+glass rules and comes earlier in the file, so the glass rules win; keep this block **after**
+the Elevation block. Its `box-shadow` stays.
+
+### R8.3 Components
+
+| File | Change |
+|---|---|
+| `src/paper/Paper.tsx` | **Remove** `PaperStage`, `PaperGutters`, `STAGE_SEED`'s stage wording and the `placement` prop. **Add** `PaperField`: a `div.paper-field`, mounted once in `useEffect` with `{ flow: 'page', payloads: PAYLOADS, font: paperFont(), seed: FIELD_SEED, only: paperOnly() }` (no `count`: the engine's table), `destroy()` on unmount. Keep `paperFont`, `paperOnly`, `useMedia` only if still used. `PaperToggle` becomes the three-state button of R5.4: no `data-placement`, no `aria-pressed`; classes as the other buttons in the top bar's pill; icon `pause` / `calm` / `play`. `FIELD_SEED` is chosen by eye from seeds 0–9 at 390 and 1440 px, as `STAGE_SEED` was |
+| `src/app/Shell.tsx` | `<PaperField />` as the first child of the root `div` (replaces `<PaperGutters />`). The header gets class `glass-bar` and loses `border-transparent`, `data-[scrolled=true]:bg-bg/80`, `data-[scrolled=true]:backdrop-blur-xl`, `data-[scrolled=true]:border-line` and the transition; the sentinel and its IntersectionObserver are removed with them (the bar is glass always). `<PaperToggle />` is the first button inside `QuickToggles`. The app name gets `min-w-0 truncate` so four buttons fit at 360 px |
+| `src/features/home/HomePage.tsx` | Remove `<PaperStage />` and its import. Add `plate` to: the hero copy `div` (eyebrow, headline, lede, note); the syllabus `header`; in `TopicSection`, a wrapper around the title row and the description (and move `mb-4` to it); the `footer` (drop its `pb-4`). The hero hint under the signature panel gets `plate-chip` and `text-ink-2` instead of `text-muted` |
+| `src/features/lesson/LessonPage.tsx` | Wrap the lesson `header` and the `lesson-prose` block in one `<div className="plate read space-y-6">` (the reading sheet). The "back" link gets `plate-chip` (drop `-ms-3`). The quiz `h2` gets `plate-chip` and `inline-flex`. The key-points `Card` gets `read` |
+| `src/components/Quiz.tsx` | the quiz panel's root card gets `read` |
+| `src/components/FeedbackWidget.tsx`, `src/app/AchievementToast.tsx` | the sheet and the toast get `solid` |
+| `src/components/ui/Icon.tsx` | add `calm: 'M3 12c3-4 6-4 9 0s6 4 9 0'` |
+| `src/i18n/locales/{en,he}.json` | R5.4's three keys; remove `settings.paperPause` |
+| `src/paper/payloads.ts`, `payloads.test.ts` | `family` on M1–M11; M12–M51 per R7.3; `LABELS` for all 51; the id-list test and one `check()` test per row; a test that no family is over a third of the catalog |
+| `src/paper/engine.d.ts` | R8.1's API |
+| `docs/subjects/math/` | rebuilt by `npm run check`, committed |
+
+Not touched: `index.html`'s pre-paint script, `providers.tsx`, `src/progress`, any explorer,
+any lesson YAML.
+
+`--fab-clearance` and `data-fab-avoid` are unchanged. The feedback button stays where it is,
+opaque, at the bottom end corner. Nothing else is `position: fixed` any more (Revision 1's
+fixed pause button is gone), so nothing competes with it.
+
+The dev query `?paperOnly=<n>` stays (dev builds only). Add `?paperLevel=<0–5>` and
+`?paperSeed=<n>` the same way, for R9.
+
+---
+
+## R9. Acceptance checklist (replaces §14)
+
+"Matrix" = 390×844 and 1440×900 × Hebrew and English × light and dark = 8 runs, in Playwright
+(`chromium.launch({ executablePath: '/opt/pw-browsers/chromium' })`, the package resolved from
+`apps/math/scripts/`), on **home and one lesson page**, top and scrolled to the explorer.
+
+1. `node scripts/check-paper-sync.mjs` exits 0.
+2. `cd apps/<subject> && npm run check` is clean. `payloads.test.ts`: one passing `check()` per
+   row of §10 and R7.3; the id list equals the spec's; every payload has a family; no family
+   holds more than a third.
+3. Matrix: no console error, no page error, no raw i18n key;
+   `document.documentElement.scrollWidth === clientWidth`, also at 360 px wide.
+4. Layer: exactly one `canvas.academy-paper` on every route; its host is `position: fixed`,
+   `pointer-events: none`, `aria-hidden` on the canvas; `<html>` has `data-paper`; with the
+   engine's script blocked the page renders with solid cards and no `data-paper`.
+5. Every payload, forced with `?paperOnly=<n>`, light and dark, at 390 and 1440: the label is
+   whole, on the paper, not touching a stroke, and matches the spec character for character;
+   the drawing matches its row; no grid line crosses itself inside the graph box; no missing
+   glyph. **Look at each screenshot.**
+6. **Contrast sampling** (the method of R2.2), per theme, at both widths, 8 seeds × 3 payload
+   sets, for each of: pane, bench, bar, chip, a well alone, in `frost` and in `clear`. For
+   each, the worst pixel against every text colour used on that tier: body text ≥ 4.5:1,
+   large text and graphics ≥ 3:1. Record the table in the PR. Also sample the real page: for
+   every text element on home and lesson, the pixels of its background box in a still-frame
+   screenshot against its computed `color`; report any pair under 4.5:1 (3:1 for text of
+   24 px, or 18.66 px bold, and larger).
+7. **No text on the field:** for every element under `header` and `main` that has a text node
+   of its own, walk up to `#root`: an ancestor must have one of `.elev-0`, `.elev-1`,
+   `.elev-2`, `.plate`, `.plate-chip`, `.read`, `.solid`, `.glass-bar`, or a computed
+   background alpha ≥ 0.7. Zero failures on home, lesson, and a finished quiz.
+8. Glass states: with `?paperLevel=0` computed `backdrop-filter` on a pane is the blur and its
+   background alpha is 0.72 / 0.78; with `?paperLevel=2` no `backdrop-filter` and 0.90 / 0.93;
+   emulating `prefers-reduced-transparency: reduce` gives the clear values; `prefers-contrast:
+   more` gives opaque; print gives opaque and no canvas.
+9. Still frame, `reducedMotion: 'reduce'`: the canvas shows a full still frame; two loads give
+   byte-identical canvas data at each width; the button is absent; over 2 s
+   `AcademyPaper._frames` does not change.
+10. Stops and states: hidden tab → 0 frames in 600 ms; button → calm
+    (`localStorage['academy:paper-motion'] === 'calm'`, about 20 draws a second), → still (a
+    still frame, 0 frames), → moving; reload keeps the state; another subject on the same
+    origin shows the same state; five idle minutes → still, any input → resumes.
+11. **Frame rate**, home and lesson, 390×844 @3 and 1440×900 @2, governor off, 4 s after 3 s
+    of warm-up, at L0, L2 and L3. Unthrottled, phone size: mean ≥ 50 fps at L0 (prototype
+    50.5–58.8). Unthrottled, desktop size: mean ≥ 50 fps at L2 (prototype 54.3) and report L0.
+    At ÷4, phone size: ≥ 28 fps at L3 (prototype 30.5) and report the rest. JS `draw()` p95
+    unthrottled ≤ 5 ms. Then governor on at ÷4: it reaches a level whose mean gap is ≤ 22 ms,
+    or L5, within 15 s, and `sessionStorage['academy:paper-level']` holds it. Record all
+    numbers in the PR next to R2.1's.
+12. Interaction: drag a chart handle and a slider for 3 s at L0 and at ÷4: `AcademyPaper._draws`
+    does not change during the drag, and the gaps between the app's own frames during the drag
+    are no worse than with the field hidden (mean within 10 %). Answer a quiz, reload:
+    progress persisted.
+13. Hebrew and RTL: slider fill and thumb direction, chart orientation and axis direction
+    exactly as before this change (screenshot diff of the explorer's well against `main`:
+    identical apart from the well's 0.94 alpha); napkin graphs run left to right and formulas
+    read left to right in both languages; the top bar's four buttons are in logical order.
+14. **Real devices, required before Phase 1a-v2 merges** (manual): one mid-range Android
+    phone (Chrome) and one iPhone (Safari); home for two minutes and a lesson for two minutes
+    each. Write down: the level it settled at (`AcademyPaper.level()` through remote
+    devtools, or a temporary on-screen readout in a dev build); whether scrolling and dragging
+    a handle are smooth; whether the phone warms; Low Power Mode behaviour; and whether the
+    address bar sliding away disturbs the napkins (R3.1). If a phone settles at L4 or L5,
+    stop and apply R11's cut order.
+15. Static: every `:hover` rule inside `@media (hover: hover)` (the existing programmatic
+    check); the engine has no `shadowBlur`, `filter`, `getImageData`, `setInterval`; the
+    button has a 44 px hit area, a visible focus ring and its label in the active language;
+    the first screen at 390×844 still shows the hero panel above y = 844.
+16. After merge: the live site in a private window, home and a lesson, both themes.
+
+---
+
+## R10. Phases (replaces §13 from 1a on)
+
+Each is one branch and one PR, mergeable alone.
+
+| Phase | Contents | Depends on |
+|---|---|---|
+| 0, 1a | **Done** (Revision 1, on `main`) | — |
+| **1a-v2 Math** | R8 in full: engine changes, sync, Math's field, glass, plates, button, 51 payloads; the same SKIN BASE block copied into Physics and Chemistry (inert there). R9 items 1–16 on Math | — |
+| **1b-v2 Physics** | field, plates, button, catalog to R7.5's target (rows specified first, in this file); its R3.4 row confirmed and R4's alphas re-sampled for its palette | 1a-v2 |
+| **1c-v2 Chemistry** | the same for Chemistry | 1a-v2 |
+| **1d-v2 Hub** | the field behind the whole hub; the hub's panels are already glass (`--panel`), so the work is re-sampling their alphas against the field (R9 item 6), plates for any text on the page, the button in the top bar, `docs/hub/paper-payloads.js` to R7.5's target | 1a-v2 |
+| **2 Nitrox** | §12 unchanged: bubbles, a stage on the Dashboard. **Still gated: build only after Guy re-confirms.** Whether its bubbles should also go full-page is asked then, not assumed | Guy |
+
+Show 1a-v2 to Guy on his phone before starting 1b-v2: the look, and the level real phones
+reach, are decided there. 1b-v2, 1c-v2 and 1d-v2 are independent of each other.
+
+---
+
+## R11. Risks, and what to cut first
+
+1. **Real phones are unmeasured.** The harness has no GPU. Everything about smoothness on a
+   phone is a hypothesis until R9 item 14. This is the largest risk in the revision.
+2. **Battery and heat.** A full-screen canvas never scrolls away. Mitigations: the ladder, the
+   interaction hold, idle and hidden stops, low-battery still frame, calm mode. If a phone
+   warms in two minutes, make calm the default on coarse-pointer devices.
+3. **Thin contrast margin on panes** (about 4.6:1 for the weakest text colour). It is measured,
+   not guessed, but a new ink, a darker napkin token or a lower alpha can break it. R9 item 6
+   is the guard; R4.2 names the proper fix if more transparency is wanted.
+4. **"Clear" glass is not very see-through.** A device that steps down to L2 shows napkins
+   around the cards and only a tint behind them. If most phones land there, the owner's third
+   wish is only half met on them; say so when showing 1a-v2.
+5. **Bent graphs.** Wild paper bends a plot. The calm heart limits it; it does not remove it.
+   If a specialist reviewer objects, raise the heart's calm (0.35 → 0.2) before lowering relief.
+6. **Busy behind reading.** Movement around a paragraph distracts some readers. Calm and still
+   are one press away, and the reading sheet lets 14 % through. If it is still too much, make
+   the reading sheet opaque (`--g-bench: 1` for `.read`) and keep the bench glass.
+7. **Safari.** `backdrop-filter` over a canvas that changes every frame, `100lvh`, and canvas
+   fill rate are all unmeasured there. The `clear` path needs none of the first.
+8. **Fold-over at the rim** may look like a rendering fault to some eyes. Lower `SLOPE_MAX`.
+9. **Catalog size and review load.** 36 tier-B identities are outside the lessons. Each has a
+   numeric check, but a check cannot catch a wrong label string. R9 item 5 is a human reading
+   51 screenshots; do not skip it.
+10. **SKIN BASE drift.** The glass block is scoped so it can live in all three apps at once.
+    If it is put into Math only, the three blocks differ until 1b-v2 and 1c-v2: do not.
+
+**Cut order** when a budget is missed on a real device, first to last. Each is a default
+changed, not a feature removed, until (g):
+
+- (a) Start phones at L1 (0.6 MP canvas). Nearly invisible.
+- (b) Half rate by default on coarse-pointer devices (30 draws a second).
+- (c) Phone count 6 → 5, desktop 9 → 7.
+- (d) Blur radius 14 → 10 px and no `saturate()`. (Measured: little gain; try it only on a
+  device that shows one.)
+- (e) Start phones at L2 (clear glass). This gives up "semi-visible" on phones: ask Guy first.
+- (f) Drop the short ripples and the small bumps (keeps the big shape, cuts about a third of
+  the engine's arithmetic).
+- (g) Calm as the default everywhere.
+- (h) Still frame on phones, motion on wide screens only.
+
+Never cut: the no-text-on-the-field rule, the measured alphas, the still frame, the button,
+the `check()` tests.
+
+---
+---
+
+# REVISION 1 (as built in Phase 0 and Phase 1a)
+
+Kept for the parts that still apply and as the record of what is on `main`. Passages replaced
+by Revision 2 are marked.
+
+Contents of Revision 1: 0 the request and how it is read · 1 decisions at a glance · 2 what was measured ·
 3 where it appears · 4 architecture · 5 the engine · 6 payloads and the pen · 7 tokens ·
 8 budget, degrading and the off switch · 9 accessibility and RTL · 10 content catalogs ·
 11 integration, file by file · 12 Nitrox bubbles (Phase 2) · 13 phases · 14 acceptance ·
@@ -43,6 +1093,8 @@ Reading:
    partnership happens. §12 is self-contained and is built only after he re-confirms. Phase 1
    does not touch `apps/nitrox` or `docs/subjects/nitrox/`.
 
+**Superseded by Revision 2 (R0, R3, R6).** Both departures below are withdrawn at the owner's direction: the layer is full-page, with every text block on measured glass, and the paper is wilder than the glucose page's. Kept as the record of why Revision 1 was built as it was.
+
 Two deliberate departures from the glucose page, both forced by evidence (§2):
 
 - **Not a full-page background.** In the glucose page almost nothing stands on the paper. Here
@@ -57,6 +1109,8 @@ Two deliberate departures from the glucose page, both forced by evidence (§2):
 ---
 
 ## 1. Decisions at a glance
+
+**Superseded by Revision 2 (R1)** for D4 and D5 (stage and gutters, no layer on a phone lesson). D1–D3 and D6–D9 stand; D8's button gains a calm state (R5.4).
 
 | # | Decision | Why |
 |---|---|---|
@@ -115,6 +1169,8 @@ a real iPhone (Safari), see §14 item 12.
 
 ### 2.2 Legibility (screenshots at 390 and 1440 px, light and dark)
 
+**Superseded by Revision 2 (R2.2, R2.3, R4)** where it rejects a full-page canvas. The finding that text straight on a napkin is unreadable stands, and is why Revision 2 puts every text block on glass.
+
 - Graphs, bars, arrows and atoms projected through the surface read well and bend with it.
 - Sprite text with the tangent-plane map stays readable while a napkin tilts; at the glucose
   relief it does not, at 0.28–0.40 it does. Text below about 7 px is dropped and the napkin
@@ -131,6 +1187,8 @@ a real iPhone (Safari), see §14 item 12.
 ---
 
 ## 3. Where it appears
+
+**Superseded by Revision 2 (R3).** The whole section: there is one full-page field on every page, no stage, no gutters, and content does sit over the layer, on glass.
 
 | Page | Phone and tablet (margin < 96 px) | Wide (margin ≥ 96 px) |
 |---|---|---|
@@ -164,6 +1222,8 @@ light, gradient and the faint 24 px rule in the top 520 px). The napkins lie on 
 ---
 
 ## 4. Architecture
+
+**Superseded by Revision 2 (R8.3)** in one line of the tree: `Paper.tsx` exports `PaperField` and the three-state button instead of `<PaperStage/>` and `<PaperGutters/>`. The file layout, the engine header, the sync procedure and the no-shared-package reasoning stand.
 
 ```
 docs/hub/paper-engine.js          CANONICAL engine (hand-written; the hub loads it as a classic script)
@@ -243,6 +1303,8 @@ empty.
 
 ### 5.2 Differences from the glucose engine
 
+**Superseded by Revision 2** for the page flow in these rows: pixel cap (R3.3), placement and count (R3.2), relief, turn and tilt (R6, R3.3), `SEG` (R6.4), edge fog (none, R3.1), and the payload index rule under the table (R7.4). The other rows stand.
+
 | Glucose | Here |
 |---|---|
 | One canvas, `alpha: false`, fills `--paper` | One canvas per host, transparent, `clearRect` each frame; the page background shows through |
@@ -267,6 +1329,8 @@ equals the one another live napkin of the same canvas shows, add 1 until it does
 
 ### 5.3 Placement
 
+**Superseded by Revision 2 (R3.2)** for the field. The two flows below stay in the engine for the gallery and remain valid code paths.
+
 `w`, `h` are the host's CSS size. `along`, `crossing` and `rnd` as in the glucose `napkin()`.
 
 ```js
@@ -290,6 +1354,8 @@ zNear = 0.12 + rnd() * 0.25;              // was rnd() * 0.25: the nearest napki
 napkin is about 130–180 px wide when near, with its formula at 12–18 px.
 
 ### 5.4 Edge fog
+
+**Superseded by Revision 2 (R3.1):** the page flow has no edge fog. Applies only to the `x` and `y` flows.
 
 After the napkins are drawn, erase toward the canvas edges so nothing is cut by a straight
 line. `globalCompositeOperation = 'destination-out'`, linear gradients created once per
@@ -436,6 +1502,8 @@ wider than 85 % of the napkin this was not noticeable in the prototype. The alte
 
 ### 6.5 Per-napkin budget
 
+**Superseded by Revision 2 (R7.2)** for the numbers: 220 points, 16 calls, 4 labels. The prohibitions stand.
+
 A payload may use at most: 160 projected points, 14 stroke or fill calls, 4 labels. No
 `shadowBlur`, no gradients, no `filter`, no `getImageData`. No allocation per frame (reuse
 module-level arrays as the glucose engine does with `PX`, `PY`).
@@ -443,6 +1511,8 @@ module-level arrays as the glucose engine does with `PX`, `PY`).
 ---
 
 ## 7. Tokens
+
+**Superseded by Revision 2 (R3.4)** for `--napkin`, `--napkin-edge`, `--napkin-shadow`, the two grid tokens and `--paper-ink-alpha` (now 0.95). The inks, `--paper-text`, `--paper-font` and the notes on where inks come from stand; the contrast figures after each ink are replaced by R3.4's.
 
 Each app adds these to its PALETTE block in `src/styles.css`; the hub adds them to
 `docs/hub/hub.css` next to its other tokens. `--paper-ink-alpha` is 0.8 everywhere and
@@ -483,6 +1553,8 @@ Notes:
 
 ### 8.1 Budget
 
+**Superseded by Revision 2 (R5.1).**
+
 | | Budget |
 |---|---|
 | Target | 60 fps on a mid-range phone; never a dropped interaction frame in an explorer |
@@ -514,6 +1586,8 @@ Checked once at the first `mount`, re-checked when the media query or battery ch
 
 ### 8.4 The governor
 
+**Superseded by Revision 2 (R5.2):** a five-step ladder replaces the two steps below.
+
 While moving, keep the last 90 `requestAnimationFrame` gaps (ignore the first 30 after any
 start and any gap over 250 ms, which is a tab switch). Every 90 frames:
 
@@ -525,6 +1599,8 @@ start and any gap over 250 ms, which is a tab switch). Every 90 frames:
 It never steps back up. There is no per-device tuning beyond this.
 
 ### 8.5 The pause button (WCAG 2.2.2)
+
+**Superseded by Revision 2 (R5.4, R8.3)** for placement, the number of states and the labels. The storage key, its sharing across apps and the `try/catch` rule stand.
 
 One button per page, shown only while `canMove()`:
 
@@ -558,6 +1634,8 @@ Wrap every access in `try/catch`, as the hub already does.
 ---
 
 ## 9. Accessibility and RTL
+
+**Superseded by Revision 2** in two bullets: "Nothing existing changes contrast" (it does: R4 measures it) and the `.paper-stage` / `.paper-gutter` class names (now `.paper-field`). Everything else stands, including: the canvas is never mirrored, and no word is drawn on it.
 
 - Every canvas: `aria-hidden="true"`, `pointer-events: none`, no `tabindex`, no `role`.
   Hosts carry no text. Nothing is conveyed only by the Paper layer: every formula on a napkin
@@ -594,6 +1672,8 @@ Rules for the implementer:
 4. No tick labels, no units, no numbers on axes. A napkin shows a shape and one formula.
 
 ### 10.1 Math Academy (`apps/math/src/paper/payloads.ts`) — 11 payloads
+
+**Superseded by Revision 2 (R7.3)** for the count: these 11 rows stand unchanged and gain a family; 40 rows are added.
 
 | id | Drawn (graph box) | Label markup | Tier and source | `check()` |
 |---|---|---|---|---|
@@ -691,6 +1771,8 @@ No formulas. §12.
 ## 11. Integration, file by file
 
 ### 11.1 Each of Math, Physics, Chemistry (same list, per app)
+
+**Superseded by Revision 2 (R8).** The list and CSS below are what Phase 1a shipped in Math; R8 says what replaces them.
 
 | File | Change |
 |---|---|
@@ -825,6 +1907,8 @@ one online load.
 
 ## 13. Phases
 
+**Superseded by Revision 2 (R10)** from Phase 1a on.
+
 Each phase is one branch and one PR, mergeable alone, in this order.
 
 | Phase | Contents | Visible change on the site |
@@ -844,6 +1928,8 @@ already has a copy, in the same PR.
 ---
 
 ## 14. Acceptance checklist
+
+**Superseded by Revision 2 (R9).**
 
 Run per phase, on what that phase touches. "Matrix" = 390×844 and 1440×900 × HE and EN ×
 light and dark = 8 runs, in Playwright (`chromium.launch({ executablePath:
@@ -897,6 +1983,8 @@ light and dark = 8 runs, in Playwright (`chromium.launch({ executablePath:
 
 ## 15. Risks, and what to cut first
 
+**Superseded by Revision 2 (R11).** Risk 1 below ("it may feel smaller than what Guy liked") is what happened; its last sentence ("do not go back to a full-page canvas behind text") is withdrawn.
+
 1. **It may feel smaller than what Guy liked.** On a phone it is a 120–176 px band with two
    napkins, not a whole moving page. That is the price of never putting a napkin behind
    text. Show Phase 1a early. If he wants more presence, the levers, in order: raise the
@@ -934,6 +2022,8 @@ screens only. Never cut: the still frame, the pause button, `check()` tests.
 ---
 
 ## 16. Amendments made to the other specs in this change
+
+**Revision 2 changed the same three files again:** `CLAUDE.md` ("Background" section, the architecture tree line, the status line), `HUB_LLD.md` §7.1 and `SUBJECT_APP_SKIN_LLD.md` §7 / §10 now say the layer is full-page behind glass, not confined to bands. The reason recorded below still holds, with one change: "confined to bands with no text" is replaced by "never behind text that is not on measured glass".
 
 - `CLAUDE.md`: architecture tree lists this file and the new paths; a "Background" section
   states the rules a contributor must not break; the hub "Register" bullet and the
