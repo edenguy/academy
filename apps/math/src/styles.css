@@ -28,15 +28,15 @@
   --critical: #b93232;  --critical-fill: #d03b3b;  --critical-soft: rgba(208, 59, 59, 0.12);
   --grid: rgba(98, 42, 182, 0.07);
   /* Paper layer (BACKGROUND_LLD.md R3.4): graph-paper napkins. Inks are Math's violet / deepened pink / plot blue. */
-  --napkin: #ffffff;  --napkin-edge: rgba(98, 42, 182, 0.5);  --napkin-shadow: rgba(60, 30, 120, 0.26);
-  --paper-grid: rgba(98, 42, 182, 0.17);  --paper-grid5: rgba(98, 42, 182, 0.36);
+  --napkin: #dccff2;  --napkin-edge: rgba(98, 42, 182, 0.7);  --napkin-shadow: rgba(60, 30, 120, 0.4);
+  --paper-grid: rgba(98, 42, 182, 0.3);  --paper-grid5: rgba(98, 42, 182, 0.5);
   --paper-ink-1: #6250d6;  --paper-ink-2: #b83a72;  --paper-ink-3: #2a78d6;  --paper-text: #4a3a63;
-  --paper-ink-alpha: 0.95;  --napkin-cells: 12;
+  --paper-ink-alpha: 1;  --napkin-cells: 12;
   --paper-font: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Glass (R4.1, R12): each theme's --surface / --surface-2 / --bg as an RGB triplet, then the tuning knobs.
      GLASS TUNING: every --g-* is one tier's fill alpha, LOWER = MORE SEE-THROUGH; --g-blur is the frost radius (higher = softer napkin under text).
      Each value was set to the lowest the contrast sampling allows (BACKGROUND_LLD.md R12); re-sample before going lower. */
-  --glass-rgb: 255, 255, 255;  --well-rgb: 248, 241, 253;  --bar-rgb: 245, 236, 251;
+  --glass-rgb: 250, 245, 255;  --well-rgb: 248, 241, 253;  --bar-rgb: 245, 236, 251;
   --glass-edge: rgba(255, 255, 255, 0.85);
   --g-pane: 0.50;         /* cards: lesson list, dashboard, hero copy, headings (frosted) */
   --g-bench: 0.64;        /* explorer panel, reading sheet, key points, quiz panel (frosted) */
@@ -46,9 +46,9 @@
   --g-pane-clear: 0.84;   /* pane when the engine drops the blur or the browser cannot: stays more opaque than --g-pane */
   --g-bench-clear: 0.88;  /* bench, same fallback */
   --g-bar-clear: 0.90;    /* bar, same fallback */
-  --g-blur: 18px;         /* frost radius on pane, bench, bar */
+  --g-blur: 14px;         /* frost radius on pane, bench, bar (light: lower than dark, so the napkin's grid and edge stay readable through the card) */
   /* the weakest text colours, one step stronger, used only on glass (BACKGROUND_LLD.md R12) */
-  --muted-g: #675780;  --accent-g: #5b4ac8;  --good-g: #096c46;  --critical-g: #af2f2f;
+  --muted-g: #55486a;  --accent-g: #4b3da7;  --good-g: #065a39;  --critical-g: #922525;
   color-scheme: light;
 }
 :root[data-theme='dark'] {                 /* dark: "lit bench" */
@@ -71,10 +71,10 @@
   --grid: rgba(173, 150, 255, 0.08);
   --napkin: #2b1c55;  --napkin-edge: rgba(173, 150, 255, 0.55);  --napkin-shadow: rgba(0, 0, 0, 0.55);
   --paper-grid: rgba(173, 150, 255, 0.2);  --paper-grid5: rgba(173, 150, 255, 0.42);
-  --paper-ink-1: #a99ff0;  --paper-ink-2: #ee7fa9;  --paper-ink-3: #5a9cf0;  --paper-text: #cdbdee;
+  --paper-ink-1: #a99ff0;  --paper-ink-2: #ee7fa9;  --paper-ink-3: #5a9cf0;  --paper-text: #cdbdee;  --paper-ink-alpha: 0.95;
   --glass-rgb: 31, 20, 64;  --well-rgb: 39, 26, 77;  --bar-rgb: 20, 10, 40;
   --glass-edge: rgba(255, 255, 255, 0.08);
-  --g-pane: 0.54;  --g-bench: 0.64;  --g-bar: 0.62;  --g-well: 0.90;  --g-chip: 0.86;
+  --g-blur: 18px;  --g-pane: 0.54;  --g-bench: 0.64;  --g-bar: 0.62;  --g-well: 0.90;  --g-chip: 0.86;
   --g-pane-clear: 0.84;  --g-bench-clear: 0.88;  --g-bar-clear: 0.86;
   --muted-g: #a99eca;  --accent-g: #a39bec;  --good-g: #2fd69a;  --critical-g: #ea8989;
   color-scheme: dark;
