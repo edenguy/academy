@@ -107,7 +107,7 @@ academy/                         (this repo)
 ├── README.md                     setup, Pages config, "adding a subject" walkthrough
 ├── HUB_LLD.md                    hub design spec (incl. §11 "inviting landing", implemented)
 ├── SUBJECT_APP_SKIN_LLD.md       Math/Physics "Bench" skin spec (implemented)
-├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (engine + Math built; the rest per its §13)
+├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (Revision 2 = current design; Revision 1 = what is built)
 ├── scripts/                      hub-level tooling (render-og-cards.mjs, check-paper-sync.mjs, ...)
 ├── apps/                         SOURCE — never served, never deployed directly
 │   ├── nitrox/                    see apps/nitrox/CLAUDE.md
@@ -306,27 +306,41 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
 
 ## Background: the Paper layer (`BACKGROUND_LLD.md`)
 
-**Spec only so far; nothing is built.** Guy asked for the moving background of his glucose
-project here: napkins of graph paper that float and draw themselves, carrying math graphs and
-formulas in Math, motion graphs, vectors and equations in Physics, molecules and formulas in
-Chemistry, a mix on the hub, and rising bubbles in Nitrox. Full design, measurements, content
-catalogs, phases and acceptance: `BACKGROUND_LLD.md`. The rules that are easy to break:
+Guy asked for the moving background of his glucose project here: napkins of graph paper that
+float and draw themselves, carrying math graphs and formulas in Math, motion graphs, vectors
+and equations in Physics, molecules and formulas in Chemistry, a mix on the hub, and rising
+bubbles in Nitrox. `BACKGROUND_LLD.md` has two revisions. **Revision 2 is the current design
+and is built in the engine and in Math** (Physics, Chemistry and the hub are not): after
+seeing Revision 1 on his phone Guy asked for napkins over the whole page, larger and more of
+them, translucent cards, much wilder paper and a large shuffled catalog. Revision 1's stage
+band and gutters remain only as engine flows (`'x'`, `'y'`). Build from Revision 2 (sections
+R0–R11 of that file). The rules that are easy to break:
 
-- **It never sits behind text.** It lives in a *stage* band at the top of a home page (and the
-  hub hero) and in the two page *margins* on wide screens. Lesson and quiz pages get margins
-  only, so a lesson on a phone has none. A full-page canvas behind the content was prototyped
-  and rejected: napkins behind the hero copy and lesson prose made them unreadable.
+- **No text stands on the field.** The napkins fill the whole page on one fixed canvas behind
+  everything, on every page. Every piece of text sits on a glass surface (a card, a bench, or
+  a `.plate` for text that used to stand on the page) or on a solid one. Text straight on a
+  napkin is unreadable; that was measured in Revision 1 and still holds.
+- **The glass alphas are measured, not chosen by eye.** As built in Math: pane 0.76 light / 0.82
+  dark (the spec's 0.72 / 0.78 sampled at 4.36-4.45:1 and was raised), bench and reading sheet
+  0.86 / 0.88, wells 0.97, with a 14 px blur; without blur 0.90 / 0.94 for panes. They hold the
+  weakest text colour at 4.5:1 over the densest napkin by a thin margin. Do not lower one, add
+  an ink or darken a napkin token without re-running the contrast sampling
+  (`BACKGROUND_LLD.md` R9 item 6).
+- **The engine decides what the device can afford** and tells CSS through `data-paper` on
+  `<html>` (`frost`, `clear`, or absent = solid cards as before). It steps down resolution,
+  then blur, then count, then frame rate, then stands still. Its numbers come from a harness
+  with no GPU: a real-phone check is required before the Math rebuild merges.
 - **One engine, copied.** `docs/hub/paper-engine.js` is the canonical file; each
   `apps/<subject>/src/paper/engine.js` is a byte-identical copy. Edit the canonical file, run
   `node scripts/check-paper-sync.mjs --write`, rebuild every app that has a copy.
-- **Every napkin states a fact** (rule 6). A payload is listed in `BACKGROUND_LLD.md` §10 with
+- **Every napkin states a fact** (rule 6). A payload is listed in `BACKGROUND_LLD.md` §10 and R7 with
   its source before it is drawn; an app's payload recomputes its numbers from the subject's own
   pure functions in `check()`, and a test runs every `check()`. No words on a napkin, only
   symbols, so nothing is translated or mirrored.
 - **It can always stand still.** One still frame under `prefers-reduced-motion`, Save-Data,
-  weak devices, low battery or slow frames; stopped in a hidden tab and when scrolled away; a
-  pause button whose state is one `localStorage` key, `academy:paper-motion`, shared by the hub
-  and every app.
+  weak devices, low battery or slow frames; stopped in a hidden tab and after five idle
+  minutes; a button in the top bar with three states (moving, calm, still) whose state is one
+  `localStorage` key, `academy:paper-motion`, shared by the hub and every app.
 - **It is the one exception** to "no infinite animation, no floating elements" in `HUB_LLD.md`
   §7 and `SUBJECT_APP_SKIN_LLD.md` §7/§10. It has no glow, no parallax and no pointer
   reaction, and it does not license any other looping decoration.
@@ -481,9 +495,10 @@ layout bug. Don't commit temp scripts.
     than this file and may lag (e.g. Math's README still describes the integral-only pilot and an
     old `docs/math` build path) — this file wins; fix them when you touch those apps.
   - The recent history's Claude-authored commits (rule 5).
-- **Paper layer (`BACKGROUND_LLD.md`):** built so far: Phase 0 (the engine, `check-paper-sync.mjs`)
-  and Phase 1a (Math: stage, gutters, pause button, 11 payloads). Still to build: Physics,
-  Chemistry and the hub; Nitrox bubbles gated on Guy's go-ahead. Needs the real-device check
-  (§14 item 12) before 1a merges.
+- **Paper layer (`BACKGROUND_LLD.md`):** built: the engine (Phase 0, extended to Revision 2) and
+  Phase 1a-v2 in Math (full-page field, glass cards and plates, wild surfaces, three-state
+  button, 50 of the 51 payloads: M35 waits for the `tan` / `tg` notation to be confirmed).
+  Next: Physics, Chemistry and the hub on the same model; Nitrox bubbles still gated on Guy's
+  go-ahead. 1a-v2 needs the real-device check (R9 item 14) before it merges.
 - **Not started:** a shared package for the Math/Physics/Chemistry scaffold; Nitrox is
   unchanged by the Bench/dashboard work (it is the reference, by design).

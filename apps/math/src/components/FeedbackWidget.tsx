@@ -113,7 +113,7 @@ export function FeedbackWidget() {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="elev-2 no-stripe w-full sm:max-w-md max-h-[92dvh] overflow-y-auto rounded-t-[var(--r-xl)] sm:rounded-[var(--r-xl)] p-6 pb-safe">
+          <div className="elev-2 solid no-stripe w-full sm:max-w-md max-h-[92dvh] overflow-y-auto rounded-t-[var(--r-xl)] sm:rounded-[var(--r-xl)] p-6 pb-safe">
             <div className="flex items-start justify-between mb-1">
               <h2 className="text-lg font-bold text-ink">{t('feedback.title')}</h2>
               <button

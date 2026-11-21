@@ -36,29 +36,31 @@ export function LessonPage() {
 
   return (
     <div className="space-y-6">
-      <LinkButton to="/" variant="ghost" size="sm" className="-ms-3">
+      <LinkButton to="/" variant="ghost" size="sm" className="plate-chip">
         <Icon name="arrow" size={16} className="rotate-180 rtl:rotate-0" /> {t('lesson.backHome')}
       </LinkButton>
 
-      <header className="flex items-start gap-3">
-        <span className="hidden md:grid shrink-0 num w-9 h-9 rounded-pill bg-accent-soft text-accent place-items-center font-mono text-[15px] font-semibold mt-1">
-          {lesson.order}
-        </span>
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-semibold text-accent">{pick(lesson.subtitle, locale)}</span>
-            <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-2 h-6 inline-flex items-center">
-              {pick(TOPICS[lesson.topic].curriculumBadge, locale)}
-            </span>
+      <div className="plate read space-y-6">
+        <header className="flex items-start gap-3">
+          <span className="hidden md:grid shrink-0 num w-9 h-9 rounded-pill bg-accent-soft text-accent place-items-center font-mono text-[15px] font-semibold mt-1">
+            {lesson.order}
+          </span>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm font-semibold text-accent">{pick(lesson.subtitle, locale)}</span>
+              <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-2 h-6 inline-flex items-center">
+                {pick(TOPICS[lesson.topic].curriculumBadge, locale)}
+              </span>
+            </div>
+            <h1 className="font-display font-extrabold text-[28px] md:text-[40px] leading-[1.12] text-ink">{pick(lesson.title, locale)}</h1>
           </div>
-          <h1 className="font-display font-extrabold text-[28px] md:text-[40px] leading-[1.12] text-ink">{pick(lesson.title, locale)}</h1>
-        </div>
-      </header>
+        </header>
 
-      <div className="lesson-prose space-y-4 max-w-[68ch]">
-        {lesson.intro.map((p, i) => (
-          <Rich key={i} text={pick(p, locale)} />
-        ))}
+        <div className="lesson-prose space-y-4 max-w-[68ch]">
+          {lesson.intro.map((p, i) => (
+            <Rich key={i} text={pick(p, locale)} />
+          ))}
+        </div>
       </div>
 
       {lesson.explorers?.map((explorer, i) => (
@@ -67,7 +69,7 @@ export function LessonPage() {
         </div>
       ))}
 
-      <Card variant="card" className="space-y-3">
+      <Card variant="card" className="read space-y-3">
         <div className="flex items-center gap-2 font-semibold text-[15px] text-ink">
           <Icon name="pin" size={20} className="text-accent-2" /> {t('lesson.keyPointsTitle')}
         </div>
@@ -82,9 +84,11 @@ export function LessonPage() {
       </Card>
 
       <section>
-        <h2 className="text-xl text-ink mb-3 flex items-center gap-2">
-          <Icon name="target" size={20} className="text-accent" /> {t('lesson.quizTitle')}
-        </h2>
+        <div className="mb-3">
+          <h2 className="plate-chip text-xl text-ink inline-flex items-center gap-2">
+            <Icon name="target" size={20} className="text-accent" /> {t('lesson.quizTitle')}
+          </h2>
+        </div>
         <Quiz
           questions={lesson.quiz}
           locale={locale}

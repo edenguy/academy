@@ -749,7 +749,7 @@ Directional icons (`arrow`) mirror with `rtl:-scale-x-100` (already the pattern)
 | quiz | wrong: `.anim-wiggle` once; correct: `.anim-pop`; progress segments animate `background-color` 220 ms |
 | finished signature | `stroke-dasharray` draw-in, 900 ms |
 | top bar | `data-scrolled` → background/border fade 220 ms |
-| **never** | infinite loops (`.anim-bob` removed), parallax, 3-D tilt, cursor trails, confetti. *One exception:* the Paper layer (`BACKGROUND_LLD.md`) loops while it is on screen; it has no parallax, can be paused, and stands still under reduced motion |
+| **never** | infinite loops (`.anim-bob` removed), parallax, 3-D tilt, cursor trails, confetti. *One exception:* the Paper layer (`BACKGROUND_LLD.md`, Revision 2: a full-page field behind glass cards) loops while it is on screen; it has no parallax, can be calmed or stopped, and stands still under reduced motion |
 | reduced motion | the existing global `prefers-reduced-motion` override stays; additionally `useReducedMotion()` gates the stagger, the hero sweep and the draw-in |
 
 ---
@@ -808,9 +808,11 @@ mapping and `heroCurve.ts` are the per-subject column, not a fork of the rendere
   display size per screen; a third decorative hue.
 - `opacity-50` as a disabled style; `uppercase`/`tracking-*` on labels; `--accent-2` as text
   on a light surface; `--good-fill` as text on white.
-- Infinite animation of any kind, except the Paper layer (`BACKGROUND_LLD.md`: floating
-  napkins in a stage band on the home page and in the page margins on wide screens, never
-  behind text; added at the owner's request and not a licence for any other loop); hover
+- Infinite animation of any kind, except the Paper layer (`BACKGROUND_LLD.md` Revision 2:
+  floating napkins on one fixed canvas behind the whole page, never behind text that is not
+  on a measured glass surface; while it is mounted the elevation classes become translucent
+  and the page's own 24 px graph rule is switched off, as that file's R4 and R8.2 specify;
+  added at the owner's request and not a licence for any other loop); hover
   effects that only exist on desktop *and* carry
   meaning (every hover state has a non-hover equivalent: the handle's static position, the
   arrow button's presence).

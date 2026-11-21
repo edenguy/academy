@@ -13,7 +13,6 @@ import { LinkButton } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
-import { PaperStage } from '@/paper/Paper';
 import { HERO_CURVE } from '@/math/heroCurve';
 import { lessonSignature } from '@/math/lessonSignature';
 import type { Lesson, TopicId } from '@/content/schema';
@@ -40,12 +39,12 @@ function LessonCard({ lesson, index, isDone, here }: { lesson: Lesson; index: nu
         className="elev-1 is-link group flex flex-col gap-3 p-4 md:p-5 min-h-[172px]"
       >
         <div className="flex items-center gap-2">
-          <span className="num shrink-0 w-[30px] h-[30px] rounded-pill bg-accent-soft text-accent grid place-items-center font-mono text-[15px] font-semibold">
+          <span className="num shrink-0 w-[30px] h-[30px] rounded-pill bg-accent-soft text-ink-2 grid place-items-center font-mono text-[15px] font-semibold">
             {isDone ? <Icon name="check" size={15} /> : lesson.order}
           </span>
           <span className="text-[12.5px] text-muted">{t('home.questionsCount', { count: lesson.quiz.length })}</span>
           {here && (
-            <span className="ms-auto inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill text-[12.5px] font-semibold bg-accent-soft text-accent">
+            <span className="ms-auto inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill text-[12.5px] font-semibold bg-accent-soft text-ink-2">
               <span className="w-1.5 h-1.5 rounded-pill bg-accent" aria-hidden="true" />
               {here === 'stopped' ? t('home.hereStopped') : t('home.hereNext')}
             </span>
@@ -170,18 +169,20 @@ function TopicSection({ topicId, next, completed }: { topicId: TopicId; next: Ne
 
   return (
     <section>
-      <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1.5">
-        <div className="flex items-baseline gap-3 min-w-0">
-          <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{pick(topic.title, locale)}</h2>
-          <span className="text-[12.5px] font-semibold text-ink-2">
-            <span className="num">{progress.done}</span> {t('home.of')} <span className="num">{progress.total}</span>
+      <div className="plate mb-4">
+        <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1.5">
+          <div className="flex items-baseline gap-3 min-w-0">
+            <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{pick(topic.title, locale)}</h2>
+            <span className="text-[12.5px] font-semibold text-ink-2">
+              <span className="num">{progress.done}</span> {t('home.of')} <span className="num">{progress.total}</span>
+            </span>
+          </div>
+          <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-3 h-7 inline-flex items-center">
+            {pick(topic.curriculumBadge, locale)}
           </span>
         </div>
-        <span className="elev-0 text-[12.5px] font-semibold text-ink-2 bg-surface-3 rounded-pill px-3 h-7 inline-flex items-center">
-          {pick(topic.curriculumBadge, locale)}
-        </span>
+        <p className="text-sm text-ink-2">{pick(topic.description, locale)}</p>
       </div>
-      <p className="text-sm text-ink-2 mb-4">{pick(topic.description, locale)}</p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {lessons.map((lesson, i) => (
           <LessonCard
@@ -204,10 +205,9 @@ export function HomePage() {
 
   return (
     <div className="space-y-10 md:space-y-14">
-      <PaperStage />
       <section className="grid grid-cols-1 min-[900px]:grid-cols-[1.1fr_1fr] gap-8 min-[900px]:gap-10 items-center">
-        <div>
-          <div className="inline-flex h-7 items-center gap-1.5 px-3 rounded-pill bg-accent-2-soft text-accent text-[12.5px] font-semibold">
+        <div className="plate">
+          <div className="inline-flex h-7 items-center gap-1.5 px-3 rounded-pill bg-accent-2-soft text-ink-2 text-[12.5px] font-semibold">
             <span className="w-1.5 h-1.5 rounded-pill bg-accent-2" aria-hidden="true" /> {t('home.eyebrowNew')}
           </div>
           <h1
@@ -223,14 +223,14 @@ export function HomePage() {
           <div className="elev-2 aspect-[16/7] min-[900px]:aspect-[4/3] overflow-hidden">
             <HeroSignature curve={HERO_CURVE} />
           </div>
-          <p className="mt-2 text-[12.5px] text-muted text-center hidden [@media(hover:none)]:block">
-            {t('hero.signatureHint')}
-          </p>
+          <div className="mt-3 text-center hidden [@media(hover:none)]:block">
+            <p className="plate-chip inline-block text-[12.5px] text-ink-2">{t('hero.signatureHint')}</p>
+          </div>
         </div>
       </section>
 
       <section className="space-y-10 md:space-y-14">
-        <header>
+        <header className="plate">
           <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.syllabusTitle')}</h2>
           <p className="text-sm text-ink-2 mt-1 max-w-[52ch]">{t('home.syllabusLead')}</p>
         </header>
@@ -241,7 +241,7 @@ export function HomePage() {
 
       <ProgressSection />
 
-      <footer className="text-xs text-muted max-w-3xl space-y-1 pb-4">
+      <footer className="plate text-xs text-muted max-w-3xl space-y-1">
         <p>{t('footer.disclaimer')}</p>
         <p>
           <a href="https://edenguy.github.io" rel="author" className="hover:text-ink">

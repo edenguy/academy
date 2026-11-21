@@ -69,7 +69,7 @@ export function Quiz({
 
   if (finished) {
     return (
-      <Card variant="card" className="text-center space-y-4">
+      <Card variant="card" className="read text-center space-y-4">
         <div className="relative mx-auto w-14 h-14 rounded-pill bg-good-soft grid place-items-center">
           <Icon name="check" size={28} className="text-good anim-pop" />
         </div>
@@ -96,7 +96,7 @@ export function Quiz({
   const canCheck = q.type === 'mcq' ? mcqChoice !== null : numericInput.trim() !== '';
 
   return (
-    <Card variant="card" className="space-y-4">
+    <Card variant="card" className="read space-y-4">
       <div className="flex items-center gap-3" aria-live="polite">
         <div className="flex-1 flex gap-1.5" aria-hidden="true">
           {Array.from({ length: total }).map((_, i) => (
