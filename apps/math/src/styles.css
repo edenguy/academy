@@ -28,18 +28,18 @@
   --critical: #b93232;  --critical-fill: #d03b3b;  --critical-soft: rgba(208, 59, 59, 0.12);
   --grid: rgba(98, 42, 182, 0.07);
   /* Paper layer (BACKGROUND_LLD.md R3.4): graph-paper napkins. Inks are Math's violet / deepened pink / plot blue. */
-  --napkin: #dccff2;  --napkin-edge: rgba(98, 42, 182, 0.7);  --napkin-shadow: rgba(60, 30, 120, 0.4);
-  --paper-grid: rgba(98, 42, 182, 0.3);  --paper-grid5: rgba(98, 42, 182, 0.5);
+  --napkin: #e7ddf6;  --napkin-edge: rgba(98, 42, 182, 0.5);  --napkin-shadow: rgba(60, 30, 120, 0.28);
+  --paper-grid: rgba(98, 42, 182, 0.2);  --paper-grid5: rgba(98, 42, 182, 0.34);
   --paper-ink-1: #6250d6;  --paper-ink-2: #b83a72;  --paper-ink-3: #2a78d6;  --paper-text: #4a3a63;
-  --paper-ink-alpha: 1;  --napkin-cells: 12;
+  --paper-ink-alpha: 0.75;  --napkin-cells: 12;
   --paper-font: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Glass (R4.1, R12): each theme's --surface / --surface-2 / --bg as an RGB triplet, then the tuning knobs.
      GLASS TUNING: every --g-* is one tier's fill alpha, LOWER = MORE SEE-THROUGH; --g-blur is the frost radius (higher = softer napkin under text).
      Each value was set to the lowest the contrast sampling allows (BACKGROUND_LLD.md R12); re-sample before going lower. */
   --glass-rgb: 250, 245, 255;  --well-rgb: 248, 241, 253;  --bar-rgb: 245, 236, 251;
   --glass-edge: rgba(255, 255, 255, 0.85);
-  --g-pane: 0.50;         /* cards: lesson list, dashboard, hero copy, headings (frosted) */
-  --g-bench: 0.64;        /* explorer panel, reading sheet, key points, quiz panel (frosted) */
+  --g-pane: 0.40;         /* cards: lesson list, dashboard, hero copy, headings (frosted) */
+  --g-bench: 0.56;        /* explorer panel, reading sheet, key points, quiz panel (frosted) */
   --g-bar: 0.62;          /* top bar (frosted) */
   --g-well: 0.90;         /* plot areas, readouts, quiz choices, inputs (no blur: graphs stay crisp) */
   --g-chip: 0.86;         /* loose one-line headings and links (no blur) */
