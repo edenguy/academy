@@ -107,7 +107,8 @@ academy/                         (this repo)
 ├── README.md                     setup, Pages config, "adding a subject" walkthrough
 ├── HUB_LLD.md                    hub design spec (incl. §11 "inviting landing", implemented)
 ├── SUBJECT_APP_SKIN_LLD.md       Math/Physics "Bench" skin spec (implemented)
-├── scripts/                      hub-level tooling (render-og-cards.mjs, ...)
+├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (spec, not built yet)
+├── scripts/                      hub-level tooling (render-og-cards.mjs, check-paper-sync.mjs, ...)
 ├── apps/                         SOURCE — never served, never deployed directly
 │   ├── nitrox/                    see apps/nitrox/CLAUDE.md
 │   ├── math/                      Math Academy
@@ -115,7 +116,8 @@ academy/                         (this repo)
 │   └── chemistry/                 Chemistry Academy
 └── docs/                         SERVED by GitHub Pages — the entire public site
     ├── index.html                  hub landing page (hand-written, no build)
-    ├── hub/                        the hub's OWN assets (hub.css, hub.js, logos, social/)
+    ├── hub/                        the hub's OWN assets (hub.css, hub.js, logos, social/,
+    │                               paper-engine.js = the CANONICAL Paper engine, paper-payloads.js)
     └── subjects/
         ├── index.html              tiny redirect page → /academy/#subjects
         ├── nitrox/ math/ physics/ chemistry/  built output of the matching app
@@ -244,6 +246,7 @@ means:
 - Every `:hover` rule is inside `@media (hover: hover)` — sticky hover on touch caused a stuck
   glow on the hub. Verify programmatically that none are un-gated.
 - Respect `prefers-reduced-motion`; motion easing `cubic-bezier(.2,.8,.2,1)`, 180–320 ms.
+  The Paper layer must show one still frame and run no animation frames under it.
 - Contrast: body text ≥ 4.5:1 on tinted surfaces.
 - First-visit/empty states look sane (0 progress, no achievements, no stored data), and
   corrupted stored data degrades gracefully.
@@ -284,7 +287,8 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
   sparkles, neural-net dots, mesh-gradient blobs, gradient-filled headlines, emoji icons, or text
   claiming "AI"/"smart"/"adaptive". Dark-first (near-black indigo, one soft light at the top-start
   corner), light mode is "paper lab". Glow is reserved for things that are live or draggable —
-  nothing static glows. Full ban list: `HUB_LLD.md` §7.
+  nothing static glows. Full ban list: `HUB_LLD.md` §7. The one exception to "no infinite
+  motion, no floating elements" is the Paper layer (see "Background" below).
 - **Typography:** IBM Plex Sans Hebrew (headings/body, both languages) + IBM Plex Mono
   (readouts, chips, numbers — tabular, uppercase-Latin-only, never on Hebrew). Subject apps keep
   Rubik; intentional, not inconsistency. Hebrew is never tracked or uppercased.
@@ -299,6 +303,35 @@ saturated badge, and use a per-subject text-safe colour for status, ring and pil
   the subject's own source of truth (a constant in its own code or content), never retyped or
   guessed. (This is how the hub's former Nitrox demo cited `DEFAULT_PLANNING_PPO2`; the same
   applies to any demo you add.)
+
+## Background: the Paper layer (`BACKGROUND_LLD.md`)
+
+**Spec only so far; nothing is built.** Guy asked for the moving background of his glucose
+project here: napkins of graph paper that float and draw themselves, carrying math graphs and
+formulas in Math, motion graphs, vectors and equations in Physics, molecules and formulas in
+Chemistry, a mix on the hub, and rising bubbles in Nitrox. Full design, measurements, content
+catalogs, phases and acceptance: `BACKGROUND_LLD.md`. The rules that are easy to break:
+
+- **It never sits behind text.** It lives in a *stage* band at the top of a home page (and the
+  hub hero) and in the two page *margins* on wide screens. Lesson and quiz pages get margins
+  only, so a lesson on a phone has none. A full-page canvas behind the content was prototyped
+  and rejected: napkins behind the hero copy and lesson prose made them unreadable.
+- **One engine, copied.** `docs/hub/paper-engine.js` is the canonical file; each
+  `apps/<subject>/src/paper/engine.js` is a byte-identical copy. Edit the canonical file, run
+  `node scripts/check-paper-sync.mjs --write`, rebuild every app that has a copy.
+- **Every napkin states a fact** (rule 6). A payload is listed in `BACKGROUND_LLD.md` §10 with
+  its source before it is drawn; an app's payload recomputes its numbers from the subject's own
+  pure functions in `check()`, and a test runs every `check()`. No words on a napkin, only
+  symbols, so nothing is translated or mirrored.
+- **It can always stand still.** One still frame under `prefers-reduced-motion`, Save-Data,
+  weak devices, low battery or slow frames; stopped in a hidden tab and when scrolled away; a
+  pause button whose state is one `localStorage` key, `academy:paper-motion`, shared by the hub
+  and every app.
+- **It is the one exception** to "no infinite animation, no floating elements" in `HUB_LLD.md`
+  §7 and `SUBJECT_APP_SKIN_LLD.md` §7/§10. It has no glow, no parallax and no pointer
+  reaction, and it does not license any other looping decoration.
+- **Nitrox bubbles are Phase 2** and are built only after Guy re-confirms (he invests in Nitrox
+  only if the Israeli Diving Federation partnership happens).
 
 ## How to add a lesson or topic to an existing subject
 
@@ -448,5 +481,7 @@ layout bug. Don't commit temp scripts.
     than this file and may lag (e.g. Math's README still describes the integral-only pilot and an
     old `docs/math` build path) — this file wins; fix them when you touch those apps.
   - The recent history's Claude-authored commits (rule 5).
+- **Specified, not built:** the Paper layer (`BACKGROUND_LLD.md`): Phase 0 engine, then Math,
+  Physics, Chemistry and the hub; Nitrox bubbles gated on Guy's go-ahead.
 - **Not started:** a shared package for the Math/Physics/Chemistry scaffold; Nitrox is
   unchanged by the Bench/dashboard work (it is the reference, by design).

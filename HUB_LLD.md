@@ -317,6 +317,7 @@ What reads as premium/modern to a 15-year-old in 2026 is the look of a **well-li
    live: the hairline cursor, the axis chips under the hero curve (§5.2), the mono readouts.
 7. **Motion with physics, not bounce.** `cubic-bezier(.2,.8,.2,1)`, 180–320 ms. One slow idle
    (the mark breathing, 5 s). No infinite float/bob, no particles, no parallax layers.
+   *One exception, added at the owner's request:* the Paper layer (§7.1, `BACKGROUND_LLD.md`).
 
 ### 3.2 Color tokens (CSS custom properties on `:root`, dark via `[data-theme="dark"]`)
 
@@ -837,6 +838,27 @@ Copy traps:
   everyone", "free" without "pilot/for now", "certified", "AI-powered", any retention or
   efficacy statistic, any fact about the story that isn't on the Nitrox about page
 - mixing Hebrew and English inline; translating EN marketing idioms word-for-word into HE
+
+### 7.1 The one exception: the Paper layer (spec in `BACKGROUND_LLD.md`, not built yet)
+
+Guy asked for the moving background of his glucose project: napkins of graph paper that drift
+and draw a graph, a vector diagram or a molecule with its formula. It loops for as long as it
+is on screen and its napkins float, which the list above forbids ("infinite bobbing/floating
+elements", and §3.1 #7). The exception is this system and nothing else:
+
+- It lives only in a stage band at the top of the hero and in the two page margins from
+  1272 px. No text, panel, tile or control is ever over it, except its own pause button.
+- No glow (§3.1 #5 stands: nothing static glows, and this is not something you can move), no
+  parallax, no pointer reaction, no particles, no page-wide grid. Its graph paper exists only
+  on the napkins.
+- Its inks are the hub's own spectrum hues. A napkin is not painted in a subject's colours.
+- It can be paused, stands still under `prefers-reduced-motion` and on weak or low-battery
+  devices, and stops in a hidden tab.
+- Everything written on a napkin is a correct, sourced formula (`BACKGROUND_LLD.md` §10).
+
+Every other item in this section still applies, to the Paper layer too (no sparkles, no
+gradient text, no emoji, no "AI" lettering) and to everything else on the page without
+exception. Do not cite the Paper layer to justify another looping decoration.
 
 ---
 
