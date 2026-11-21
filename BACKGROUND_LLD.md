@@ -1131,6 +1131,17 @@ bar 5.11, chip 5.97, well 6.27; no-blur fallback pane 5.78, bench 6.20, bar 6.06
 With the first-pass text colours the pane was 3.42 (10 px blur), and 4.44 with a first darkening (L 0.085) at 14 px: the new
 paper tone, edge and shadow cost about 0.17 in worst-pixel luminance against the first pass (0.72 to 0.55), which is why the text had to move further.
 
+**R12.2 Washed-out paper, clearer light cards (2026-11-21).** Owner: the napkin "a little more
+washed out", the cards "a little more translucent". Light tokens only: `--napkin` `#dccff2` to
+`#e7ddf6`, `--napkin-edge` 0.7 to 0.5, `--napkin-shadow` 0.40 to 0.28, `--paper-grid` 0.30 to 0.20,
+`--paper-grid5` 0.50 to 0.34, `--paper-ink-alpha` 1 to 0.75, `--g-pane` 0.50 to 0.40, `--g-bench` 0.64 to 0.56.
+Bar, chip, well, the no-blur fallbacks, blur (14 px) and the glass-only text colours are unchanged. Dark is untouched.
+
+Worst-case contrast, light, same method as R12.1 (real tier classes, 8 seeds x 3 payload sets x 390 and 1440 px), weakest
+of the six text colours: pane frost 4.97 (worst pixel L 0.579), bench 5.61, bar 5.63, chip 6.14, well 6.40; no-blur fallback pane 5.97,
+bench 6.35, bar 6.19. `--ink` and `--ink-2` at least 6.06. The paler paper and fainter ink raised the worst pixel by 0.01-0.03, which
+paid for the lower alphas, so no alpha or text colour had to move back.
+
 ---
 ---
 
