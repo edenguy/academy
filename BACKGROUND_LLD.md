@@ -30,7 +30,7 @@ sync script, the facts rule). Where the two disagree, Revision 2 wins.
 Contents: R0 the direction · R1 decisions · R2 what was measured · R3 the full-page layer ·
 R4 glass and legibility · R5 performance, the quality ladder, calm mode · R6 the wild surface ·
 R7 catalogs and random order · R8 integration into Math · R9 acceptance · R10 phases ·
-R11 risks and cut order.
+R11 risks and cut order · R12 clearer glass (2026-11-21; its alphas supersede R4.1 and R4.2).
 
 ---
 
@@ -1052,6 +1052,84 @@ changed, not a feature removed, until (g):
 
 Never cut: the no-text-on-the-field rule, the measured alphas, the still frame, the button,
 the `check()` tests.
+
+### R12. Clearer glass (2026-11-21)
+
+The owner looked at the Revision 2 build on a phone and asked for the cards to be more
+see-through. The alphas in R4.1 and R4.2 above are the first Revision 2 build and are
+superseded by this table. Every number is one custom property near the top of
+`apps/math/src/styles.css` (`--g-*`, `--g-blur`); "a bit more" or "a bit less" is a one-number change.
+
+| Tier | Light | Dark | Blur | Property |
+|---|---|---|---|---|
+| Pane (`.elev-1`, `.plate`) | 0.50 (was 0.76) | 0.54 (was 0.82) | 18 px | `--g-pane` |
+| Bench, reading sheet | 0.64 (0.86) | 0.64 (0.88) | 18 px | `--g-bench` |
+| Bar | 0.62 (0.74) | 0.62 (0.74) | 18 px | `--g-bar` |
+| Well (`.elev-0`) | 0.90 (0.97) | 0.90 (0.97) | none | `--g-well` |
+| Chip (`.plate-chip`) | 0.86 (0.90) | 0.86 (0.94) | none | `--g-chip` |
+| `clear` pane / bench / bar | 0.84 / 0.88 / 0.90 (0.90 / 0.94 / 0.92) | 0.84 / 0.88 / 0.86 (0.94 / 0.95 / 0.92) | none | `--g-pane-clear`, `--g-bench-clear`, `--g-bar-clear` |
+
+Blur went from 14 to 18 px. Sampling showed little contrast to gain above 18 (worst pixel at
+alpha 0.50: 3.80 at 14 px, 3.94 at 18, 3.97 at 22, against 1.99 with no blur), so the radius
+is chosen for how the napkin looks under the card, not for contrast.
+
+**Stronger text on glass.** The alphas above cannot meet 4.5:1 with the palette's own weakest
+text colours (`--good` and `--muted` are 5.2-5.4:1 on a solid surface). So the four weakest
+colours have a glass-only value, used only while `data-paper` is set and only inside a glass
+tier: light `--muted` `#71608c` to `#675780`, `--good` `#0b7a4f` to `#096c46`, `--critical`
+`#b93232` to `#af2f2f`, text `--accent` `#6250d6` to `#5b4ac8`; dark `--muted` `#9586c0` to
+`#a99eca`, `--accent` `#9085e9` to `#a39bec`, `--critical` `#e66767` to `#ea8989` (dark `--good` unchanged).
+`--muted`, `--good` and `--critical` are redefined on the tier elements, so a `:hover`
+colour still wins; `--accent` is also a fill, so only `.text-accent` is overridden. No text
+halo was needed.
+
+**Worst-case contrast, R2.2's method on the real tier classes** (probe element carrying the
+real class, `backdrop-filter` and fill over the field; 8 seeds x 3 payload sets (shuffled
+catalog, every napkin M1, every napkin M2) x 390 and 1440 px; worst pixel against each of
+`--ink`, `--ink-2`, `--muted`, `--accent`, `--good`, `--critical`). Weakest text colour:
+
+| Tier | Light frost | Light clear | Dark frost | Dark clear |
+|---|---|---|---|---|
+| Pane / plate | 4.71 | 4.82 | 4.62 | 4.75 |
+| Bench / reading sheet | 5.14 | 5.17 | 5.07 | 5.21 |
+| Bar | 4.62 | 4.39 at 0.86; about 4.7 at the shipped 0.90 (backdrop-capture model, not re-sampled with the real class) | 5.59 | 5.78 |
+| Chip (no blur) | 4.99 | 4.99 | 5.01 | 5.01 |
+| Well alone on the field | 4.89 | 4.89 | 5.09 | 5.09 |
+
+`--ink` and `--ink-2` are at least 6.64:1 everywhere. The light bar's `clear` alpha is 0.90
+and not 0.86 for that reason. Pane and bar margins are thin (0.1-0.2 over 4.5): going lower needs another palette step and a re-sample. Real-page sampling (every text box on home
+and two lessons, text made transparent, background box against computed colour, 1624 boxes at
+390 and 1440 px, both themes) finds no new failure; the groups it still lists (text on filled
+buttons, the lesson signature's SVG text, boxes half under the fixed feedback button) are the
+same before and after and are not glass. Three near-misses before (4.18, 4.29, 4.47:1 for
+`--accent` text on a pane) pass after.
+
+**Frame rate** (headless software rendering, governor off, L0, 4 s after 3 s warm-up, mean of
+two runs, home / lesson, unthrottled and CPU /4): 390 px before 58 / 53 and 14 / 14, after 55 / 53 and 14 / 15;
+1440 px before 28 / 21 and 12 / 12, after 30 / 20 and 14 / 12. No change outside run-to-run noise (about +/-3 fps).
+A sweep at 14, 20 and 24 px showed the same: the canvas, not the blur, dominates. The ladder
+is unchanged: at /4 the governor stepped L0 to L1 to L2 to L3 in 18 s, and L2 is a clearly
+different level (no blur, pane 0.84 against 0.50). Calm (about 20 draws a second) and still (0) behave as before.
+
+**R12.1 Light mode, second pass (2026-11-21).** After the first pass the light cards still
+looked almost like main at 390 px: a white napkin behind a white card shows nothing. Alphas are
+unchanged; only light-theme tokens moved so the napkin separates from the glass:
+
+- `--napkin` `#ffffff` to `#dccff2` (lavender paper, darker than the page and the glass);
+  `--glass-rgb` `255,255,255` to `250,245,255` (faint lavender, lighter than the paper).
+- `--napkin-edge` 0.5 to 0.7, `--napkin-shadow` 0.26 to 0.40, `--paper-grid` 0.17 to 0.30,
+  `--paper-grid5` 0.36 to 0.50, `--paper-ink-alpha` 0.95 to 1. Dark keeps 0.95 (set explicitly now, it used to inherit).
+- Light `--g-blur` 14 px (dark stays 18): at 10 px the grid and edge read plainly through a card, at 18 they are soft; 14 is the compromise.
+- Light glass-only text colours darkened again, because the darker paper lowers the worst
+  pixel: `--muted-g` `#55486a`, `--accent-g` `#4b3da7`, `--good-g` `#065a39`, `--critical-g` `#922525`
+  (all about L 0.076). Muted is now close to ink-2 (`#4a3a63`); the hierarchy rests on size and weight.
+- Engine untouched (tokens only); `check-paper-sync.mjs` passes.
+
+Worst-case contrast, light, real tier classes, 8 seeds x 3 payload sets x 390 and 1440 px,
+weakest of the six text colours: pane frost 4.76 (worst pixel L 0.551; this replaces the 4.71 above), bench 5.51,
+bar 5.11, chip 5.97, well 6.27; no-blur fallback pane 5.78, bench 6.20, bar 6.06. `--ink` and `--ink-2` at least 5.79.
+With the first-pass text colours the pane was 3.42 (10 px blur), and 4.44 with a first darkening (L 0.085) at 14 px: the new
+paper tone, edge and shadow cost about 0.17 in worst-pixel luminance against the first pass (0.72 to 0.55), which is why the text had to move further.
 
 ---
 ---
