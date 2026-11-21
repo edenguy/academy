@@ -14,7 +14,8 @@
     "language": "Language",
     "theme": "Theme",
     "music": "Calm background music",
-    "paperPause": "Pause background motion",
+    "paperCalm": "Calm the background motion",
+    "paperStop": "Stop background motion",
     "paperPlay": "Play background motion"
   },
   "home": {

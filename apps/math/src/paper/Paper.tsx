@@ -1,21 +1,20 @@
 /**
- * The Paper layer in Math Academy: floating napkins of graph paper, with a graph or a formula
- * on each, in a stage band on the home page and in the page margins on wide screens.
- * Spec: BACKGROUND_LLD.md §3, §8.5, §9 and §11.1. Decoration only: `aria-hidden`, never clickable,
- * never behind text.
+ * The Paper layer in Math Academy, Revision 2: one fixed full-viewport canvas of floating napkins
+ * of graph paper behind every page, with a graph or a formula on each. Every piece of text sits on
+ * glass or a solid surface, never on the field (BACKGROUND_LLD.md R3, R4, R5.4, R8.3).
+ * Decoration only: `aria-hidden`, never clickable.
  *
  * The engine (./engine.js) is a byte-identical copy of docs/hub/paper-engine.js and defines the
  * global `AcademyPaper`. It reads nothing from the progress store, so it never waits for hydration.
  */
 import './engine.js';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { PAYLOADS } from './payloads';
 
-/** Which still frame the stage opens on: chosen by eye from seeds 0-9 for a spread on both phone and desktop widths. */
-const STAGE_SEED = 6;
+/** Which napkins the field opens on: chosen by eye from seeds 0-9 for a spread at 390 and 1440 px (BACKGROUND_LLD.md R8.3). */
+export const FIELD_SEED = 3;
 const FALLBACK_FONT = "'JetBrains Mono Variable', ui-monospace, monospace";
 
 function paperFont(): string {
@@ -26,86 +25,48 @@ function paperFont(): string {
   }
 }
 
-/** Dev builds only: `?paperOnly=<n>` makes every napkin carry payload n (BACKGROUND_LLD.md §14 item 5). */
-function paperOnly(): number | undefined {
+/** Dev builds only: `?paperOnly=<n>` makes every napkin carry payload n, `?paperSeed=<n>` picks the seed, `?paperLevel=<0-5>` starts at that quality level. */
+function devParam(name: string): number | undefined {
   if (!import.meta.env.DEV) return undefined;
-  const n = Number(new URLSearchParams(window.location.search).get('paperOnly'));
-  return Number.isInteger(n) && n >= 0 ? n : undefined;
+  const raw = new URLSearchParams(window.location.search).get(name);
+  const n = Number(raw);
+  return raw !== null && Number.isInteger(n) && n >= 0 ? n : undefined;
 }
 
-function useMedia(query: string): boolean {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const on = () => setMatches(mq.matches);
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, [query]);
-  return matches;
-}
-
-/** The pause / play button (WCAG 2.2.2). Shown only while the engine can move at all (§8.3). */
-function PaperToggle({ placement }: { placement: 'stage' | 'fixed' }) {
-  const { t } = useTranslation();
-  const snap = useSyncExternalStore(AcademyPaper.onChange, () => `${AcademyPaper.motion()}|${AcademyPaper.canMove()}`);
-  const [motion, can] = snap.split('|');
-  if (can !== 'true') return null;
-  const paused = motion === 'off';
-  const label = t(paused ? 'settings.paperPlay' : 'settings.paperPause');
-  return (
-    <button
-      type="button"
-      className="paper-toggle"
-      data-placement={placement}
-      aria-pressed={paused}
-      aria-label={label}
-      title={label}
-      onClick={() => AcademyPaper.setMotion(paused ? 'on' : 'off')}
-    >
-      <Icon name={paused ? 'play' : 'pause'} size={16} />
-    </button>
-  );
-}
-
-/** The band at the top of the home page: two napkins on a phone, three from 1024 px. */
-export function PaperStage() {
+/** The field: mounted once for the whole app, behind everything. */
+export function PaperField() {
   const ref = useRef<HTMLDivElement>(null);
-  const wide = useMedia('(min-width: 1024px)');
   useEffect(() => {
     const host = ref.current;
     if (!host) return;
-    const handle = AcademyPaper.mount(host, { flow: 'x', payloads: PAYLOADS, count: wide ? 3 : 2, font: paperFont(), seed: STAGE_SEED, only: paperOnly() });
+    const level = devParam('paperLevel');
+    if (level !== undefined) AcademyPaper._setLevel(level);
+    const handle = AcademyPaper.mount(host, { flow: 'page', payloads: PAYLOADS, font: paperFont(), seed: devParam('paperSeed') ?? FIELD_SEED, only: devParam('paperOnly') });
     return () => handle.destroy();
-  }, [wide]);
-  return (
-    <div ref={ref} className="paper-stage">
-      <PaperToggle placement="stage" />
-    </div>
-  );
+  }, []);
+  return <div ref={ref} className="paper-field" />;
 }
 
-/** One napkin in each page margin, only while a margin is at least 96 px wide (from 1216 px). */
-export function PaperGutters() {
-  const { pathname } = useLocation();
-  const left = useRef<HTMLDivElement>(null);
-  const right = useRef<HTMLDivElement>(null);
-  const wide = useMedia('(min-width: 1216px)');
-  useEffect(() => {
-    if (!wide || !left.current || !right.current) return;
-    const only = paperOnly();
-    const font = paperFont();
-    const handles = [
-      AcademyPaper.mount(left.current, { flow: 'y', payloads: PAYLOADS, count: 1, font, seed: 1, only }),
-      AcademyPaper.mount(right.current, { flow: 'y', payloads: PAYLOADS, count: 1, font, seed: 4, only }),
-    ];
-    return () => handles.forEach((h) => h.destroy());
-  }, [wide]);
+const NEXT = { on: 'calm', calm: 'off', off: 'on' } as const;
+const LABEL = { on: 'settings.paperCalm', calm: 'settings.paperStop', off: 'settings.paperPlay' } as const;
+const ICON = { on: 'pause', calm: 'calm', off: 'play' } as const;
+
+/** The background-motion button (WCAG 2.2.2): moving, calm, still, in that order. Shown only while the engine can move at all (§8.3). Its label names what a press will do. */
+export function PaperToggle() {
+  const { t } = useTranslation();
+  const snap = useSyncExternalStore(AcademyPaper.onChange, () => `${AcademyPaper.motion()}|${AcademyPaper.canMove()}`);
+  const [motion, can] = snap.split('|') as [keyof typeof NEXT, string];
+  if (can !== 'true') return null;
+  const label = t(LABEL[motion]);
   return (
-    <>
-      <div ref={left} className="paper-gutter" data-side="left" />
-      <div ref={right} className="paper-gutter" data-side="right" />
-      {wide && pathname !== '/' && <PaperToggle placement="fixed" />}
-    </>
+    <button
+      type="button"
+      className="relative inline-flex items-center justify-center w-9 h-9 rounded-pill text-ink-2 hover:text-ink transition-colors after:content-[''] after:absolute after:-inset-1"
+      aria-label={label}
+      title={label}
+      onClick={() => AcademyPaper.setMotion(NEXT[motion])}
+    >
+      <Icon name={ICON[motion]} size={17} />
+    </button>
   );
 }

@@ -1,12 +1,12 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { clsx } from 'clsx';
 import { Icon } from '@/components/ui/Icon';
 import { Logo } from '@/components/Logo';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { AchievementToast } from './AchievementToast';
-import { PaperGutters } from '@/paper/Paper';
+import { PaperField, PaperToggle } from '@/paper/Paper';
 import { useAmbient } from '@/audio/useAmbient';
 import { useLocale, useThemeToggle } from './providers';
 
@@ -16,7 +16,8 @@ function QuickToggles() {
   const { theme, toggleTheme } = useThemeToggle();
   const { enabled: musicOn, toggle: toggleMusic } = useAmbient();
   return (
-    <div className="elev-0 flex items-center gap-0.5 rounded-pill p-1">
+    <div className="elev-0 flex shrink-0 items-center gap-0.5 rounded-pill p-1">
+      <PaperToggle />
       <button
         type="button"
         onClick={toggleMusic}
@@ -54,33 +55,14 @@ function QuickToggles() {
 export function Shell() {
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const headerRef = useRef<HTMLElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [pathname]);
 
-  // Transparent top bar over the page until scrolled — toggled via an IntersectionObserver on
-  // a 1px sentinel instead of a scroll listener.
-  useEffect(() => {
-    const header = headerRef.current;
-    const sentinel = sentinelRef.current;
-    if (!header || !sentinel) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry) header.dataset.scrolled = entry.isIntersecting ? 'false' : 'true';
-      },
-      { threshold: 0 },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div className="min-h-dvh flex flex-col">
-      <PaperGutters />
+      <PaperField />
       <a
         href="#content"
         onClick={(e) => {
@@ -95,16 +77,11 @@ export function Shell() {
       >
         {t('app.skipToContent')}
       </a>
-      <div ref={sentinelRef} className="h-px" />
-      <header
-        ref={headerRef}
-        data-scrolled="false"
-        className="sticky top-0 z-30 border-b border-transparent transition-[background-color,border-color] duration-[220ms] data-[scrolled=true]:bg-bg/80 data-[scrolled=true]:backdrop-blur-xl data-[scrolled=true]:border-line"
-      >
+      <header className="glass-bar sticky top-0 z-30">
         <div className="flex items-center justify-between px-4 md:px-8 h-[60px] max-w-5xl w-full mx-auto">
-          <NavLink to="/" className="flex items-center gap-2.5">
+          <NavLink to="/" className="flex min-w-0 items-center gap-2.5">
             <Logo size={40} />
-            <div className="font-display font-bold text-[17px] text-ink leading-tight">{t('app.name')}</div>
+            <div className="min-w-0 truncate font-display font-bold text-[17px] text-ink leading-tight">{t('app.name')}</div>
           </NavLink>
           <QuickToggles />
         </div>

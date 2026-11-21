@@ -49,7 +49,7 @@ export function AchievementToast() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? undefined : { opacity: 0, y: -10, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-            className="pointer-events-auto elev-1 px-4 py-3 flex items-center gap-3 max-w-sm shadow-[0_12px_40px_-12px_var(--glow)]"
+            className="pointer-events-auto elev-1 solid px-4 py-3 flex items-center gap-3 max-w-sm shadow-[0_12px_40px_-12px_var(--glow)]"
             role="status"
           >
             <span className="grid place-items-center w-10 h-10 rounded-pill bg-accent-2-soft text-accent-2 shrink-0">
