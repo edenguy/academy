@@ -1111,9 +1111,25 @@ A sweep at 14, 20 and 24 px showed the same: the canvas, not the blur, dominates
 is unchanged: at /4 the governor stepped L0 to L1 to L2 to L3 in 18 s, and L2 is a clearly
 different level (no blur, pane 0.84 against 0.50). Calm (about 20 draws a second) and still (0) behave as before.
 
-What still looks weak: in light mode a white napkin behind a white card shows only through its
-grid, ink, edge and shadow, so the effect is clearly less than in dark mode. The next lever is
-a faint tint in `--glass-rgb`, not a lower alpha.
+**R12.1 Light mode, second pass (2026-11-21).** After the first pass the light cards still
+looked almost like main at 390 px: a white napkin behind a white card shows nothing. Alphas are
+unchanged; only light-theme tokens moved so the napkin separates from the glass:
+
+- `--napkin` `#ffffff` to `#dccff2` (lavender paper, darker than the page and the glass);
+  `--glass-rgb` `255,255,255` to `250,245,255` (faint lavender, lighter than the paper).
+- `--napkin-edge` 0.5 to 0.7, `--napkin-shadow` 0.26 to 0.40, `--paper-grid` 0.17 to 0.30,
+  `--paper-grid5` 0.36 to 0.50, `--paper-ink-alpha` 0.95 to 1. Dark keeps 0.95 (set explicitly now, it used to inherit).
+- Light `--g-blur` 14 px (dark stays 18): at 10 px the grid and edge read plainly through a card, at 18 they are soft; 14 is the compromise.
+- Light glass-only text colours darkened again, because the darker paper lowers the worst
+  pixel: `--muted-g` `#55486a`, `--accent-g` `#4b3da7`, `--good-g` `#065a39`, `--critical-g` `#922525`
+  (all about L 0.076). Muted is now close to ink-2 (`#4a3a63`); the hierarchy rests on size and weight.
+- Engine untouched (tokens only); `check-paper-sync.mjs` passes.
+
+Worst-case contrast, light, real tier classes, 8 seeds x 3 payload sets x 390 and 1440 px,
+weakest of the six text colours: pane frost 4.76 (worst pixel L 0.551; this replaces the 4.71 above), bench 5.51,
+bar 5.11, chip 5.97, well 6.27; no-blur fallback pane 5.78, bench 6.20, bar 6.06. `--ink` and `--ink-2` at least 5.79.
+With the first-pass text colours the pane was 3.42 (10 px blur), and 4.44 with a first darkening (L 0.085) at 14 px: the new
+paper tone, edge and shadow cost about 0.17 in worst-pixel luminance against the first pass (0.72 to 0.55), which is why the text had to move further.
 
 ---
 ---
