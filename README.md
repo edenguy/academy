@@ -16,7 +16,8 @@ academy/                              (this repo)
 │   ├── nitrox/                         source for Nitrox Academy (enriched-air diving theory)
 │   ├── math/                           source for Math Academy
 │   ├── physics/                        source for Physics Academy
-│   └── chemistry/                      source for Chemistry Academy
+│   ├── chemistry/                      source for Chemistry Academy
+│   └── codegraph/                      source for Code Graph Academy (unlisted, like nitrox: not on the hub)
 └── docs/                              SERVED by GitHub Pages — the whole site lives here
     ├── index.html                      landing page, listing every subject
     ├── hub/                             the hub's OWN assets only (favicon.svg, social/) — nothing a subject owns
@@ -24,7 +25,8 @@ academy/                              (this repo)
         ├── nitrox/                       built output of apps/nitrox, at /academy/subjects/nitrox/
         ├── math/                         built output of apps/math, at /academy/subjects/math/
         ├── physics/                      built output of apps/physics, at /academy/subjects/physics/
-        └── chemistry/                    built output of apps/chemistry, at /academy/subjects/chemistry/
+        ├── chemistry/                    built output of apps/chemistry, at /academy/subjects/chemistry/
+        └── codegraph/                    built output of apps/codegraph, at /academy/subjects/codegraph/ (unlisted)
 ```
 
 A subject never touches another subject's code; what's shared (a UI primitive, the

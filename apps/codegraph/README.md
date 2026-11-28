@@ -1,68 +1,48 @@
-# Chemistry Academy — pilot
+# Code Graph Academy — pilot
 
-Playful, bilingual (Hebrew/English) interactive lessons. This pilot is one chapter,
-structure and bonding: six lessons, each with something you drag. Published at
-<https://edenguy.github.io/academy/subjects/chemistry/>.
+Seven bilingual (Hebrew first, English second) lessons on how a coding agent finds its way around
+code it cannot read in full: what a code graph is, the three kinds and their blind spots, whether
+a standard exists, and what the topology looks like when an organization has hundreds of repos and
+thousands of developers. Live at <https://edenguy.github.io/academy/subjects/codegraph/>.
 
-The badge on the home page is the chapter name only. It does not say "5-unit" and it does
-not name a grade. Schools split this chapter across different years, and no Ministry
-chemistry document is cited in this repo. The six lessons follow an outline supplied for
-that chapter. They are a study aid, not a certified course.
+**Unlisted, like Nitrox.** It is not a school subject, so the hub does not show it and no other
+subject links to it. Its URL must keep working; do not add it to `docs/hub/hub.js` (`SOURCES`)
+or to the hub's tiles unless Guy asks.
 
-Later chapters, not built and not shown in the app: the atom and the periodic table,
-stoichiometry, redox, acids and bases, energy and rate, food chemistry, and the inquiry lab.
+The course is **generic**. It describes no particular company, and the organization in the
+examples (500 repos, 20,000 developers) is made up: every explorer that shows those numbers says so.
+Every claim is on the verified-facts table in `CODEGRAPH_LLD.md` §2 (repo root); a claim that is not
+on that table is not taught.
 
 ## Commands
 
 ```bash
-cd apps/chemistry
-npm install
-npm run dev          # http://localhost:5173/academy/subjects/chemistry/
+cd apps/codegraph
+npm install          # or `npm ci`
+npm run dev          # http://localhost:5173/academy/subjects/codegraph/
 npm run typecheck
 npm test
-npm run build        # writes ../../docs/subjects/chemistry (commit it)
-npm run check        # typecheck + test + build, in one shot
+npm run build        # writes ../../docs/subjects/codegraph (commit it)
+npm run check        # typecheck + test + build
+npm run export:md    # YAML -> bilingual Markdown for review (docs/review/, not committed)
+npm run export:pdf
 ```
 
-## Content model: everything is YAML
+## Where things are
 
-Lesson text lives in `src/content/lessons/*.yaml`, one file per lesson. Each field is
-bilingual: `{ en: "...", he: "..." }`. UI chrome is in `src/i18n/locales/{en,he}.json`.
-
-YAML is validated by the Zod schema in `src/content/schema.ts` at load time. The chemistry
-itself — charges, the dipole sum, whether a hydrogen bond is in range, the material-probe
-table — lives in `src/chemistry/` and is unit-tested. Components do not contain those rules.
-
-Inline lesson text supports `**bold**`, `_italic_`, `{{NaCl}}` (a formula, left-to-right),
-and `[[180]]` (a number, same treatment). See `src/components/ui/Rich.tsx`.
-
-## Content review workflow
-
-```bash
-npm run export:md    # writes docs/review/chemistry-lessons.{he,en}.md
-npm run export:pdf   # same content as a printable PDF (needs Playwright's Chromium)
-```
-
-YAML stays the source of truth. The export is a one-way copy for a reader to mark up.
-
-## Architecture
-
-| Layer | Path | Rule |
+| Layer | Path | Notes |
 |---|---|---|
-| Chemistry | `src/chemistry/` | Pure functions only. Unit-tested. |
-| Content | `src/content/lessons/*.yaml` + `schema.ts` + `topics.ts` | YAML, Zod-validated at load. Never imports React. |
-| Components | `src/components/` | `ChemistryExplorer` dispatches on `explorers[].kind`. |
-| Features | `src/features/` | `home/HomePage`, `lesson/LessonPage`. `HashRouter`. |
-| Progress | `src/progress/` | IndexedDB key `academy-chemistry:v1` via idb-keyval. A visit is stored only after hydration, and `mergePersisted` keeps it. Math and Physics do the same. |
-| i18n | `src/i18n/locales/{en,he}.json` | UI chrome only. |
+| Lessons | `src/content/lessons/*.yaml` | Bilingual, Zod-validated at load (`src/content/schema.ts`). Identifiers go in `{{ }}`. |
+| The toy shop | `src/graph/toy.ts` | 4 files, 28 lines, 11 nodes, 10 edges: the source of truth for lessons 1 to 3 and 5. |
+| Pure functions | `src/graph/*.ts` | Search, graph walks, the four ways to answer, staleness, scale, cadence, topology, access, landscape. Every table in `CODEGRAPH_LLD.md` §4 is a vitest case. |
+| Explorers | `src/components/explorers/` | Nine kinds. Components contain no formulas. The topology, graph and access diagrams have a wide and a narrow layout chosen by container width. |
+| Strings | `src/i18n/locales/{en,he}.json` | UI chrome and explorer labels; lesson prose lives in the YAML. |
+| Progress | `src/progress/` | IndexedDB key `academy-codegraph:v1`. The hub does not read it. |
 
-Palette: amber `#e0922a` → teal `#14998a` on the favicon. Text uses the darker amber
-`#8a4e08`, because the bright amber fails as text on the paper. Tailwind v4, logical
-spacing (`ms-`, `me-`, `ps-`, `pe-`). `.num` / `.sci` keep numbers and formulas
-left-to-right inside Hebrew.
+## Open items
 
-## Status
-
-Pilot: 6 lessons, one topic. Progress is on this browser only. The feedback widget stays
-inert until `REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-chemistry` in
-`src/components/FeedbackWidget.tsx` is a real Web3Forms key. No per-subject share card.
+- The feedback form is inert until a real Web3Forms key replaces
+  `REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-codegraph` in `src/components/FeedbackWidget.tsx`
+  (create it with `edenguy+academy-codegraph@gmail.com`).
+- No share cards.
+- The source links in the landscape lesson (`CODEGRAPH_LLD.md` §2) need a manual check once a year.
