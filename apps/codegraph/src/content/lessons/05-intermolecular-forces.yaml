@@ -1,0 +1,92 @@
+id: intermolecular-forces
+topic: structure-and-bonding
+order: 5
+
+title:
+  en: "Between molecules, a weaker pull"
+  he: "בין מולקולות, משיכה חלשה יותר"
+
+subtitle:
+  en: "The line inside water stays solid. The link between waters is dashed."
+  he: "הקו בתוך המים נשאר רציף. הקשר בין מולקולות המים מקווקו."
+
+intro:
+  - en: >-
+      The bond **inside** a water molecule is covalent: each hydrogen shares a pair with
+      the oxygen. That line stays solid no matter how you drag. Forces **between** molecules
+      are a different thing, and they are weaker than that covalent bond.
+    he: >-
+      הקשר **בתוך** מולקולת מים הוא קוולנטי: כל מימן חולק זוג עם החמצן. הקו הזה נשאר רציף
+      לא משנה איך גוררים. כוחות **בין** מולקולות הם דבר אחר, והם חלשים יותר מהקשר הקוולנטי הזה.
+  - en: >-
+      Every molecule attracts its neighbors a little. Those weak pulls are van der Waals
+      forces. A **hydrogen bond** is the stronger case of that family in this lesson: a
+      hydrogen that is already bonded to oxygen reaches toward the oxygen of another water
+      molecule. Drag the second molecule until one of its hydrogens points at the other
+      oxygen and sits close. A dashed line appears. Turn it away, or pull it far, and the
+      line goes.
+    he: >-
+      כל מולקולה מושכת קצת את שכנותיה. המשיכות החלשות האלה הן כוחות ואן דר ואלס. **קשר
+      מימן** הוא המקרה החזק יותר במשפחה הזו בשיעור הזה: מימן שכבר קשור לחמצן נמשך אל החמצן
+      של מולקולת מים אחרת. גררו את המולקולה השנייה עד שאחד המימנים שלה פונה אל החמצן השני
+      וקרוב אליו. מופיע קו מקווקו. מסובבים אותו הצידה, או מרחיקים, והקו נעלם.
+  - en: >-
+      Boiling is these between-molecule links letting go, while the covalent bonds inside
+      each molecule stay. Hydrogen bonds are why water hangs on to its neighbors more
+      stubbornly than a similar molecule that cannot make them. No boiling temperature is
+      shown.
+    he: >-
+      רתיחה היא הקשרים שבין המולקולות שמרפים, בזמן שהקשרים הקוולנטיים בתוך כל מולקולה
+      נשארים. קשרי מימן הם הסיבה שמים נאחזים בשכנים שלהם בעקשנות רבה יותר ממולקולה דומה
+      שלא יכולה ליצור אותם. לא מוצגת טמפרטורת רתיחה.
+
+explorers:
+  - kind: waterPair
+    x: 1.9
+    y: 0
+    rotation: 180
+    caption:
+      en: "Drag the second water. A dashed line means a hydrogen bond."
+      he: "גררו את מולקולת המים השנייה. קו מקווקו הוא קשר מימן."
+
+keyPoints:
+  - en: "Inside one water molecule the O–H links are covalent. Between water molecules the pull is weaker."
+    he: "בתוך מולקולת מים אחת קשרי O–H הם קוולנטיים. בין מולקולות מים המשיכה חלשה יותר."
+  - en: "Van der Waals forces are the weak attraction between molecules. A hydrogen bond needs a hydrogen already bonded to oxygen (or nitrogen, or fluorine) pointing at such an atom on a neighbor."
+    he: "כוחות ואן דר ואלס הם המשיכה החלשה בין מולקולות. קשר מימן צריך מימן שכבר קשור לחמצן (או לחנקן, או לפלואור) ופונה לאטום כזה אצל השכן."
+  - en: "Boiling lets the links between molecules go. It does not break the covalent bonds inside them. No temperature is shown here."
+    he: "רתיחה מרפה את הקשרים שבין המולקולות. היא לא שוברת את הקשרים הקוולנטיים שבתוכן. לא מוצגת כאן טמפרטורה."
+
+quiz:
+  - type: mcq
+    id: q1-inside
+    prompt:
+      en: "The solid line between O and H inside one water molecule is:"
+      he: "הקו הרציף בין O ל-H בתוך מולקולת מים אחת הוא:"
+    choices:
+      - en: "A covalent bond, a shared pair"
+        he: "קשר קוולנטי, זוג משותף"
+      - en: "A hydrogen bond"
+        he: "קשר מימן"
+      - en: "A van der Waals force"
+        he: "כוח ואן דר ואלס"
+    correctIndex: 0
+    explanation:
+      en: "Hydrogen bonds and van der Waals forces are between molecules. Inside the molecule, O and H share a pair."
+      he: "קשרי מימן וכוחות ואן דר ואלס הם בין מולקולות. בתוך המולקולה, O ו-H חולקים זוג."
+  - type: mcq
+    id: q2-between
+    prompt:
+      en: "When does the dashed line between two water molecules appear?"
+      he: "מתי מופיע הקו המקווקו בין שתי מולקולות מים?"
+    choices:
+      - en: "Whenever the two oxygens exist, at any distance"
+        he: "בכל פעם ששני החמצנים קיימים, בכל מרחק"
+      - en: "When a hydrogen of one points at the oxygen of the other, and is close"
+        he: "כשמימן של אחת פונה אל החמצן של השנייה, והוא קרוב"
+      - en: "Only after the covalent bond inside a molecule breaks"
+        he: "רק אחרי שהקשר הקוולנטי בתוך מולקולה נשבר"
+    correctIndex: 1
+    explanation:
+      en: "The dashed line is the hydrogen bond. It needs the hydrogen pointing at the neighboring oxygen, within the reach defined in the lesson's model. Pull them apart or turn the hydrogen away and it disappears."
+      he: "הקו המקווקו הוא קשר המימן. הוא צריך שהמימן יפנה אל החמצן השכן, בתוך הטווח שמוגדר במודל של השיעור. מרחיקים אותם או מסובבים את המימן, והוא נעלם."

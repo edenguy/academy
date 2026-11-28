@@ -1,0 +1,84 @@
+id: ionic-bond
+topic: structure-and-bonding
+order: 1
+
+title:
+  en: "Ionic bond: a metal hands an electron over"
+  he: "קשר יוני: מתכת מוסרת אלקטרון"
+
+subtitle:
+  en: "Charges appear, then a lattice — and the solid does not conduct"
+  he: "מופיעים מטענים, ואז סריג — והמוצק לא מוליך"
+
+intro:
+  - en: >-
+      A metal atom and a nonmetal atom do not share. The metal **gives electrons away**,
+      and the nonmetal **takes them**. What is left is a positive ion and a negative ion.
+      They attract. That attraction is the ionic bond.
+    he: >-
+      אטום של מתכת ואטום של אל-מתכת לא חולקים. המתכת **מוסרת אלקטרונים**, והאל-מתכת
+      **מקבלת אותם**. מה שנשאר הוא יון חיובי ויון שלילי. הם נמשכים. המשיכה הזו היא הקשר היוני.
+  - en: >-
+      The lesson builds only two formulas, from a fixed charge table. Sodium loses one
+      electron and chlorine gains it: {{NaCl}}. Magnesium loses two, so two chlorines are
+      needed: {{MgCl2}}. The charges in the formula add up to zero.
+    he: >-
+      השיעור בונה רק שתי נוסחאות, מטבלת מטענים קבועה. נתרן מוסר אלקטרון אחד וכלור מקבל אותו:
+      {{NaCl}}. מגנזיום מוסר שניים, ולכן צריך שני אטומי כלור: {{MgCl2}}. המטענים בנוסחה
+      מסתכמים באפס.
+  - en: >-
+      In the **solid**, the ions sit in a lattice and cannot travel, so the solid does not
+      conduct. **Melt** it, or **dissolve** it, and the ions are free to move. Then it conducts.
+    he: >-
+      ב**מוצק** היונים יושבים בסריג ולא יכולים לנוע, ולכן המוצק לא מוליך. **מתיכים** אותו,
+      או **ממיסים** אותו, והיונים חופשיים לנוע. אז הוא מוליך.
+
+explorers:
+  - kind: ionTransfer
+    pair: na-cl
+    state: solid
+    caption:
+      en: "Drag the electron across. Switch the pair, then the state."
+      he: "גררו את האלקטרון. החליפו זוג, ואז את המצב."
+
+keyPoints:
+  - en: "A positive ion and a negative ion attract. That attraction is the ionic bond, and the ions pack into a lattice."
+    he: "יון חיובי ויון שלילי נמשכים. המשיכה הזו היא הקשר היוני, והיונים נארזים בסריג."
+  - en: "{{NaCl}} needs one electron moved. {{MgCl2}} needs two, so the charges still cancel."
+    he: "ב-{{NaCl}} מעבירים אלקטרון אחד. ב-{{MgCl2}} מעבירים שניים, והמטענים עדיין מתאזנים."
+  - en: "An ionic solid does not conduct. The melt and the solution do, because the ions can move."
+    he: "מוצק יוני לא מוליך. ההתכה והתמיסה כן, כי היונים יכולים לנוע."
+
+quiz:
+  - type: mcq
+    id: q1-solid-conduct
+    prompt:
+      en: "Solid sodium chloride is a lattice of ions. Does that solid conduct electricity?"
+      he: "נתרן כלורי מוצק הוא סריג של יונים. האם המוצק הזה מוליך חשמל?"
+    choices:
+      - en: "No. The ions are stuck in place."
+        he: "לא. היונים תקועים במקום."
+      - en: "Yes. Any substance made of ions conducts, even as a solid."
+        he: "כן. כל חומר שעשוי מיונים מוליך, גם כמוצק."
+      - en: "Yes, but only if the crystal is cold."
+        he: "כן, אבל רק אם הגביש קר."
+    correctIndex: 0
+    explanation:
+      en: "Conduction here needs ions that can travel. In the solid they cannot. Melt or dissolve the lattice and they can."
+      he: "הולכה כאן צריכה יונים שיכולים לנוע. במוצק הם לא יכולים. מתיכים או ממיסים את הסריג, ואז הם יכולים."
+  - type: mcq
+    id: q2-mgcl2
+    prompt:
+      en: "Magnesium loses two electrons. Chlorine gains one. Which formula balances?"
+      he: "מגנזיום מוסר שני אלקטרונים. כלור מקבל אחד. איזו נוסחה מאוזנת?"
+    choices:
+      - en: "{{MgCl}}"
+        he: "{{MgCl}}"
+      - en: "{{MgCl2}}"
+        he: "{{MgCl2}}"
+      - en: "{{Mg2Cl}}"
+        he: "{{Mg2Cl}}"
+    correctIndex: 1
+    explanation:
+      en: "One {{Mg^2+}} needs two {{Cl^-}} so the charges add to zero. That is {{MgCl2}}."
+      he: "יון {{Mg^2+}} אחד צריך שני יוני {{Cl^-}} כדי שהמטענים יסתכמו באפס. זו הנוסחה {{MgCl2}}."
