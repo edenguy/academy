@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Chemistry Academy",
+    "name": "Code Graph Academy",
     "unofficial": "An independent, unofficial study tool",
     "skipToContent": "Skip to content"
   },
@@ -18,8 +18,8 @@
   "home": {
     "eyebrowNew": "New pilot",
     "heroTitle": "Come see",
-    "heroTitle2": "what holds matter together",
-    "heroBody": "Drag an electron, a bond angle, or a second water molecule, and watch the bond respond. Six lessons on structure and bonding.",
+    "heroTitle2": "how a coding agent finds its way",
+    "heroBody": "Seven lessons with a live simulation: what a code graph is, which kinds exist, whether there is a standard, and what it all looks like in an organization of hundreds of repos and thousands of developers. No prior knowledge needed.",
     "lessonsTitle": "Lessons",
     "syllabusTitle": "Syllabus",
     "syllabusLead": "What this course covers. A lesson you already finished is marked done.",
@@ -30,10 +30,11 @@
     "done": "Done",
     "questionsCount": "{{count}} practice questions",
     "startAria": "Start: {{title}}",
-    "reviewAria": "Review: {{title}}"
+    "reviewAria": "Review: {{title}}",
+    "curriculumNote": "The course teaches general ideas. It describes no particular company, and the organization in the examples is made up."
   },
   "hero": {
-    "signatureHint": "Slide your finger along the graph"
+    "signatureHint": "Drag to widen the blast radius"
   },
   "dashboard": {
     "progressTitle": "Your progress",
@@ -52,54 +53,39 @@
     "upNext": "Up next"
   },
   "achievements": {
-    "first-lesson": { "title": "First lesson", "body": "You completed your first lesson." },
-    "topic-complete": { "title": "Structure and bonding, done", "body": "You completed every lesson in this chapter." },
-    "ten-correct": { "title": "Ten correct", "body": "You answered 10 quiz questions correctly." },
-    "all-complete": { "title": "Chemistry Academy, complete", "body": "You finished every lesson." }
+    "first-lesson": {
+      "title": "First lesson",
+      "body": "You completed your first lesson."
+    },
+    "graph-basics": {
+      "title": "Nodes and edges",
+      "body": "You finished the three foundation lessons."
+    },
+    "big-picture": {
+      "title": "The whole map",
+      "body": "You now know what is standard and what is not."
+    },
+    "at-scale": {
+      "title": "At scale",
+      "body": "You finished the three organization lessons."
+    },
+    "ten-correct": {
+      "title": "Ten correct",
+      "body": "You answered 10 practice questions correctly."
+    },
+    "all-complete": {
+      "title": "Code Graph Academy, complete",
+      "body": "You finished all seven lessons."
+    }
   },
   "lesson": {
     "backHome": "All lessons",
-    "yes": "Yes",
-    "no": "No",
-    "varies": "Varies",
-    "formula": "Formula",
-    "conducts": "Conducts",
-    "pair": "Pair",
-    "state": "State",
-    "states": { "solid": "Solid", "melt": "Melt", "solution": "Solution" },
-    "electronsMoved": "Electrons moved",
-    "ionGraph": "An electron moving from a metal atom to a nonmetal atom",
-    "pairsCount": "Shared pairs",
-    "bondOrder": "Bond order",
-    "arrangement": "Arrangement",
-    "arrangements": { "molecular": "Molecules", "network": "Network" },
-    "sharedGraph": "Shared electron pairs, or a covalent network",
-    "netDipole": "Net dipole",
-    "polarity": "Molecule",
-    "polar": "Polar",
-    "nonpolar": "Nonpolar",
-    "angle": "Angle",
-    "dipoleGraph": "Two equal bond dipoles and their vector sum",
-    "holds": "Lattice holds",
-    "electronsDrift": "Electrons drifting",
-    "shear": "Shear",
-    "drift": "Drift",
-    "seaGraph": "Positive ions in a sea of electrons",
-    "hydrogenBond": "Hydrogen bond",
-    "separation": "Separation",
-    "rotation": "Turn",
-    "waterGraph": "Two water molecules. A dashed line is a hydrogen bond.",
-    "answer": "Answer",
-    "material": "Structure",
-    "materials": { "ionic": "Ionic", "molecular": "Molecular", "metallic": "Metallic", "network": "Network" },
-    "probe": "Probe",
-    "probes": { "conductSolid": "Conducts as a solid", "conductMelt": "Conducts when melted", "dissolve": "Dissolves", "meltEasy": "Melts easily" },
-    "probeGraph": "The structure you are probing",
     "keyPointsTitle": "Key points",
     "quizTitle": "Time to practice",
     "prevLesson": "Previous lesson",
     "nextLesson": "Next lesson",
-    "backToLessons": "Back to all lessons"
+    "backToLessons": "Back to all lessons",
+    "explorerIntro": "Try it yourself"
   },
   "quiz": {
     "check": "Check answer",
@@ -114,7 +100,7 @@
     "next": "Next question"
   },
   "footer": {
-    "disclaimer": "Chemistry Academy is an independent, unofficial study tool, not a substitute for classroom instruction.",
+    "disclaimer": "Code Graph Academy is an independent, unofficial study tool. It is not affiliated with any project or company it mentions, and its examples are made up.",
     "credit": "Created by Guy Eden"
   },
   "feedback": {
@@ -133,5 +119,391 @@
     "sending": "Sending…",
     "success": "Thanks! We've got your message.",
     "error": "Something went wrong. Please try again."
+  },
+  "org": {
+    "illustrative": "An example organization. The numbers are parameters you can change, not data about a real company."
+  },
+  "explorer": {
+    "common": {
+      "steps": "Step {{current}} of {{total}}",
+      "next": "Next",
+      "back": "Back",
+      "yes": "Yes",
+      "no": "No",
+      "of": "{{a}} of {{b}}",
+      "source": "Source",
+      "notOnMachine": "Not on this machine",
+      "haveSource": "I have this repo's source",
+      "webShopHere": "The web-shop repo is on my machine"
+    },
+    "question": {
+      "callers": "Who calls format_price in money.py?",
+      "callees": "What does get_order call?",
+      "fieldReaders": "Who reads the field total_price?"
+    },
+    "search": {
+      "step": "Agent step",
+      "hits": "Search hits",
+      "filesOpened": "Files opened",
+      "linesRead": "Lines read",
+      "linesAnswer": "Lines that answer",
+      "stepAsk": "The agent gets the question. It has opened nothing yet.",
+      "stepSearch": "The agent searches for the word. {{hits}} lines come back, in {{files}} files.",
+      "stepOpen": "The agent opens {{file}} and reads it. {{lines}} lines read so far.",
+      "collapsed": "{{n}} more lines",
+      "withGraph": "With a graph: 1 query →"
+    },
+    "role": {
+      "definition": "Definition",
+      "call": "Call",
+      "import": "Import",
+      "comment": "Comment",
+      "fieldWrite": "Writes the field",
+      "fieldRead": "Reads the field",
+      "otherTarget": "Call to the other function",
+      "answer": "This is the answer"
+    },
+    "graph": {
+      "nodes": "Nodes",
+      "edges": "Edges",
+      "start": "Start",
+      "affected": "Affected",
+      "hops": "Steps away",
+      "dependsOn": "Depends on",
+      "dependedOnBy": "Is depended on by",
+      "filterNote": "The filter changes only what is drawn. The count uses the whole graph.",
+      "figure": "The toy shop as a graph: 11 nodes and 10 edges in two repos"
+    },
+    "kind": {
+      "function": "Function",
+      "endpoint": "Endpoint",
+      "field": "Field",
+      "contractGroup": "API contract"
+    },
+    "edge": {
+      "calls": "calls",
+      "requests": "requests",
+      "handledBy": "is handled by",
+      "reads": "reads",
+      "partOf": "is part of"
+    },
+    "ask": {
+      "structure": "Structure",
+      "identity": "Identity",
+      "interface": "Interface",
+      "buildBroken": "The build is broken",
+      "publishedNote": "The three graphs here were published for both repos. The switch affects only the search.",
+      "truth": "The correct answer",
+      "col": {
+        "search": "Text search",
+        "syntax": "Syntax graph",
+        "index": "Compiler index",
+        "contract": "Contract graph"
+      },
+      "built": {
+        "search": "Looks for letters in the files on the machine",
+        "syntax": "Built by a parser, file by file. Knows names.",
+        "index": "Built with the compiler. Knows each symbol exactly.",
+        "contract": "Built from declared interfaces and their declared users."
+      },
+      "searchLine": "{{relevant}} of {{hits}} hits answer the question · {{files}} files to open",
+      "why": {
+        "syntax": {
+          "callers": {
+            "imprecise": "Two definitions share this name and the graph matches by name. One of the two candidates is wrong.",
+            "right": "Only one definition with this name is left, so matching by name is enough."
+          },
+          "callees": {
+            "right": "The calls are written in the function body, and a parser sees them."
+          },
+          "fieldReaders": {
+            "blind": "One side has a string, the other a property. To the syntax they are unrelated."
+          }
+        },
+        "index": {
+          "callers": {
+            "right": "The compiler resolved each call to one definition."
+          },
+          "callees": {
+            "right": "The same: each call is resolved to an exact symbol."
+          },
+          "fieldReaders": {
+            "blind": "Each language has its own index, and an HTTP request between them is not a symbol."
+          },
+          "unavailable": "The compiler could not process the project, so there is usually no index for this commit."
+        },
+        "contract": {
+          "fieldReaders": {
+            "right": "The field is part of a declared interface, and its reader is on record."
+          },
+          "blind": "This happens inside the service. A contract knows only its boundary."
+        }
+      }
+    },
+    "verdict": {
+      "right": "Exact",
+      "imprecise": "Ambiguous",
+      "blind": "Blind",
+      "unavailable": "No index"
+    },
+    "scale": {
+      "repos": "Repos",
+      "developers": "Developers",
+      "reposPerDeveloper": "Repos each developer works on",
+      "s": {
+        "everyMachineEverything": "Every machine indexes everything",
+        "everyMachineOwn": "Every machine indexes only its own",
+        "publishOnce": "Index once and publish"
+      },
+      "builds": "Index builds",
+      "reach": "Repos the agent can see: {{a}} of {{b}} ({{pct}}%)",
+      "rebuilds": "Rebuilds after one merge: {{n}}",
+      "logScale": "Bar lengths use a log scale",
+      "arithmetic": "This is arithmetic on the numbers above, not a measurement."
+    },
+    "staleness": {
+      "head": "Head",
+      "published": "Last publish",
+      "publishNow": "Publish now",
+      "behind": "Commits behind",
+      "stillTrue": "Still true",
+      "phantom": "Describe code that is gone",
+      "missing": "Missing from the snapshot",
+      "commit": {
+        "c1": "round_cents is renamed round_money",
+        "c2": "orders/legacy.py is deleted",
+        "c3": "web-shop adds renderReceipt, which also shows the price",
+        "c4": "A comment is edited. No relation changed."
+      },
+      "snapshotSays": "The snapshot says",
+      "codeSays": "The code says",
+      "mismatch": "Does not match",
+      "decision": {
+        "trust": "The snapshot is current. Trust it.",
+        "verifyLive": "The snapshot is behind and the source is at hand. Check the code directly.",
+        "answerAsOf": "The snapshot is behind and there is no source. Answer, and say which commit the answer is for."
+      },
+      "figure": "A timeline of five commits with the head and the last publish, and the graph below it"
+    },
+    "cadence": {
+      "commitsPerDay": "Commits per repo per day",
+      "yourNumber": "Your number. An example, not a statistic.",
+      "pipeline": "Pipeline duration (minutes)",
+      "c": {
+        "everyMerge": "On every merge",
+        "hourly": "Every hour",
+        "nightly": "Once a night",
+        "weekly": "Once a week"
+      },
+      "behind": "An answer can be up to {{n}} commits behind",
+      "lessThanOne": "less than 1",
+      "publishes": "Publishes a day across {{repos}} repos",
+      "assumption": "Assumes commits are spread evenly over the day.",
+      "figure": "One day as a timeline, with commits and publish points"
+    },
+    "topology": {
+      "t": {
+        "local": "Local",
+        "central": "Central",
+        "hybrid": "Hybrid",
+        "sharded": "Sharded"
+      },
+      "lane": {
+        "product": "Product teams (repo owners)",
+        "platform": "Platform team",
+        "security": "Security and access",
+        "developers": "Developers"
+      },
+      "node": {
+        "repo": "Repo",
+        "ci": "CI: builds the index, publishes",
+        "registry": "Snapshot registry",
+        "server": "MCP server",
+        "policy": "Who may read what",
+        "machine": "Developer machine",
+        "agent": "Agent",
+        "client": "MCP client",
+        "local": "Local graph + local MCP server"
+      },
+      "m": {
+        "servers": "Servers running",
+        "builds": "Index builds",
+        "reach": "Repos the agent can reach",
+        "affected": "Developers who lose it if one server fails",
+        "uncommitted": "Sees uncommitted work",
+        "survives": "Own work survives a central failure"
+      },
+      "shards": "Servers",
+      "changeOrg": "Change the organization",
+      "assumptions": "Assumptions: developers are split evenly between servers, with no failover. In hybrid, \"lose\" means answers about other people's repos.",
+      "track": {
+        "question": "A question",
+        "publish": "A publish"
+      },
+      "ownedBy": "Owned by",
+      "doesTitle": "What it does",
+      "hereTitle": "In this arrangement",
+      "notUsed": "Not used in this arrangement",
+      "figure": "A diagram of an example organization in four lanes: product teams, platform, security and access, developers",
+      "edge": {
+        "merge": "A change is merged and triggers CI",
+        "snapshot": "CI stores a snapshot in the registry",
+        "load": "The server loads snapshots from the registry",
+        "ask": "The MCP client calls a tool on the server",
+        "policy": "The access rule applies here",
+        "clone": "The developer clones the repo"
+      },
+      "does": {
+        "repo": "Holds one team's source code.",
+        "ci": "Runs after every merge, runs the indexer and stores the result.",
+        "registry": "Records which snapshot belongs to which repo and which commit.",
+        "server": "Takes questions from agents as tool calls and answers from the snapshots.",
+        "policy": "The rule for who may read which repo. A snapshot inherits it from its repo.",
+        "machine": "Runs the agent. Inside the agent there is one MCP client per server it is connected to."
+      },
+      "here": {
+        "repo": {
+          "local": "Only repos cloned to the machine are visible to the agent.",
+          "other": "Every merge triggers the publish of a new snapshot."
+        },
+        "ci": {
+          "used": "One build per repo, not per machine."
+        },
+        "registry": {
+          "used": "The one place the servers load from."
+        },
+        "server": {
+          "central": "One server for all developers. Everyone depends on it.",
+          "hybrid": "Answers about other people's repos. The local server answers about your working copy.",
+          "sharded": "Each server serves part of the developers, and all serve the same snapshots."
+        },
+        "policy": {
+          "local": "The only check is whether you could clone the repo.",
+          "other": "Has to be enforced at the registry, at the server, or both. See lesson 7."
+        },
+        "machine": {
+          "local": "Builds its own graphs and runs a local server as a subprocess.",
+          "central": "Builds nothing. It only asks the central server.",
+          "hybrid": "Builds a graph of its own working copy and asks the central server about the rest.",
+          "sharded": "Asks the server it is assigned to."
+        }
+      },
+      "step": {
+        "q1": "The agent needs a fact about code in another team's repo.",
+        "q2": "The MCP client calls a tool on the server.",
+        "q3": "The server checks what the caller may read.",
+        "q4": "The server reads the snapshot listed in the registry.",
+        "q5": "The answer returns to the agent, with the snapshot's commit.",
+        "h1": "The agent needs two facts: one about your code and one about another team's.",
+        "h2": "The local server answers about your working copy, uncommitted changes included.",
+        "h3": "For the other repo the MCP client asks the central server.",
+        "h4": "The central server checks access and reads the snapshot.",
+        "h5": "The answer returns with its commit. The agent now has both facts.",
+        "l1": "The agent needs a fact about code.",
+        "l2": "The MCP client asks the local server, which runs on the same machine.",
+        "l3": "The local server answers from a graph built from a cloned repo.",
+        "l4": "For repos that were not cloned there is no one to ask.",
+        "p1": "A change is merged into a repo.",
+        "p2": "CI runs the indexer on the repo.",
+        "p3": "The snapshot is stored and its commit is recorded in the registry.",
+        "p4": "The servers load the new snapshot. Answers are current from now on.",
+        "n1": "Nothing is published in this arrangement. Each machine indexes for itself."
+      }
+    },
+    "access": {
+      "share": "Share of repos this developer may read",
+      "exampleNote": "An example, not a statistic.",
+      "where": "Where is the check?",
+      "c": {
+        "none": "None",
+        "server": "Server",
+        "registry": "Registry",
+        "both": "Both"
+      },
+      "skipServer": "The request skips the server and goes straight to the registry",
+      "serviceAccount": "The server reads the registry with one account that may read everything",
+      "mayRead": "May read",
+      "shouldNotSee": "Should not see",
+      "exposed": "Exposed in this case",
+      "v": {
+        "blocked": "Blocked",
+        "exposed": "Exposed"
+      },
+      "box": {
+        "developer": "Developer",
+        "server": "MCP server",
+        "registry": "Registry"
+      },
+      "modelNote": "A model of one common design, not a description of a product.",
+      "figure": "The path of a request from the developer to the registry, with the places where access is checked"
+    },
+    "landscape": {
+      "layer": {
+        "format": {
+          "name": "Data format",
+          "q": "How is an index written to a file?",
+          "standard": "Several formats are published openly, and each is well defined.",
+          "notStandard": "No single format that everyone agreed on. Different tools read different formats."
+        },
+        "indexer": {
+          "name": "Indexers",
+          "q": "Who extracts the facts from the code?",
+          "standard": "Nothing. These are open-source projects, one per language.",
+          "notStandard": "Coverage differs by language, and not every language has a tool."
+        },
+        "storage": {
+          "name": "Storage, query and registry",
+          "q": "Where are the facts kept, and how do you ask?",
+          "standard": "Nothing. There are open-source systems and accounts that companies have published.",
+          "notStandard": "The registry, meaning which snapshot belongs to which repo and commit, is built anew in each organization."
+        },
+        "serving": {
+          "name": "Serving",
+          "q": "How does the agent ask?",
+          "standard": "How an agent discovers and calls tools.",
+          "notStandard": "Which tools a graph server offers and what they return. Whoever builds the server decides."
+        },
+        "org": {
+          "name": "Organization metadata and contracts",
+          "q": "Who owns what, and what are the interfaces?",
+          "standard": "Formats for describing interfaces and for listing components.",
+          "notStandard": "Joining code, contracts and ownership into one graph."
+        }
+      },
+      "status": {
+        "spec": "Open spec",
+        "project": "Open-source project",
+        "pattern": "Each organization's own"
+      },
+      "count": {
+        "spec": "{{n}} open specs",
+        "project": "{{n}} projects",
+        "pattern": "{{n}} patterns"
+      },
+      "unknown": "A company's internal setup is known only from what it has published. Everything else is unknown.",
+      "piece": {
+        "lsif": "A format from the LSP world, for navigating code without a local copy of the source.",
+        "scip": "An open protobuf schema for a code index. Designed by Sourcegraph, partly after pain points with LSIF.",
+        "kythe-schema": "The graph schema of Kythe, an open-source project from Google that aims at language-agnostic exchange of facts about code.",
+        "tree-sitter": "A parser generator and parsing library. Gives useful results even with syntax errors.",
+        "scip-indexers": "A separate tool per language, relying on that language's compiler or build setup.",
+        "kythe-indexers": "Tools that hook into the build and extract nodes and edges from it.",
+        "codeql": "Builds a database of the codebase for analysis. For compiled languages, by watching the build.",
+        "glean": "An open-source system from Meta for storing facts about code, with its own query language. Also takes in SCIP and LSIF.",
+        "central-index": "Google described in 2020 one central index for its code search: the work is done once, for everyone.",
+        "registry": "No standard and no agreed name. This course calls it a registry.",
+        "mcp": "An open specification: an agent discovers tools on a server and calls them. It is revised from time to time, so check the revision.",
+        "lsp": "The protocol between a code editor and a language server. LSIF grew out of it.",
+        "graph-tools": "The MCP specification does not cover this. Two servers can serve completely different graphs.",
+        "backstage": "An open-source software catalog: components, APIs and teams, with relations such as ownedBy and consumesApi. Its source of truth is descriptor files kept in source control.",
+        "openapi": "A language-agnostic description of an HTTP API.",
+        "asyncapi": "A description of message-driven and event-driven APIs.",
+        "protobuf": "A language-neutral, platform-neutral definition of structured data.",
+        "graphql": "A type system and query language. The schema describes what the service offers.",
+        "spdx": "An open standard for a software bill of materials (SBOM).",
+        "cyclonedx": "A bill-of-materials standard, published as ECMA-424.",
+        "joining": "No standard joins the three. \"Contract graph\" in this course names an idea, not a format."
+      }
+    }
   }
 }

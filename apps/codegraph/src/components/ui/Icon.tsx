@@ -2,7 +2,8 @@ import type { ReactNode, SVGProps } from 'react';
 
 export type IconName =
   | 'check' | 'x' | 'arrow' | 'sun' | 'moon' | 'globe' | 'alert' | 'refresh' | 'speaker'
-  | 'speakerMute' | 'paperclip' | 'handle' | 'pin' | 'envelope' | 'target' | 'lock' | 'trophy' | 'play';
+  | 'speakerMute' | 'paperclip' | 'handle' | 'pin' | 'envelope' | 'target' | 'lock' | 'trophy' | 'play'
+  | 'repo' | 'gear' | 'stack' | 'server' | 'shield' | 'laptop' | 'doc' | 'cube' | 'puzzle' | 'approx' | 'emptyCircle' | 'pause';
 
 const paths: Record<IconName, string> = {
   check: 'm5 12 5 5L20 7',
@@ -23,6 +24,18 @@ const paths: Record<IconName, string> = {
   lock: 'M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z',
   trophy: 'M8 4h8v5a4 4 0 0 1-8 0V4Zm0 1H5a2 2 0 0 0 0 4h1M16 5h3a2 2 0 0 1 0 4h-1M10 16v2a2 2 0 0 0 4 0v-2M9 21h6',
   play: 'M7 4.5v15l12-7.5-12-7.5Z',
+  repo: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Zm0 13a3 3 0 0 1 3-3h11',
+  gear: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0-12v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M18.4 5.6l-2.1 2.1m-8.6 8.6-2.1 2.1',
+  stack: 'm12 3 9 4.5-9 4.5-9-4.5L12 3Zm-9 9 9 4.5 9-4.5m-18 4.5L12 21l9-4.5',
+  server: 'M4 5h16v6H4V5Zm0 8h16v6H4v-6Zm3-5h.01M7 16h.01',
+  shield: 'M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6l-7-3Z',
+  laptop: 'M5 6h14v9H5V6Zm-2 12h18',
+  doc: 'M7 3h7l4 4v14H7V3Zm7 0v4h4M10 12h5m-5 3h5',
+  cube: 'm12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9 8-4.5M12 12v9M12 12 4 7.5',
+  puzzle: 'M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4h2a2 2 0 1 0 0-4H6V6h4V4Z',
+  approx: 'M4 9c2-2 4-2 6 0s4 2 6 0 3-1 4 0M4 16c2-2 4-2 6 0s4 2 6 0 3-1 4 0',
+  emptyCircle: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z',
+  pause: 'M9 5v14M15 5v14',
 };
 
 /** A second, filled element some icons need (a dot on `handle`/`pin`/`target`) — Icon.tsx

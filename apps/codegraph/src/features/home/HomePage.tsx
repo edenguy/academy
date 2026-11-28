@@ -13,6 +13,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
+import { OrgNote } from '@/components/explorers/OrgNote';
 import { HERO_CURVE } from '@/graph/heroCurve';
 import { lessonSignature } from '@/graph/lessonSignature';
 import type { Lesson } from '@/content/schema';
@@ -178,10 +179,12 @@ export function HomePage() {
           </p>
         </div>
       </section>
+      <OrgNote className="text-[13px] text-muted -mt-4" />
 
       <header>
         <h2 className="text-[22px] md:text-[26px] font-bold text-ink">{t('home.syllabusTitle')}</h2>
         <p className="text-sm text-ink-2 mt-1 max-w-[52ch]">{t('home.syllabusLead')}</p>
+        <p className="text-sm text-ink-2 mt-1 max-w-[52ch]">{t('home.curriculumNote')}</p>
       </header>
 
       {TOPIC_ORDER.map((topicId) => {

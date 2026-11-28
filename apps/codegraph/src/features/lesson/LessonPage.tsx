@@ -62,7 +62,7 @@ export function LessonPage() {
       </div>
 
       {lesson.explorers?.map((explorer, i) => (
-        <div key={i} className="my-8">
+        <div key={`${lesson.id}-${i}`} className="my-8">
           <LessonExplorer config={explorer} locale={locale} />
         </div>
       ))}
