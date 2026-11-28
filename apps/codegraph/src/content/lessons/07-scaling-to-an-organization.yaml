@@ -1,0 +1,170 @@
+id: scaling-to-an-organization
+topic: code-graphs
+order: 7
+
+title:
+  en: "Scaling it to an organization"
+  he: "להגדיל את זה לארגון שלם"
+
+subtitle:
+  en: "Chapter 7 · freshness, access, ownership"
+  he: "פרק 7 · טריות, הרשאות, אחריות"
+
+intro:
+  - en: >-
+      At the size of a whole organization three questions are left. How old is the
+      answer? Who is allowed to see it? And who is responsible for each part?
+    he: >-
+      בגודל של ארגון שלם נשארות שלוש שאלות. בת כמה התשובה? מי רשאי לראות אותה? ומי אחראי
+      על כל חלק?
+  - en: >-
+      **Freshness.** Set how many commits a repo gets per day; that number is yours, the
+      course does not claim one. With [[10]] a day and a snapshot published once a
+      night, an answer can be up to [[10]] commits behind. Published every hour: less
+      than one. Published on every merge: only as long as the pipeline takes. The price
+      is builds. On every merge, [[500]] repos at [[10]] commits a day are [[5,000]]
+      publishes a day; nightly it is [[500]]. The arithmetic assumes commits are spread
+      evenly over the day. Real systems do live with a gap: Google wrote in 2020 that
+      one of its semantic indexes was computed once a day, because building it cost
+      about as much as a full build.
+    he: >-
+      **טריות.** קבעו כמה פעולות {{commit}} מאגר מקבל ביום. המספר הזה שלכם, והקורס לא
+      טוען שיש מספר נכון. עם [[10]] ביום ותמונת מצב שמתפרסמת פעם בלילה, תשובה יכולה
+      להיות עד [[10]] צעדים מאחור. בפרסום כל שעה: פחות מצעד אחד. בפרסום בכל מיזוג: רק
+      הזמן שהתהליך לוקח. המחיר הוא בניות. בכל מיזוג, [[500]] מאגרים עם [[10]] שינויים
+      ביום הם [[5,000]] פרסומים ביום. פעם בלילה אלה [[500]]. החשבון מניח שהשינויים
+      מתפזרים באופן אחיד על פני היום. מערכות אמיתיות כן חיות עם פער: {{Google}} כתבה
+      ב-[[2020]] שאחד האינדקסים הסמנטיים שלה חושב פעם ביום, כי לבנות אותו עלה בערך כמו
+      בנייה מלאה.
+  - en: >-
+      A gap is not a fault as long as it is stated. The rule from lesson 5 becomes
+      policy: the snapshot is at the head, trust it; it is behind and the source is at
+      hand, check live; it is behind and there is no source, give the answer with its
+      commit.
+    he: >-
+      פער הוא לא תקלה כל עוד מצהירים עליו. הכלל משיעור 5 הופך למדיניות: תמונת המצב
+      מעודכנת לראש הענף, סומכים עליה. היא מאחור וקוד המקור בהישג יד, בודקים ישירות. היא
+      מאחור ואין קוד מקור, נותנים את התשובה יחד עם ה-{{commit}} שלה.
+  - en: >-
+      **Access.** Not every developer may read every repo. A repo's graph gives away its
+      structure: names, who calls what, which APIs exist. So a snapshot should inherit
+      the permissions of its repo. If a developer may read [[60%]] of the repos, that is
+      [[300]] of [[500]], and a central server that does not filter would show the
+      other [[200]] as well.
+    he: >-
+      **הרשאות.** לא כל מפתח רשאי לקרוא כל מאגר. גרף של מאגר חושף את המבנה שלו: שמות, מי
+      קורא למה, אילו ממשקים קיימים. לכן תמונת מצב צריכה לרשת את ההרשאות של המאגר שלה. אם
+      מפתח רשאי לקרוא [[60%]] מהמאגרים, אלה [[300]] מתוך [[500]], ושרת מרכזי שלא מסנן
+      יציג לו גם את [[200]] האחרים.
+  - en: >-
+      Where does the check live? At the server, which filters each answer by who is
+      asking. At the registry, which refuses to hand over a snapshot. Or at both. Try
+      the cases in the explorer: someone fetches from the registry directly and skips
+      the server, or the server reads the registry with one account that may read
+      everything. Only "both" blocks every case. What {{MCP}} contributes here is
+      narrow: its specification defines an optional authorization flow for {{HTTP}}
+      connections, based on {{OAuth 2.1}}, which is how a caller proves who it is to a
+      server. Which repos that caller may read is not covered by the specification. The
+      people who build the server and the registry decide it.
+    he: >-
+      איפה הבדיקה יושבת? בשרת, שמסנן כל תשובה לפי מי ששואל. במרשם, שמסרב למסור תמונת
+      מצב. או בשניהם. נסו את המקרים בסימולציה: מישהו פונה ישר למרשם ועוקף את השרת, או
+      שהשרת קורא מהמרשם עם חשבון אחד שמותר לו לקרוא הכול. רק "שניהם" חוסם את כל המקרים.
+      התרומה של {{MCP}} כאן מצומצמת: המפרט שלו מגדיר תהליך הרשאה, שאינו חובה, לחיבורי
+      {{HTTP}}, על בסיס {{OAuth 2.1}}, וזו הדרך שבה מי שפונה מוכיח לשרת מי הוא. אילו
+      מאגרים מותר לו לקרוא, בזה המפרט לא עוסק. את זה קובע מי שבונה את השרת ואת המרשם.
+  - en: >-
+      **Ownership**, in one common split. Repo owners keep their repo indexable: a build
+      that works and interfaces that are declared. A platform team runs the pipeline,
+      the registry and the servers. A security and access function owns the rule that a
+      snapshot inherits its repo's permissions. Developers consume, and know to ask
+      "as of which commit?". That is the whole picture: precomputed relations, the right
+      graph for the question, published once per repo, served with a date and a
+      permission check.
+    he: >-
+      **אחריות**, לפי חלוקה נפוצה אחת. בעלי המאגר שומרים שהמאגר שלהם יהיה ניתן לאינדוקס:
+      בנייה שעובדת וממשקים מוצהרים. צוות פלטפורמה מפעיל את תהליך הפרסום, את המרשם ואת
+      השרתים. גורם אבטחה והרשאות אחראי על הכלל שלפיו תמונת מצב יורשת את ההרשאות של המאגר
+      שלה. המפתחים הם הצרכנים, והם יודעים לשאול "נכון לאיזה {{commit}}?". זו כל התמונה:
+      קשרים שחושבו מראש, הגרף הנכון לשאלה, פרסום פעם אחת לכל מאגר, והגשה עם תאריך ועם
+      בדיקת הרשאות.
+
+explorers:
+  - kind: cadence
+    repos: 500
+    commitsPerDay: 10
+    cadence: nightly
+    caption:
+      en: "Set your own commit rate and choose how often snapshots are published"
+      he: "קבעו קצב שינויים משלכם ובחרו כל כמה זמן מתפרסמות תמונות מצב"
+  - kind: access
+    repos: 500
+    readableShare: 60
+    checkAt: server
+    caption:
+      en: "Move the permission check and see which paths it blocks"
+      he: "הזיזו את בדיקת ההרשאות וראו אילו מסלולים היא חוסמת"
+
+keyPoints:
+  - en: How often snapshots are published decides how old an answer can be. More often costs more builds.
+    he: התדירות שבה מתפרסמות תמונות מצב קובעת עד כמה תשובה יכולה להיות ישנה. תדירות גבוהה יותר עולה יותר בניות.
+  - en: An answer should carry the commit it is true for.
+    he: תשובה צריכה לשאת את ה-commit שהיא נכונה לו.
+  - en: A snapshot should inherit the permissions of its repo. A check at both the registry and the server blocks every path in this model.
+    he: תמונת מצב צריכה לרשת את ההרשאות של המאגר שלה. בדיקה גם במרשם וגם בשרת חוסמת את כל המסלולים במודל הזה.
+  - en: MCP defines how a caller proves who it is over HTTP. What that caller may read is decided by whoever builds the server.
+    he: MCP מגדיר איך מי שפונה מוכיח מי הוא ב-HTTP. מה מותר לו לקרוא קובע מי שבונה את השרת.
+
+quiz:
+  - type: numeric
+    id: q1-commits-behind
+    prompt:
+      en: "A repo gets 12 commits a day, spread evenly, and its snapshot is published every 6 hours. Up to how many commits behind can an answer be?"
+      he: "מאגר מקבל 12 שינויים ביום, בפיזור אחיד, ותמונת המצב שלו מתפרסמת כל 6 שעות. עד כמה צעדים מאחור תשובה יכולה להיות?"
+    correctValue: 3
+    tolerance: 0
+    explanation:
+      en: "12 a day is one every 2 hours. In 6 hours, 3 commits pile up before the next publish."
+      he: "12 ביום הם אחד כל שעתיים. ב-6 שעות מצטברים 3 שינויים לפני הפרסום הבא."
+  - type: numeric
+    id: q2-nightly-publishes
+    prompt:
+      en: "500 repos, each changing every day, publish a snapshot once a night. How many publishes a day across the organization?"
+      he: "500 מאגרים, שכל אחד מהם משתנה כל יום, מפרסמים תמונת מצב פעם בלילה. כמה פרסומים ביום יש בכל הארגון?"
+    correctValue: 500
+    tolerance: 0
+    explanation:
+      en: "One per repo per night: 500, however many commits each repo had that day."
+      he: "אחד לכל מאגר בכל לילה: 500, בלי קשר למספר השינויים שהיו בכל מאגר באותו יום."
+  - type: mcq
+    id: q3-server-only
+    prompt:
+      en: "The permission check lives only at the server. Someone downloads a snapshot straight from the registry. What happens?"
+      he: "בדיקת ההרשאות יושבת רק בשרת. מישהו מוריד תמונת מצב ישר מהמרשם. מה קורה?"
+    choices:
+      - en: The server blocks it
+        he: השרת חוסם את זה
+      - en: Nothing stops it, because the request never passes through the server
+        he: שום דבר לא עוצר את זה, כי הבקשה בכלל לא עוברת דרך השרת
+      - en: MCP blocks it
+        he: MCP חוסם את זה
+    correctIndex: 1
+    explanation:
+      en: A check protects only the path that goes through it. That is the argument for checking at the registry as well.
+      he: בדיקה מגינה רק על המסלול שעובר דרכה. זה הנימוק לבדוק גם במרשם.
+  - type: mcq
+    id: q4-mcp-auth
+    prompt:
+      en: "What does the MCP specification say about authorization?"
+      he: "מה המפרט של MCP אומר על הרשאות?"
+    choices:
+      - en: It lists which repos each developer may read
+        he: הוא מפרט אילו מאגרים כל מפתח רשאי לקרוא
+      - en: It defines an optional flow, based on OAuth 2.1, for HTTP connections; what a caller may read is left to the server
+        he: הוא מגדיר תהליך שאינו חובה, על בסיס OAuth 2.1, לחיבורי HTTP. מה מותר לפונה לקרוא נשאר בידי השרת
+      - en: It forbids central servers
+        he: הוא אוסר על שרתים מרכזיים
+    correctIndex: 1
+    explanation:
+      en: The specification covers how a client gets and presents a token. The rule that a snapshot inherits its repo's permissions has to be built by the organization.
+      he: המפרט עוסק באופן שבו לקוח מקבל אסימון ומציג אותו. את הכלל שלפיו תמונת מצב יורשת את ההרשאות של המאגר שלה הארגון צריך לבנות בעצמו.

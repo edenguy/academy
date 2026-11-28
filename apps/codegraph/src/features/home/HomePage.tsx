@@ -13,8 +13,8 @@ import { LinkButton } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { HeroSignature } from '@/components/HeroSignature';
 import { LessonSignature } from '@/components/LessonSignature';
-import { HERO_CURVE } from '@/chemistry/heroCurve';
-import { lessonSignature } from '@/chemistry/lessonSignature';
+import { HERO_CURVE } from '@/graph/heroCurve';
+import { lessonSignature } from '@/graph/lessonSignature';
 import type { Lesson } from '@/content/schema';
 
 function LessonCard({ lesson, index, isDone }: { lesson: Lesson; index: number; isDone: boolean }) {

@@ -1,0 +1,118 @@
+id: agent-sees-what-it-opens
+topic: code-graphs
+order: 1
+
+title:
+  en: "The agent only sees what it opens"
+  he: "הסוכן רואה רק את מה שהוא פותח"
+
+subtitle:
+  en: "Chapter 1 · the problem"
+  he: "פרק 1 · הבעיה"
+
+intro:
+  - en: >-
+      A **coding agent** is a program that reads code, runs searches and edits files for
+      you. It has one hard limit: it knows only what it has opened in the current
+      session. Any file it has not read does not exist for it yet.
+    he: >-
+      **סוכן קוד** הוא תוכנה שקוראת קוד, מריצה חיפושים ועורכת קבצים בשבילכם. יש לו מגבלה
+      אחת קשיחה: הוא יודע רק את מה שפתח בשיחה הנוכחית. קובץ שלא קרא פשוט לא קיים מבחינתו,
+      עד שיקרא אותו.
+  - en: >-
+      So how does it find anything? Mostly the way you would: a text search. Type a name,
+      get the lines that contain it, open the files, read. Below is a toy shop: [[4]]
+      files in [[2]] repos. The question is simple: who calls {{format_price}}, the one
+      in {{money.py}}?
+    he: >-
+      אז איך הוא מוצא משהו? בעיקר כמו שאתם הייתם מוצאים: חיפוש טקסט. מקלידים שם, מקבלים את
+      השורות שמכילות אותו, פותחים את הקבצים וקוראים. למטה יש חנות צעצוע: [[4]] קבצים
+      ב-[[2]] מאגרי קוד. השאלה פשוטה: מי קורא ל-{{format_price}}, זו שנמצאת ב-{{money.py}}?
+  - en: >-
+      Drag the slider; each step is one action of the agent. The search comes back with
+      [[6]] lines in [[4]] files: two definitions with the same name, an import, a call
+      to the **other** function, a comment, and one line that is the answer. The search
+      cannot tell them apart. To find out, the agent opens every file and reads [[28]]
+      lines.
+    he: >-
+      גררו את המחוון. כל צעד הוא פעולה אחת של הסוכן. החיפוש חוזר עם [[6]] שורות ב-[[4]]
+      קבצים: שתי הגדרות עם אותו שם, שורת ייבוא, קריאה לפונקציה **האחרת**, הערה, ושורה אחת
+      שהיא התשובה. החיפוש לא יודע להבדיל ביניהן. כדי לדעת, הסוכן פותח את כל הקבצים וקורא
+      [[28]] שורות.
+  - en: >-
+      Now switch off the second repo, as if it were not on your machine. Its hits vanish,
+      and nothing tells the agent that something is missing. A search cannot find what is
+      not there. In a real organization most of the code is not on your machine.
+    he: >-
+      עכשיו כבו את המאגר השני, כאילו הוא לא נמצא אצלכם על המחשב. התוצאות ממנו נעלמות, ושום
+      דבר לא מספר לסוכן שמשהו חסר. חיפוש לא יכול למצוא את מה שאין. בארגון אמיתי, רוב הקוד
+      לא נמצא אצלכם על המחשב.
+  - en: >-
+      The idea this course is about: work out the relations **ahead of time**. Who calls
+      whom, who reads which field. Then the agent asks one question and gets one answer,
+      instead of searching, opening and guessing. That map, computed in advance, is
+      called a **code graph**.
+    he: >-
+      הרעיון שהקורס הזה עוסק בו: לחשב את הקשרים **מראש**. מי קורא למי, מי קורא איזה שדה.
+      אז הסוכן שואל שאלה אחת ומקבל תשובה אחת, במקום לחפש, לפתוח ולנחש. למפה הזאת, שמחושבת
+      מראש, קוראים **גרף קוד**.
+
+explorers:
+  - kind: searchCost
+    term: format_price
+    bothRepos: true
+    caption:
+      en: "Step through what the agent has to do to answer one question"
+      he: "עברו צעד אחר צעד על מה שהסוכן צריך לעשות כדי לענות על שאלה אחת"
+
+keyPoints:
+  - en: A coding agent knows only the code it has opened in this session.
+    he: סוכן קוד יודע רק את הקוד שפתח בשיחה הנוכחית.
+  - en: A text search matches letters, not meaning. A definition, a comment and a call to a different function with the same name all look alike.
+    he: חיפוש טקסט מתאים אותיות ולא משמעות. הגדרה, הערה וקריאה לפונקציה אחרת עם אותו שם נראות לו אותו דבר.
+  - en: A search cannot find code that is not on the machine, and it does not say that anything is missing.
+    he: חיפוש לא מוצא קוד שלא נמצא על המחשב, והוא גם לא אומר שמשהו חסר.
+
+quiz:
+  - type: numeric
+    id: q1-hit-count
+    prompt:
+      en: "With both repos on the machine, how many lines does a search for {{format_price}} return in the toy shop?"
+      he: "כששני המאגרים נמצאים על המחשב, כמה שורות מחזיר חיפוש של {{format_price}} בחנות הצעצוע?"
+    correctValue: 6
+    tolerance: 0
+    explanation:
+      en: "Six: two definitions, one import, two calls (one to each function) and one comment. Only one of the six answers the question."
+      he: "שש: שתי הגדרות, שורת ייבוא אחת, שתי קריאות (אחת לכל פונקציה) והערה אחת. רק אחת מהשש עונה על השאלה."
+  - type: mcq
+    id: q2-hit-is-not-answer
+    prompt:
+      en: "Why is a search hit not yet an answer?"
+      he: "למה תוצאת חיפוש היא עדיין לא תשובה?"
+    choices:
+      - en: Because searches are slow
+        he: כי חיפוש הוא איטי
+      - en: Because the search matches text, so it cannot tell a call from a definition, a comment, or a call to another function with the same name
+        he: כי החיפוש מתאים טקסט, ולכן לא מבדיל בין קריאה לבין הגדרה, הערה או קריאה לפונקציה אחרת עם אותו שם
+      - en: Because the agent forgets the results
+        he: כי הסוכן שוכח את התוצאות
+    correctIndex: 1
+    explanation:
+      en: Every hit has to be opened and read before you know what it is. That reading is the real cost.
+      he: כל תוצאה צריך לפתוח ולקרוא לפני שיודעים מה היא. הקריאה הזאת היא המחיר האמיתי.
+  - type: mcq
+    id: q3-missing-repo
+    prompt:
+      en: "The {{web-shop}} repo is not on the machine. What does a search for {{total_price}} tell the agent about the code in it?"
+      he: "המאגר {{web-shop}} לא נמצא על המחשב. מה חיפוש של {{total_price}} מספר לסוכן על הקוד שבו?"
+    choices:
+      - en: It lists the lines but marks them as remote
+        he: הוא מציג את השורות ומסמן שהן מרוחקות
+      - en: It warns that a repo is missing
+        he: הוא מזהיר שחסר מאגר
+      - en: Nothing, and it gives no sign that anything is missing
+        he: כלום, והוא גם לא נותן שום סימן שמשהו חסר
+    correctIndex: 2
+    explanation:
+      en: The search covers the files that are there. One hit comes back, from the service that writes the field, and the reader in the other repo stays invisible.
+      he: החיפוש עובר על הקבצים שיש. חוזרת תוצאה אחת, מהשירות שכותב את השדה, ומי שקורא אותו במאגר האחר נשאר בלתי נראה.

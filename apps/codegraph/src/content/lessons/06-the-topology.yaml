@@ -1,0 +1,159 @@
+id: the-topology
+topic: code-graphs
+order: 6
+
+title:
+  en: "The topology: who talks to whom"
+  he: "הטופולוגיה: מי מדבר עם מי"
+
+subtitle:
+  en: "Chapter 6 · the boxes, the arrows, four arrangements"
+  he: "פרק 6 · התיבות, החצים, ארבעה סידורים"
+
+intro:
+  - en: >-
+      The boxes first. A **developer machine** runs the agent, and inside the agent sits
+      an {{MCP}} client. **Repos** are owned by teams. A **{{CI}}** job builds the index
+      and publishes it. A **registry** lists the snapshots. An **{{MCP}} server** answers
+      questions. Two facts from the {{MCP}} specification make everything below possible:
+      a server can be a local process or a remote service, and there are two standard
+      ways to connect. In one the client launches the server as a subprocess on the same
+      machine. In the other the server is an independent process, reached over {{HTTP}},
+      that serves many clients.
+    he: >-
+      קודם התיבות. **מחשב של מפתח** מריץ את הסוכן, ובתוך הסוכן יושב לקוח {{MCP}}.
+      **מאגרי הקוד** שייכים לצוותים. משימת **{{CI}}** בונה את האינדקס ומפרסמת אותו.
+      **מרשם** מפרט את תמונות המצב. **שרת {{MCP}}** עונה על שאלות. שתי עובדות מהמפרט של
+      {{MCP}} מאפשרות את כל מה שיבוא: שרת יכול להיות תהליך מקומי או שירות מרוחק, ויש שתי
+      דרכים תקניות להתחבר. באחת הלקוח מפעיל את השרת כתת-תהליך על אותו מחשב. בשנייה השרת
+      הוא תהליך עצמאי, שפונים אליו ב-{{HTTP}}, והוא משרת לקוחות רבים.
+  - en: >-
+      **Local.** Every machine runs its own server over graphs it built from the repos it
+      has. It is as fresh as it gets, down to changes you have not committed, and it
+      needs no shared infrastructure. Its reach is what is checked out: [[3]] of [[500]]
+      repos.
+    he: >-
+      **מקומי.** כל מחשב מריץ שרת משלו מעל גרפים שבנה מהמאגרים שיש עליו. אין טרי מזה,
+      כולל שינויים שעוד לא נכנסו ל-{{commit}}, ולא צריך שום תשתית משותפת. הטווח שלו הוא
+      מה שהורד למחשב: [[3]] מתוך [[500]] מאגרים.
+  - en: >-
+      **Central.** One server over the registry of published snapshots. Its reach is
+      every repo, subject to permissions. It sees only what was published, never the
+      change on your machine. And when it fails, all [[20,000]] developers lose it
+      together.
+    he: >-
+      **מרכזי.** שרת אחד מעל המרשם של תמונות המצב שפורסמו. הטווח שלו הוא כל המאגרים,
+      בכפוף להרשאות. הוא רואה רק מה שפורסם, ואף פעם לא את השינוי שעל המחשב שלכם. וכשהוא
+      נופל, כל [[20,000]] המפתחים מאבדים אותו יחד.
+  - en: >-
+      **Hybrid.** Local for your own working copy, central for everyone else's code. It
+      has the most reach and the freshest view of your own work. It also has the most
+      parts to run, and the agent has to know which of the two to ask.
+    he: >-
+      **משולב.** מקומי בשביל עותק העבודה שלכם, מרכזי בשביל הקוד של כל השאר. יש לו הטווח
+      הרחב ביותר והתמונה הטרייה ביותר של העבודה שלכם. יש לו גם הכי הרבה חלקים לתפעל,
+      והסוכן צריך לדעת את מי מהשניים לשאול.
+  - en: >-
+      **Sharded.** Several central servers, say [[4]], each serving a part of the
+      developers, for example by region. The load on each server is smaller and so is a
+      failure: [[5,000]] developers instead of [[20,000]]. The cost is more to operate,
+      and every shard has to serve the same snapshots.
+    he: >-
+      **מפוצל.** כמה שרתים מרכזיים, נניח [[4]], שכל אחד משרת חלק מהמפתחים, למשל לפי
+      אזור. העומס על כל שרת קטן יותר, וגם תקלה קטנה יותר: [[5,000]] מפתחים במקום
+      [[20,000]]. המחיר הוא יותר תפעול, וכל השרתים צריכים להגיש את אותן תמונות מצב.
+  - en: >-
+      The diagram is drawn in lanes, one per part of the organization, in one common
+      split of responsibility: product teams own the repos, a platform team owns the
+      pipeline, the registry and the servers, a security and access function owns the
+      rule of who may read what, and developers consume. Follow a question through it,
+      then follow a publish. None of the four arrangements is "the correct one", and no
+      standard chooses between them. Each trades freshness, reach, effort and what fails
+      together.
+    he: >-
+      התרשים מצויר במסלולים, מסלול לכל זרוע בארגון, לפי חלוקת אחריות נפוצה אחת: צוותי
+      המוצר אחראים על המאגרים, צוות פלטפורמה אחראי על תהליך הפרסום, על המרשם ועל השרתים,
+      גורם אבטחה והרשאות אחראי על הכלל שקובע מי רשאי לקרוא מה, והמפתחים הם הצרכנים. עקבו
+      בתרשים אחרי שאלה, ואחר כך אחרי פרסום. אף אחד מארבעת הסידורים אינו "הנכון", ושום תקן
+      לא בוחר ביניהם. כל אחד מחליף בין טריות, טווח, מאמץ ומה שנופל יחד.
+
+explorers:
+  - kind: topology
+    topology: central
+    repos: 500
+    developers: 20000
+    reposPerDeveloper: 3
+    shards: 4
+    caption:
+      en: "Switch between four arrangements, tap a box, and follow a request"
+      he: "עברו בין ארבעה סידורים, הקישו על תיבה, ועקבו אחרי בקשה"
+
+keyPoints:
+  - en: "The boxes: developer machines with an agent and an MCP client, repos, CI, a registry of snapshots, MCP servers."
+    he: "התיבות: מחשבי מפתחים עם סוכן ולקוח MCP, מאגרי קוד, CI, מרשם של תמונות מצב, שרתי MCP."
+  - en: "Local is freshest and sees least. Central sees most and fails for everyone at once."
+    he: "מקומי הוא הטרי ביותר ורואה הכי פחות. מרכזי רואה הכי הרבה ונופל לכולם בבת אחת."
+  - en: "Hybrid combines the two and has the most parts. Sharding shrinks the load and the failure."
+    he: "משולב מחבר בין השניים ויש לו הכי הרבה חלקים. פיצול מקטין את העומס ואת התקלה."
+  - en: These are patterns with trade-offs. No standard picks one.
+    he: אלה דפוסים עם יתרונות ומחירים. שום תקן לא בוחר אחד מהם.
+
+quiz:
+  - type: mcq
+    id: q1-uncommitted
+    prompt:
+      en: "In which arrangements can the agent's graph include a change you have not committed yet?"
+      he: "באילו סידורים הגרף של הסוכן יכול לכלול שינוי שעוד לא הכנסתם ל-commit?"
+    choices:
+      - en: Central only
+        he: מרכזי בלבד
+      - en: Local and hybrid
+        he: מקומי ומשולב
+      - en: Sharded only
+        he: מפוצל בלבד
+    correctIndex: 1
+    explanation:
+      en: Only a graph built on your machine can see your working copy. A central server knows what was published.
+      he: רק גרף שנבנה על המחשב שלכם יכול לראות את עותק העבודה שלכם. שרת מרכזי יודע רק מה שפורסם.
+  - type: numeric
+    id: q2-shard-failure
+    prompt:
+      en: "20,000 developers are split evenly over 4 servers, with no failover. One server fails. How many developers lose it?"
+      he: "20,000 מפתחים מחולקים שווה בשווה בין 4 שרתים, בלי גיבוי. שרת אחד נופל. כמה מפתחים מאבדים אותו?"
+    correctValue: 5000
+    tolerance: 0
+    explanation:
+      en: "20,000 ÷ 4 = 5,000. With one central server the same failure reaches all 20,000."
+      he: "20,000 ÷ 4 = 5,000. עם שרת מרכזי אחד, אותה תקלה מגיעה לכל ה-20,000."
+  - type: mcq
+    id: q3-local-reach
+    prompt:
+      en: "Local only, with 3 of 500 repos checked out. What can the agent's graph say about the other 497?"
+      he: "מקומי בלבד, עם 3 מתוך 500 מאגרים על המחשב. מה הגרף של הסוכן יכול לומר על 497 האחרים?"
+    choices:
+      - en: Everything, a little slower
+        he: הכול, רק קצת יותר לאט
+      - en: Nothing
+        he: כלום
+      - en: Only their names
+        he: רק את השמות שלהם
+    correctIndex: 1
+    explanation:
+      en: A local graph is built from what is on the machine. This is the same blind spot as the search in lesson 1.
+      he: גרף מקומי נבנה ממה שיש על המחשב. זו אותה נקודה עיוורת של החיפוש משיעור 1.
+  - type: mcq
+    id: q4-stdio
+    prompt:
+      en: "In MCP's stdio transport the client launches the server as a subprocess on the same machine. Which arrangement does that fit?"
+      he: "בתעבורת stdio של MCP הלקוח מפעיל את השרת כתת-תהליך על אותו מחשב. לאיזה סידור זה מתאים?"
+    choices:
+      - en: Local
+        he: מקומי
+      - en: Central
+        he: מרכזי
+      - en: Sharded
+        he: מפוצל
+    correctIndex: 0
+    explanation:
+      en: A subprocess lives and dies with the agent on that machine. A server shared by many machines is reached over HTTP.
+      he: תת-תהליך חי ומת יחד עם הסוכן על אותו מחשב. לשרת שמשותף למחשבים רבים פונים ב-HTTP.

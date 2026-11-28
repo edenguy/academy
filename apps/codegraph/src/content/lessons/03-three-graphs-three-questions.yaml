@@ -1,0 +1,154 @@
+id: three-graphs-three-questions
+topic: code-graphs
+order: 3
+
+title:
+  en: "Three graphs, three questions"
+  he: "שלושה גרפים, שלוש שאלות"
+
+subtitle:
+  en: "Chapter 3 · and each one's blind spot"
+  he: "פרק 3 · והנקודה העיוורת של כל אחד"
+
+intro:
+  - en: >-
+      There is no single "code graph". There are at least three kinds. They differ in
+      **who builds them**, and that decides what each one knows. You choose by the
+      question you are asking.
+    he: >-
+      אין "גרף קוד" אחד. יש לפחות שלושה סוגים. הם נבדלים בשאלה **מי בונה אותם**, וזה קובע
+      מה כל אחד מהם יודע. בוחרים לפי השאלה ששואלים.
+  - en: >-
+      **Structure: "what does this code call?"** A **syntax graph** is built by a parser.
+      A parser reads the text of one file and recognizes its shape: here a function
+      starts, here is a call. It does not need the project to build, and a parser such as
+      {{tree-sitter}} gives useful results even when the file has syntax errors. Its weak
+      spot: it knows **names**, not identities. Given two functions called
+      {{format_price}}, it cannot say which one a call means.
+    he: >-
+      **מבנה: "למה הקוד הזה קורא?"** **גרף תחבירי** נבנה על ידי {{parser}}, מנתח תחביר.
+      הוא קורא את הטקסט של קובץ אחד ומזהה את הצורה שלו: כאן מתחילה פונקציה, כאן יש קריאה.
+      הוא לא צריך שהפרויקט ייבנה, ומנתח כמו {{tree-sitter}} נותן תוצאות שימושיות גם כשיש
+      בקובץ שגיאות תחביר. נקודת התורפה שלו: הוא מכיר **שמות**, לא זהויות. כשיש שתי
+      פונקציות בשם {{format_price}}, הוא לא יודע לומר לאיזו מהן הקריאה מתכוונת.
+  - en: >-
+      **Identity: "which function is it, exactly?"** A **compiler index** is built by an
+      indexer that uses the compiler, which has already resolved every name to one
+      definition. {{SCIP}} is one open format for such an index: for each place in the
+      code it records which symbol is there and whether it is a definition or a
+      reference. Its weak spot: it needs a project the compiler can process, with its
+      dependencies and build settings. If the build is broken, there is usually no index
+      for that commit. And there is one indexer per language; not every language has one.
+    he: >-
+      **זהות: "איזו פונקציה זו בדיוק?"** **אינדקס מהדר** נבנה על ידי כלי שנעזר במהדר
+      ({{compiler}}), שכבר פענח כל שם להגדרה אחת. {{SCIP}} הוא פורמט פתוח אחד לאינדקס
+      כזה: לכל מקום בקוד הוא רושם איזה סמל נמצא שם, והאם זו הגדרה או הפניה. נקודת התורפה
+      שלו: הוא צריך פרויקט שהמהדר מסוגל לעבד, עם התלויות והגדרות הבנייה שלו. אם הבנייה
+      שבורה, בדרך כלל אין אינדקס ל-{{commit}} הזה. ויש כלי אינדוקס נפרד לכל שפה, ולא לכל
+      שפה יש כזה.
+  - en: >-
+      **Interface: "who depends on this API or this event?"** A **contract graph** is
+      built from declared interfaces: an {{OpenAPI}} document for an {{HTTP API}}, a
+      {{protobuf}} or {{GraphQL}} schema, an event definition, and the list of who
+      declared that they use each one. It crosses languages and repos, because a contract
+      is not written in either side's language. Its weak spot: it knows nothing about
+      what happens inside a service. ("Contract graph" is this course's name for the
+      idea, not a standard term.)
+    he: >-
+      **ממשק: "מי תלוי ב-{{API}} הזה או באירוע הזה?"** **גרף חוזים** נבנה מממשקים מוצהרים:
+      מסמך {{OpenAPI}} של {{HTTP API}}, סכמה של {{protobuf}} או {{GraphQL}}, הגדרה של
+      אירוע, ורשימה של מי שהצהיר שהוא משתמש בכל אחד מהם. הוא חוצה שפות ומאגרים, כי חוזה
+      לא כתוב בשפה של אף אחד מהצדדים. נקודת התורפה שלו: הוא לא יודע שום דבר על מה שקורה
+      בתוך השירות. ("גרף חוזים" הוא השם שהקורס הזה נותן לרעיון, לא מונח תקני.)
+  - en: >-
+      Ask the three questions below and watch four columns answer: plain search and the
+      three graphs. Then break the build and see who is still standing. Each graph is
+      blind exactly where another one sees. You do not want "the code graph". You want
+      the right one for the question.
+    he: >-
+      שאלו את שלוש השאלות למטה וראו ארבע עמודות עונות: חיפוש רגיל ושלושת הגרפים. אחר כך
+      שברו את הבנייה וראו מי נשאר עומד. כל גרף עיוור בדיוק במקום שבו גרף אחר רואה. לא
+      מחפשים את "גרף הקוד". מחפשים את הגרף הנכון לשאלה.
+
+explorers:
+  - kind: askGraphs
+    question: callers
+    caption:
+      en: "Choose a question and compare four ways to answer it"
+      he: "בחרו שאלה והשוו בין ארבע דרכים לענות עליה"
+
+keyPoints:
+  - en: "Structure: a syntax graph, built by a parser. It works without a build and knows names, not identities."
+    he: "מבנה: גרף תחבירי, שנבנה על ידי מנתח תחביר. הוא עובד בלי בנייה ומכיר שמות, לא זהויות."
+  - en: "Identity: a compiler index. It is exact, and it needs a project the compiler can process."
+    he: "זהות: אינדקס מהדר. הוא מדויק, והוא צריך פרויקט שהמהדר מסוגל לעבד."
+  - en: "Interface: a contract graph. It crosses languages and repos and sees only declared interfaces."
+    he: "ממשק: גרף חוזים. הוא חוצה שפות ומאגרים ורואה רק ממשקים מוצהרים."
+  - en: Each graph's blind spot is another graph's strength.
+    he: הנקודה העיוורת של כל גרף היא החוזק של גרף אחר.
+
+quiz:
+  - type: mcq
+    id: q1-identity
+    prompt:
+      en: "You need the callers of exactly the {{format_price}} in {{money.py}}, not the other one. Which graph?"
+      he: "אתם צריכים את מי שקורא בדיוק ל-{{format_price}} שב-{{money.py}}, ולא לאחרת. איזה גרף?"
+    choices:
+      - en: The syntax graph
+        he: הגרף התחבירי
+      - en: The compiler index
+        he: אינדקס המהדר
+      - en: The contract graph
+        he: גרף החוזים
+    correctIndex: 1
+    explanation:
+      en: Only the compiler has resolved each call to one definition. The syntax graph returns both callers by name and cannot choose.
+      he: רק המהדר פענח כל קריאה להגדרה אחת. הגרף התחבירי מחזיר את שני הקוראים לפי השם ולא יודע לבחור.
+  - type: mcq
+    id: q2-broken-build
+    prompt:
+      en: "The build is broken and you want a quick picture of what {{get_order}} calls. Which graph can still answer?"
+      he: "הבנייה שבורה ואתם רוצים תמונה מהירה של מה ש-{{get_order}} קוראת לו. איזה גרף עדיין יכול לענות?"
+    choices:
+      - en: The syntax graph
+        he: הגרף התחבירי
+      - en: The compiler index
+        he: אינדקס המהדר
+      - en: Neither
+        he: אף אחד מהם
+    correctIndex: 0
+    explanation:
+      en: A parser reads the file's text and does not need the build. The compiler index usually has nothing for a commit that does not build.
+      he: מנתח תחביר קורא את הטקסט של הקובץ ולא צריך את הבנייה. לאינדקס המהדר בדרך כלל אין מה להציע ל-commit שלא נבנה.
+  - type: mcq
+    id: q3-interface
+    prompt:
+      en: "You plan to rename the field {{total_price}} in the API response. Which graph tells you who will break in another repo, written in another language?"
+      he: "אתם מתכננים לשנות את שם השדה {{total_price}} בתשובה של ה-API. איזה גרף אומר לכם מי יישבר במאגר אחר, שכתוב בשפה אחרת?"
+    choices:
+      - en: The syntax graph
+        he: הגרף התחבירי
+      - en: The compiler index
+        he: אינדקס המהדר
+      - en: The contract graph
+        he: גרף החוזים
+    correctIndex: 2
+    explanation:
+      en: The field is part of a declared interface. The other two graphs see a string on one side and a property on the other, with nothing joining them.
+      he: השדה הוא חלק מממשק מוצהר. שני הגרפים האחרים רואים מחרוזת בצד אחד ותכונה בצד השני, ושום דבר לא מחבר ביניהן.
+  - type: mcq
+    id: q4-why-two
+    prompt:
+      en: "Asked who calls {{format_price}}, the syntax graph returns two candidates. Why?"
+      he: "כששואלים מי קורא ל-{{format_price}}, הגרף התחבירי מחזיר שני מועמדים. למה?"
+    choices:
+      - en: It has a bug
+        he: יש בו באג
+      - en: It matches calls to definitions by name, and two definitions share this name
+        he: הוא מתאים קריאות להגדרות לפי שם, ולשתי הגדרות יש אותו שם
+      - en: It only reads one file
+        he: הוא קורא רק קובץ אחד
+    correctIndex: 1
+    explanation:
+      en: That is its blind spot, not a defect. Knowing which definition a name means is the compiler's job.
+      he: זו הנקודה העיוורת שלו, לא תקלה. לדעת לאיזו הגדרה שם מתכוון זו העבודה של המהדר.

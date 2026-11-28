@@ -12,7 +12,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { Rich } from '@/components/ui/Rich';
 import { LessonExplorer } from '@/components/LessonExplorer';
 import { Quiz } from '@/components/Quiz';
-import { lessonSignature } from '@/chemistry/lessonSignature';
+import { lessonSignature } from '@/graph/lessonSignature';
 
 export function LessonPage() {
   const { t } = useTranslation();

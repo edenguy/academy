@@ -2,17 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { LESSONS } from '@/content';
 import { computeAccuracy, computeCourseProgress, computeNextLesson, computeTopicProgress } from '../selectors';
 
-// Exercised against the real lesson content (6 structure-and-bonding lessons) so a change
+// Exercised against the real lesson content (7 code-graphs lessons) so a change
 // to the content's shape or ordering would fail a test here, not just at runtime.
 
 describe('computeCourseProgress', () => {
   it('is 0 of total with no progress', () => {
-    expect(computeCourseProgress({}, LESSONS)).toEqual({ done: 0, total: 6, fraction: 0 });
+    expect(computeCourseProgress({}, LESSONS)).toEqual({ done: 0, total: 7, fraction: 0 });
   });
 
   it('counts only lessons that exist in the content, ignoring stale ids', () => {
-    const progress = computeCourseProgress({ 'ionic-bond': 1, 'covalent-bond': 2, 'a-deleted-lesson': 3 }, LESSONS);
-    expect(progress).toEqual({ done: 2, total: 6, fraction: 2 / 6 });
+    const progress = computeCourseProgress({ 'agent-sees-what-it-opens': 1, 'what-is-a-code-graph': 2, 'a-deleted-lesson': 3 }, LESSONS);
+    expect(progress).toEqual({ done: 2, total: 7, fraction: 2 / 7 });
   });
 
   it('reaches 1 once every lesson is done', () => {
@@ -23,8 +23,8 @@ describe('computeCourseProgress', () => {
 
 describe('computeTopicProgress', () => {
   it('scopes to one topic only', () => {
-    const completed = { 'ionic-bond': 1, 'not-a-lesson': 2 };
-    expect(computeTopicProgress('structure-and-bonding', completed, LESSONS)).toEqual({ done: 1, total: 6, fraction: 1 / 6 });
+    const completed = { 'agent-sees-what-it-opens': 1, 'not-a-lesson': 2 };
+    expect(computeTopicProgress('code-graphs', completed, LESSONS)).toEqual({ done: 1, total: 7, fraction: 1 / 7 });
   });
 });
 
@@ -47,24 +47,24 @@ describe('computeNextLesson', () => {
   it('with nothing completed and no last visit, resumes nothing and starts at the first lesson in topic order', () => {
     const next = computeNextLesson({}, null, LESSONS);
     expect(next?.resumed).toBe(false);
-    expect(next?.lesson.id).toBe('ionic-bond');
+    expect(next?.lesson.id).toBe('agent-sees-what-it-opens');
   });
 
   it('resumes the last-visited lesson if it is still incomplete', () => {
-    const next = computeNextLesson({}, 'covalent-bond', LESSONS);
-    expect(next).toEqual({ lesson: LESSONS.find((l) => l.id === 'covalent-bond'), resumed: true });
+    const next = computeNextLesson({}, 'what-is-a-code-graph', LESSONS);
+    expect(next).toEqual({ lesson: LESSONS.find((l) => l.id === 'what-is-a-code-graph'), resumed: true });
   });
 
   it('falls through to the first incomplete lesson when the last-visited one is already done', () => {
-    const next = computeNextLesson({ 'ionic-bond': 1 }, 'ionic-bond', LESSONS);
+    const next = computeNextLesson({ 'agent-sees-what-it-opens': 1 }, 'agent-sees-what-it-opens', LESSONS);
     expect(next?.resumed).toBe(false);
-    expect(next?.lesson.id).toBe('covalent-bond');
+    expect(next?.lesson.id).toBe('what-is-a-code-graph');
   });
 
   it('skips completed lessons within a topic before moving to the next topic', () => {
-    const completed = { 'ionic-bond': 1 };
+    const completed = { 'agent-sees-what-it-opens': 1 };
     const next = computeNextLesson(completed, null, LESSONS);
-    expect(next?.lesson.id).toBe('covalent-bond');
+    expect(next?.lesson.id).toBe('what-is-a-code-graph');
   });
 
   it('returns null once every lesson is completed', () => {
