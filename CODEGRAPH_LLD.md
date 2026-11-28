@@ -3033,3 +3033,51 @@ before the first commit, do not push to `main` or open a PR unless Guy says so.
 After merge (only when Guy merges): open
 `https://edenguy.github.io/academy/subjects/codegraph/` in a private window, in both
 languages, and confirm the hub is unchanged.
+
+---
+
+## 9. Deviations (recorded by the implementation on branch `guy/codegraph-app`)
+
+Where the build departs from sections 1 to 8. Everything not listed here follows the spec.
+
+1. **Locale key clash.** `explorer.topology.does` and `explorer.topology.here` are listed in §5.4
+   both as a label string and as the parent of `does.*` / `here.*`; nested JSON cannot hold both.
+   The two labels are `explorer.topology.doesTitle` and `explorer.topology.hereTitle`.
+2. **Extra locale keys** the spec did not list: `explorer.landscape.standardTitle`,
+   `.notStandardTitle`, `.sourceOpens`, `explorer.cadence.axisDay`, `.axisWeek`, `.gap`,
+   `explorer.graph.legendOrders`, `.legendWeb`, `explorer.staleness.timeline`,
+   `explorer.topology.legendPublish`, `.legendQuery`, `.legendPolicy`, `.legendClone`.
+3. **Contrast.** The verdict, status and blocked/exposed chips use `--ink` for the word and carry
+   the colour in the icon and the tint. `--good`, `--highlight` and `--series-b` on their own
+   soft tints measured 3.8 to 4.3:1 in light mode (§1.3 only vouches for them on `--surface` and
+   `--surface-2`). The Quiz result heading uses `--ink` for the same reason.
+4. **Copied SKIN BASE changes** (checklist items 18 and 24): the `.ledge` and signature-handle
+   `:hover` rules are inside `@media (hover: hover)`; `button` and `a` `color: inherit` moved into
+   `@layer base` (unlayered, it overrode `text-accent-ink` and left dark text on plum buttons);
+   `--radius-pill` added to `@theme` (the scaffold's `rounded-pill` class had no definition).
+5. **Hero tag.** `HeroSignature`'s tag now grows with its text, splits at " · " into lines, and
+   its font scales so it never renders below 12 px. The staircase curve is drawn as specified.
+6. **Graph drawing.** In the narrow layout the repo chip in each group label did not fit at 390
+   px; repos are told apart by tint, a dashed outline for `web-shop`, and a legend row under the
+   diagram. A curve that avoids a pill clears it by 10 px (a generic rule in `toyLayout.ts`), not
+   a fixed 28. In the staleness drawing a renamed function is drawn once, at its old place, with
+   the old name as its sub-label, and the two edges that land on the same line are drawn 8 px
+   apart.
+7. **Topology.** `TNode` has an optional `sharded` box and `TEdge` has no `wide`/`narrow` fields;
+   paths come from `pathFor(edge, topology, layout)`. Extra edge ids `policy-server-2` and
+   `policy-server-3` exist in the sharded arrangement. `developersPerServer` rounds a shard up.
+   A machine has no title row (the lane names it); its rows start on the icon's line so the
+   three rows fit 132 px. Hebrew lane headers in the narrow layout sit at the right (the start
+   side) and have a halo so a line that crosses them stays readable. The CI box sits in the
+   product lane, as the §4.8 coordinates put it, while §3.8 says the platform team owns the
+   pipeline: **Guy to decide** whether CI moves to the platform lane or the sentence changes.
+8. **SearchCost.** The "With a graph: 1 query" line shows the correct answer (`truth`), because
+   the compiler index is blind for `total_price`.
+9. **Smaller points.** `relevantHits` takes an optional `term`. The landscape link for
+   `central-index` is the published abseil.io URL. The lesson page keys each explorer by lesson
+   id so state does not leak between lessons. `*.tsbuildinfo` is not tracked (Chemistry does not
+   track it either). `home.curriculumNote` is shown under the syllabus lead.
+10. **Not done.** The project websites in §2 could not be reached from the build sandbox (no
+    response from any of them), so nothing was re-read there and the table in §2 is unchanged.
+    `ACADEMY_PRIVATE_PATTERN` was not supplied, so checklist item 26's fourth grep was not run;
+    the other five were.
