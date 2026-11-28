@@ -6,51 +6,53 @@
 @custom-variant rtl (&:where([dir='rtl'], [dir='rtl'] *));
 
 /* ========================================================================================
-   PALETTE — Chemistry Academy's amber → teal. Text uses the darker amber; the bright
-   amber is the favicon gradient only (it fails as text on the paper). See SKIN BASE.
+   PALETTE — Code Graph Academy's plum → lime (CODEGRAPH_LLD.md §1.3). Plum is the text-safe
+   accent. Lime is NEVER text in light mode (1.92:1 on the paper): fills, strokes, chip
+   backgrounds and the favicon only. Light --series-b, --good and --critical are text only on
+   --surface and --surface-2. Dark --critical is not text on --surface-3.
    ======================================================================================== */
-:root {                                    /* light: warm paper */
-  --bg: #f7f0e4;          --bg-2: #f1e6d4;
-  --surface: #ffffff;     --surface-2: #fbf6ee;   --surface-3: #f3e9d8;
-  --line: rgba(138, 78, 8, 0.12);  --line-strong: rgba(138, 78, 8, 0.26);
-  --axis: rgba(138, 78, 8, 0.45);
-  --ink: #2a1c0c;  --ink-2: #4a3824;  --muted: #6d5e4c;
-  --accent: #8a4e08;      --accent-ink: #ffffff;
-  --accent-deep: #6e3e05;
-  --accent-soft: rgba(138, 78, 8, 0.12);
-  --accent-2: #14998a;    --accent-2-soft: rgba(20, 153, 138, 0.16);
-  --hue-shadow: rgba(138, 78, 8, 0.22);
-  --glow: rgba(138, 78, 8, 0.30);
-  --series-a: #8a4e08;    --series-a-soft: rgba(138, 78, 8, 0.16);
-  --series-b: #14998a;    --series-b-soft: rgba(20, 153, 138, 0.16);
+:root {                                    /* light: plum-tinted paper */
+  --bg: #f8eef6;          --bg-2: #f2e3ef;
+  --surface: #ffffff;     --surface-2: #fcf5fb;   --surface-3: #f3e2f0;
+  --line: rgba(150, 33, 138, 0.12);  --line-strong: rgba(150, 33, 138, 0.26);
+  --axis: rgba(150, 33, 138, 0.45);
+  --ink: #2a1027;  --ink-2: #4d3349;  --muted: #6f5a6c;      /* muted 5.53:1 on --bg */
+  --accent: #96218a;      --accent-ink: #ffffff;              /* 6.44:1 on --bg, 7.29:1 on white */
+  --accent-deep: #771a6e;
+  --accent-soft: rgba(150, 33, 138, 0.12);
+  --accent-2: #8fbf26;    --accent-2-soft: rgba(143, 191, 38, 0.20);
+  --hue-shadow: rgba(150, 33, 138, 0.22);
+  --glow: rgba(150, 33, 138, 0.30);
+  --series-a: #96218a;    --series-a-soft: rgba(150, 33, 138, 0.16);
+  --series-b: #4f7a0c;    --series-b-soft: rgba(79, 122, 12, 0.16);
   --highlight: #a15e0a;   --highlight-soft: rgba(161, 94, 10, 0.16);
   --good: #0b7a4f;  --good-fill: #0ca36b;  --good-soft: rgba(12, 163, 107, 0.14);
   --critical: #b93232;  --critical-fill: #d03b3b;  --critical-soft: rgba(208, 59, 59, 0.12);
-  --grid: rgba(138, 78, 8, 0.07);
+  --grid: rgba(150, 33, 138, 0.07);
   color-scheme: light;
 }
-:root[data-theme='dark'] {                 /* dark: lit bench, warm */
-  --bg: #14100c;          --bg-2: #1c1610;
-  --surface: #241c14;     --surface-2: #2c2218;   --surface-3: #362a1e;
-  --line: rgba(240, 180, 90, 0.16);  --line-strong: rgba(240, 180, 90, 0.32);
-  --axis: rgba(240, 180, 90, 0.50);
-  --ink: #f8f1e6;  --ink-2: #e4d3bc;  --muted: #b5a48e;
-  --accent: #f0b45a;      --accent-ink: #1a120c;
-  --accent-deep: #d89a3e;
-  --accent-soft: rgba(240, 180, 90, 0.18);
-  --accent-2: #3ecfb8;    --accent-2-soft: rgba(62, 207, 184, 0.20);
+:root[data-theme='dark'] {                 /* dark: lit bench, plum */
+  --bg: #160b15;          --bg-2: #1e101c;
+  --surface: #281626;     --surface-2: #321c2f;   --surface-3: #3e2439;
+  --line: rgba(229, 139, 219, 0.16);  --line-strong: rgba(229, 139, 219, 0.32);
+  --axis: rgba(229, 139, 219, 0.50);
+  --ink: #fbeef9;  --ink-2: #e3c9de;  --muted: #b49bb0;
+  --accent: #e58bdb;      --accent-ink: #1e101c;
+  --accent-deep: #cf6fc4;
+  --accent-soft: rgba(229, 139, 219, 0.18);
+  --accent-2: #b5e04a;    --accent-2-soft: rgba(181, 224, 74, 0.20);
   --hue-shadow: rgba(0, 0, 0, 0.55);
-  --glow: rgba(240, 180, 90, 0.38);
-  --series-a: #f0b45a;    --series-a-soft: rgba(240, 180, 90, 0.20);
-  --series-b: #3ecfb8;    --series-b-soft: rgba(62, 207, 184, 0.20);
+  --glow: rgba(229, 139, 219, 0.38);
+  --series-a: #e58bdb;    --series-a-soft: rgba(229, 139, 219, 0.20);
+  --series-b: #b5e04a;    --series-b-soft: rgba(181, 224, 74, 0.20);
   --highlight: #e0a830;   --highlight-soft: rgba(224, 168, 48, 0.20);
   --good: #2fd69a;  --good-fill: #2fd69a;  --good-soft: rgba(47, 214, 154, 0.18);
   --critical: #e66767;  --critical-fill: #e66767;  --critical-soft: rgba(230, 103, 103, 0.18);
-  --grid: rgba(240, 180, 90, 0.08);
+  --grid: rgba(229, 139, 219, 0.08);
   color-scheme: dark;
 }
 
-/* === SKIN BASE — identical in apps/math, apps/physics, and apps/chemistry; keep in sync (diff them) === */
+/* === SKIN BASE — identical in apps/math, apps/physics, and apps/chemistry; apps/codegraph differs only by gated hover rules (CODEGRAPH_LLD.md deviations) === */
 
 :root {
   --r-xl: 20px;   /* hero signature panel, explorer "bench" */
@@ -227,8 +229,10 @@ a { color: inherit; }
 
 /* LessonSignature's handle dot (§5.3): slides along its curve on card hover/focus. */
 .signature-handle { transition: offset-distance var(--t-slow) var(--ease); }
-.elev-1.is-link:hover .signature-handle,
 .elev-1.is-link:focus-within .signature-handle { offset-distance: 70%; }
+@media (hover: hover) {
+  .elev-1.is-link:hover .signature-handle { offset-distance: 70%; }
+}
 
 /* ---------- Tactile controls — the ledge ---------- */
 .ledge {
@@ -236,7 +240,9 @@ a { color: inherit; }
   transform: translateY(0);
   transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), filter var(--t-fast) var(--ease);
 }
-.ledge:hover { filter: brightness(1.06); }
+@media (hover: hover) {
+  .ledge:hover { filter: brightness(1.06); }
+}
 .ledge:active, .ledge[aria-pressed='true']:active {
   transform: translateY(var(--ledge));
   box-shadow: 0 0 0 var(--accent-deep), 0 4px 10px -8px var(--glow);
