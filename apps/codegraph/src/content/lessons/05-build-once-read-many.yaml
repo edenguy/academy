@@ -1,0 +1,157 @@
+id: build-once-read-many
+topic: code-graphs
+order: 5
+
+title:
+  en: "Build once, read many times"
+  he: "בונים פעם אחת, קוראים הרבה"
+
+subtitle:
+  en: "Chapter 5 · the arithmetic of scale, and its price"
+  he: "פרק 5 · החשבון של קנה המידה, והמחיר שלו"
+
+intro:
+  - en: >-
+      Meet the example organization used from here on: [[500]] repos, [[20,000]]
+      developers, a few dozen teams.
+    he: >-
+      הכירו את הארגון לדוגמה שילווה אותנו מכאן: [[500]] מאגרי קוד, [[20,000]] מפתחים,
+      כמה עשרות צוותים.
+  - en: >-
+      These numbers are an example. They describe no real company, and the sliders above
+      let you change them. Every developer has an agent, and every agent sometimes needs a
+      fact about code in a repo its developer does not have.
+    he: >-
+      המספרים האלה הם דוגמה. הם לא מתארים שום חברה אמיתית, והמחוונים שלמעלה מאפשרים
+      לשנות אותם. לכל מפתח יש סוכן, וכל סוכן צריך מדי פעם עובדה על קוד שנמצא במאגר שאין
+      למפתח שלו.
+  - en: >-
+      **Option one: every machine indexes everything.** That is [[500]] × [[20,000]] =
+      [[10,000,000]] index builds, repeated as the code changes, and every machine needs
+      the source and the build setup of every repo. This is arithmetic on the numbers
+      above, not a measurement. The shape is clear enough.
+    he: >-
+      **אפשרות ראשונה: כל מחשב מאנדקס הכול.** אלה [[500]] × [[20,000]] = [[10,000,000]]
+      בניות של אינדקס, שחוזרות על עצמן כשהקוד משתנה, וכל מחשב צריך את קוד המקור ואת
+      סביבת הבנייה של כל מאגר. זה חשבון על המספרים שלמעלה, לא מדידה. הצורה ברורה מספיק.
+  - en: >-
+      **Option two: every machine indexes only what its developer works on.** Say [[3]]
+      repos each: [[60,000]] builds. Far cheaper, and the agent now sees [[3]] of [[500]]
+      repos, which is [[0.6%]]. Almost everything is still dark.
+    he: >-
+      **אפשרות שנייה: כל מחשב מאנדקס רק את מה שהמפתח שלו עובד עליו.** נניח [[3]] מאגרים
+      לכל אחד: [[60,000]] בניות. זול בהרבה, והסוכן רואה עכשיו [[3]] מתוך [[500]] מאגרים,
+      כלומר [[0.6%]]. כמעט הכול נשאר חשוך.
+  - en: >-
+      **Option three: index each repo once, in one place, and let everyone read the
+      result.** That is [[500]] builds. One common way to do it: a change is merged, a
+      {{CI}} job runs the indexer, the result is saved as a snapshot stamped with its
+      commit, a **registry** records which snapshot belongs to which repo, and a server
+      hands answers to agents. This pipeline is a pattern, not a standard. Google gave
+      the same reasoning for its code search in 2020: a central index means doing the
+      work once.
+    he: >-
+      **אפשרות שלישית: מאנדקסים כל מאגר פעם אחת, במקום אחד, וכולם קוראים את התוצאה.**
+      אלה [[500]] בניות. דרך נפוצה אחת לעשות זאת: שינוי ממוזג, משימת {{CI}} מריצה את כלי
+      האינדוקס, התוצאה נשמרת כתמונת מצב שמוטבע בה ה-{{commit}} שלה, **מרשם** רושם איזו
+      תמונת מצב שייכת לאיזה מאגר, ושרת מגיש תשובות לסוכנים. התהליך הזה הוא דפוס, לא תקן.
+      {{Google}} נתנה את אותו נימוק למנוע חיפוש הקוד שלה ב-[[2020]]: אינדקס מרכזי פירושו
+      לעשות את העבודה פעם אחת.
+  - en: >-
+      The price: **the photograph ages**. In the second explorer the snapshot was taken
+      at one commit and the code keeps moving. Drag the head forward [[3]] commits. Of
+      the snapshot's [[10]] edges, [[8]] are still true, [[2]] describe code that is
+      gone, and [[3]] new edges are missing from it. The missing ones are the dangerous
+      kind: there is a new reader of {{total_price}} and the graph does not know.
+    he: >-
+      המחיר: **התצלום מתיישן**. בסימולציה השנייה תמונת המצב צולמה ב-{{commit}} אחד והקוד
+      ממשיך לזוז. גררו את ראש הענף [[3]] צעדים קדימה. מתוך [[10]] הקשתות של תמונת המצב,
+      [[8]] עדיין נכונות, [[2]] מתארות קוד שכבר לא קיים, ו-[[3]] קשתות חדשות חסרות בה.
+      החסרות הן הסוג המסוכן: יש קורא חדש של {{total_price}}, והגרף לא יודע עליו.
+  - en: >-
+      What to do about it. Publish again on every change, so the gap stays small. And
+      when the snapshot may be behind: if the source is at hand, check it live; if it is
+      not, give the answer together with the commit it is true for.
+    he: >-
+      מה עושים עם זה. מפרסמים מחדש בכל שינוי, כדי שהפער יישאר קטן. וכשתמונת המצב עלולה
+      להיות מאחור: אם קוד המקור בהישג יד, בודקים אותו ישירות. אם לא, נותנים את התשובה
+      יחד עם ה-{{commit}} שהיא נכונה לו.
+
+explorers:
+  - kind: scale
+    repos: 500
+    developers: 20000
+    reposPerDeveloper: 3
+    caption:
+      en: "Change the size of the organization and compare three ways to index it"
+      he: "שנו את גודל הארגון והשוו בין שלוש דרכים לאנדקס אותו"
+  - kind: staleness
+    publishedAt: 0
+    head: 0
+    caption:
+      en: "Drag the head forward and see where the snapshot starts to lie"
+      he: "גררו את ראש הענף קדימה וראו איפה תמונת המצב מתחילה לשקר"
+
+keyPoints:
+  - en: Indexing everything on every machine costs repos × developers builds. Publishing costs one build per repo.
+    he: לאנדקס הכול בכל מחשב עולה מאגרים × מפתחים בניות. פרסום עולה בנייה אחת לכל מאגר.
+  - en: "One common pipeline: merge, index in CI, snapshot stamped with its commit, registry, server."
+    he: "תהליך נפוץ אחד: מיזוג, אינדוקס ב-CI, תמונת מצב שמוטבע בה ה-commit שלה, מרשם, שרת."
+  - en: A snapshot ages. It can describe code that is gone, and it can miss code that is new.
+    he: תמונת מצב מתיישנת. היא יכולה לתאר קוד שכבר לא קיים, והיא יכולה לפספס קוד חדש.
+  - en: When the snapshot may be behind, check live if you can, and otherwise say which commit the answer is for.
+    he: כשתמונת המצב עלולה להיות מאחור, בודקים ישירות אם אפשר, ואם לא, אומרים לאיזה commit התשובה נכונה.
+
+quiz:
+  - type: numeric
+    id: q1-everything-everywhere
+    prompt:
+      en: "An organization has 200 repos and 1,000 developers. Every machine indexes every repo once. How many index builds is that?"
+      he: "בארגון יש 200 מאגרים ו-1,000 מפתחים. כל מחשב מאנדקס כל מאגר פעם אחת. כמה בניות של אינדקס אלה?"
+    correctValue: 200000
+    tolerance: 0
+    explanation:
+      en: "200 × 1,000 = 200,000. Every repo is built again on every machine."
+      he: "200 × 1,000 = 200,000. כל מאגר נבנה מחדש בכל מחשב."
+  - type: numeric
+    id: q2-publish-once
+    prompt:
+      en: "The same organization indexes each repo once, centrally, and publishes the result. How many index builds?"
+      he: "אותו ארגון מאנדקס כל מאגר פעם אחת, במקום מרכזי, ומפרסם את התוצאה. כמה בניות של אינדקס?"
+    correctValue: 200
+    tolerance: 0
+    explanation:
+      en: "One per repo: 200. The number of developers no longer multiplies the work."
+      he: "אחת לכל מאגר: 200. מספר המפתחים כבר לא מכפיל את העבודה."
+  - type: mcq
+    id: q3-missing-edge
+    prompt:
+      en: "The snapshot says one function reads {{total_price}}. The code today has two. What kind of error is this?"
+      he: "תמונת המצב אומרת שפונקציה אחת קוראת את {{total_price}}. בקוד של היום יש שתיים. איזה סוג של טעות זה?"
+    choices:
+      - en: An edge that is still true
+        he: קשת שעדיין נכונה
+      - en: A phantom edge, describing code that is gone
+        he: קשת רפאים, שמתארת קוד שכבר לא קיים
+      - en: A missing edge, for code added after the snapshot
+        he: קשת חסרה, של קוד שנוסף אחרי תמונת המצב
+    correctIndex: 2
+    explanation:
+      en: The new reader was added after the snapshot was taken. Anyone who trusts the graph for "what breaks?" will miss it.
+      he: הקורא החדש נוסף אחרי שתמונת המצב צולמה. מי שסומך על הגרף בשאלה "מה יישבר?" יפספס אותו.
+  - type: mcq
+    id: q4-no-source
+    prompt:
+      en: "The snapshot of another team's repo may be behind, and you do not have that repo's source. What is the honest answer?"
+      he: "תמונת המצב של מאגר של צוות אחר עלולה להיות מאחור, ואין לכם את קוד המקור של המאגר הזה. מהי התשובה ההוגנת?"
+    choices:
+      - en: The graph's answer, stated as current
+        he: התשובה של הגרף, כאילו היא עדכנית
+      - en: The graph's answer, together with the commit it is true for
+        he: התשובה של הגרף, יחד עם ה-commit שהיא נכונה לו
+      - en: No answer at all
+        he: שום תשובה
+    correctIndex: 1
+    explanation:
+      en: An old answer with its date is useful. An old answer presented as current is how surprises happen.
+      he: תשובה ישנה עם התאריך שלה היא שימושית. תשובה ישנה שמוצגת כעדכנית היא הדרך שבה נוצרות הפתעות.

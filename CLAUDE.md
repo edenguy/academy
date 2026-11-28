@@ -42,15 +42,17 @@ overclaim.
 | **Math Academy** | `apps/math` | Two topics, 6 lessons: **Derivatives** (rate of change, derivative rules, extremum points; grade י, 5-unit) and **Integrals** (area under a curve, Riemann sums, antiderivative; grade י"א, 5-unit). Topic content follows the official Ministry 5-unit curriculum PDF. Treat Math as the template for a *new* subject. |
 | **Physics Academy** | `apps/physics` | Kinematics, 3 lessons (position vs time, velocity as slope, acceleration as area). Scaffolded from Math. Its feedback form still needs a real Web3Forms key (see "Open items"). |
 | **Chemistry Academy** | `apps/chemistry` | One topic, 6 lessons: **structure and bonding** (ionic, covalent, polarity, metallic, forces between molecules, comparing material types). Scaffolded from Math. The badge is the chapter name only — no grade, and no "5-unit" claim, because no Ministry chemistry source is cited. Feedback form still needs a real Web3Forms key (see "Open items"). |
+| **Code Graph Academy** | `apps/codegraph` | One topic, 7 lessons: how a coding agent uses precomputed code graphs, the three kinds, the landscape of formats and tools, and the topology at organization scale. Scaffolded from Chemistry. Not a school subject and **unlisted**, like Nitrox: live at `/academy/subjects/codegraph/`, not on the hub. Generic by rule: no company, tool, team or event names beyond the public sources in `CODEGRAPH_LLD.md` §2. Feedback form needs a real Web3Forms key. |
 
-**Nitrox is unlisted, on purpose (Guy's decision).** It is unrelated to the school-subject
-academies (Math, Physics, ...), so the hub — tiles, hero handle, demo, `/academy/subjects/`
-page, share cards — does not mention it, and Math/Physics never link to it. But its URL is a
-public, shared link and **must keep working exactly as it does today**: never delete or move
-`apps/nitrox` or `docs/subjects/nitrox/`, never change its `base`, and don't add it back to the
-hub (or to any cross-subject navigation) unless Guy asks. (Unlisted ≠ hidden from the internet:
-the page is still public and crawlable; if that's ever wanted, that's a separate `noindex` change
-inside the Nitrox app.)
+**Nitrox and Code Graph are unlisted, on purpose (Guy's decision).** Neither is a school subject
+like the academies (Math, Physics, ...), so the hub — tiles, hero handle, demo, `/academy/subjects/`
+page, share cards — does not mention them, and Math/Physics/Chemistry never link to them. But
+their URLs are public, shared links and **must keep working exactly as they do today**: never
+delete or move `apps/nitrox` or `apps/codegraph`, nor `docs/subjects/nitrox/` or
+`docs/subjects/codegraph/`, never change their `base`, and don't add either back to the hub (or to
+any cross-subject navigation) unless Guy asks. (Unlisted ≠ hidden from the internet: the pages are
+still public and crawlable; if that's ever wanted, that's a separate `noindex` change inside the
+app.)
 
 Nitrox is the reference for what a subject looks like once it's grown large — not something to
 imitate on day one. Math/Physics adopt Nitrox's *personal, progress-aware feel* (below), not its
@@ -94,6 +96,8 @@ full feature set (no spaced-repetition mastery, no bottom-nav, no PWA in Math/Ph
    `https://meyda.education.gov.il/files/Mazkirut_Pedagogit/matematika/mat_5u.pdf`) and are
    phrased as "matches the curriculum", never "official" or "certified". Numbers shown in any
    demo are read from the subject's own source of truth, never retyped (see the hub rules).
+   Code Graph Academy's claims are sourced in `CODEGRAPH_LLD.md` §2; a claim not on that table is
+   not taught, and nothing in that app may name or describe a specific employer's internal systems.
 7. **Never gate or lock a lesson.** Explore-anything is the product's spirit. Progress,
    "continue" and achievements decorate; every lesson is always a plain link.
 8. **Numbers and formulas never mirror.** Inside RTL Hebrew text, every number, formula, unit
@@ -108,19 +112,21 @@ academy/                         (this repo)
 ├── HUB_LLD.md                    hub design spec (incl. §11 "inviting landing", implemented)
 ├── SUBJECT_APP_SKIN_LLD.md       Math/Physics "Bench" skin spec (implemented)
 ├── BACKGROUND_LLD.md             the Paper layer: floating napkins / bubbles (Revision 2 = current design; Revision 1 = what is built)
+├── CODEGRAPH_LLD.md              Code Graph Academy spec (unlisted subject)
 ├── scripts/                      hub-level tooling (render-og-cards.mjs, check-paper-sync.mjs, ...)
 ├── apps/                         SOURCE — never served, never deployed directly
 │   ├── nitrox/                    see apps/nitrox/CLAUDE.md
 │   ├── math/                      Math Academy
 │   ├── physics/                   Physics Academy
-│   └── chemistry/                 Chemistry Academy
+│   ├── chemistry/                 Chemistry Academy
+│   └── codegraph/                 Code Graph Academy (unlisted)
 └── docs/                         SERVED by GitHub Pages — the entire public site
     ├── index.html                  hub landing page (hand-written, no build)
     ├── hub/                        the hub's OWN assets (hub.css, hub.js, logos, social/,
     │                               paper-engine.js = the CANONICAL Paper engine, paper-payloads.js)
     └── subjects/
         ├── index.html              tiny redirect page → /academy/#subjects
-        ├── nitrox/ math/ physics/ chemistry/  built output of the matching app
+        ├── nitrox/ math/ physics/ chemistry/ codegraph/  built output of the matching app
 ```
 
 Each subject is a fully independent app — own `package.json`, own Vite+React+Tailwind v4+
@@ -150,6 +156,10 @@ self-unregistering service worker pattern.
   union in `content/schema.ts`; `LessonExplorer` dispatches. The math/physics itself lives in
   pure, tested functions (`src/math/*.ts`, `src/physics/*.ts`) — components never contain
   formulas. Add vitest tests for every new pure function and hand-check the numbers.
+  Code Graph: `SearchCostExplorer`, `GraphViewExplorer`, `AskGraphsExplorer`, `LandscapeExplorer`,
+  `ScaleExplorer`, `StalenessExplorer`, `TopologyExplorer`, `CadenceExplorer`, `AccessExplorer`, over
+  pure functions in `src/graph/*.ts`. Its diagrams have two layouts (wide and narrow) chosen by
+  container width.
 - **Progress system** (`src/progress/`): a Zustand store persisted with `idb-keyval`
   (IndexedDB), recording `lessonsCompleted` (id → timestamp), `attempts` (capped),
   `lastVisited` (a lesson id), `achievements`, and `settings.{locale,theme}`. Plus
@@ -181,7 +191,8 @@ self-unregistering service worker pattern.
     row then shows 0% and that lesson's YAML title.
 - **The hub reads this storage.** Each app's record is `{state, version}` as a JSON string at
   an idb-keyval key in the default `keyval-store`/`keyval` store: `nitrox-academy:v1`,
-  `academy-math:v1`, `academy-physics:v1`, `academy-chemistry:v1`. The hub reads only `lessonsCompleted` and
+  `academy-math:v1`, `academy-physics:v1`, `academy-chemistry:v1`. (`academy-codegraph:v1` exists
+  too and is deliberately **not** in `SOURCES`: the subject is unlisted.) The hub reads only `lessonsCompleted` and
   `lastVisited`, read-only. **If you rename a key or reshape those two fields, update
   `tileProgress()`'s `SOURCES` in `docs/hub/hub.js` in the same PR.**
 - **Pre-paint script:** each app's `index.html` sets `lang`/`dir`/theme synchronously before
@@ -191,7 +202,7 @@ self-unregistering service worker pattern.
   (`elev-0/1/2`), per-subject palette on one shared system, Rubik type. Spec and rationale:
   `SUBJECT_APP_SKIN_LLD.md`. Math = violet `#6250d6` → pink `#e87ba4`; Physics = indigo
   `#3457d1` → cyan `#17a3e8`; Chemistry = amber `#e0922a` → teal `#14998a` on the favicon,
-  with `#8a4e08` as text (the bright amber fails as text on the paper). Use the `--axis` token for chart axes (they were invisible once).
+  with `#8a4e08` as text (the bright amber fails as text on the paper). Code Graph = plum `#96218a` with lime `#8fbf26` (lime is never text in light mode). Use the `--axis` token for chart axes (they were invisible once).
 - **Feedback widget:** `components/FeedbackWidget.tsx` posts to Web3Forms with a per-subject
   public access key constant (not a secret). It auto-hides over anything marked
   `data-fab-avoid` — mark any new bottom-of-screen CTA with it.
@@ -476,7 +487,7 @@ layout bug. Don't commit temp scripts.
   Nitrox Academy (mature; **unlisted** — reachable by its direct link only, removed from the hub);
   Math Academy (Derivatives + Integrals, 6 lessons, topic-grouped
   dashboard home with progress, accuracy, achievements); Physics Academy (kinematics, 3 lessons,
-  same dashboard); Chemistry Academy (structure and bonding, 6 lessons, same dashboard); the "Bench" skin on all three.
+  same dashboard); Chemistry Academy (structure and bonding, 6 lessons, same dashboard); Code Graph Academy (7 lessons, **unlisted**); the "Bench" skin on all four.
 - **Open items:**
   - Physics feedback form is inert until a real Web3Forms key replaces
     `REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-physics` in
@@ -484,6 +495,11 @@ layout bug. Don't commit temp scripts.
   - Chemistry feedback form is inert until a real Web3Forms key replaces
     `REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-chemistry` in
     `apps/chemistry/src/components/FeedbackWidget.tsx` (same signup).
+  - Code Graph feedback form is inert until a real key replaces
+    `REPLACE_WITH_WEB3FORMS_KEY_FOR_academy-codegraph` in
+    `apps/codegraph/src/components/FeedbackWidget.tsx`; Code Graph has no share cards; its source
+    links (`CODEGRAPH_LLD.md` §2) need a manual check once a year; `SUBJECT_APP_SKIN_LLD.md` has no
+    palette section for it yet (the palette lives in `CODEGRAPH_LLD.md` §1.3).
   - Physics has no share cards yet; the English hub share card exists as an asset but only the
     Hebrew one is wired (a static page carries one locale's meta tags).
   - Math's "next lesson" follows global topic order (Derivatives before Integrals), so finishing

@@ -1,0 +1,137 @@
+id: what-is-a-code-graph
+topic: code-graphs
+order: 2
+
+title:
+  en: "What a code graph is"
+  he: "מהו גרף קוד"
+
+subtitle:
+  en: "Chapter 2 · nodes, edges, snapshot"
+  he: "פרק 2 · צמתים, קשתות, תמונת מצב"
+
+intro:
+  - en: >-
+      A graph is dots joined by lines. In a code graph each dot, a **node**, is a thing
+      in the code: a function, an API endpoint, a field in a response.
+    he: >-
+      גרף הוא נקודות שמחוברות בקווים. בגרף קוד כל נקודה, **צומת**, היא דבר שקיים בקוד:
+      פונקציה, נקודת קצה של {{API}}, שדה בתשובה.
+  - en: >-
+      Each line, an **edge**, is a relation between two of them: "calls", "requests",
+      "handled by", "reads", "part of".
+    he: >-
+      כל קו, **קשת**, הוא קשר בין שניים מהם: "קורא ל", "פונה אל", "מטופל על ידי", "קורא
+      את", "חלק מ".
+  - en: >-
+      The toy shop from the last lesson has [[11]] nodes and [[10]] edges. Tap a node to
+      see its edges. Look for {{format_price}}: it appears twice, because there are two
+      different functions with that name. In text they are the same word. In a graph they
+      are two separate nodes.
+    he: >-
+      בחנות הצעצוע מהשיעור הקודם יש [[11]] צמתים ו-[[10]] קשתות. הקישו על צומת כדי לראות
+      את הקשתות שלו. חפשו את {{format_price}}: הוא מופיע פעמיים, כי יש שתי פונקציות שונות
+      עם השם הזה. בטקסט זו אותה מילה. בגרף אלה שני צמתים נפרדים.
+  - en: >-
+      Now drag the handle. Start at {{format_price}} in {{money.py}} and ask: who depends
+      on it? One step away: {{get_order}}. Two steps: the endpoint that {{get_order}}
+      serves. Three steps: the endpoint's two fields and {{fetchOrder}}, in the other
+      repo. Four: {{renderOrderCard}}. The count grows [[1]], [[2]], [[5]], [[6]]. This
+      is the **blast radius**: what may be affected if you change one thing.
+    he: >-
+      עכשיו גררו את הידית. התחילו מ-{{format_price}} שב-{{money.py}} ושאלו: מי תלוי בה?
+      במרחק צעד אחד: {{get_order}}. שני צעדים: נקודת הקצה ש-{{get_order}} משרתת. שלושה
+      צעדים: שני השדות של נקודת הקצה ו-{{fetchOrder}}, שנמצאת במאגר האחר. ארבעה:
+      {{renderOrderCard}}. המספר גדל [[1]], [[2]], [[5]], [[6]]. זה **רדיוס הפגיעה**: מה
+      עלול להיות מושפע אם משנים דבר אחד.
+  - en: >-
+      One more word: **snapshot**. A graph is computed from the code as it was at one
+      specific commit. It is a photograph, not a live broadcast. A graph should always
+      say which commit it was taken at. Lesson 5 comes back to what happens when the code
+      moves on and the photograph does not.
+    he: >-
+      ועוד מילה אחת: **תמונת מצב** ({{snapshot}}). גרף מחושב מהקוד כפי שהיה ב-{{commit}}
+      מסוים אחד. זה תצלום, לא שידור חי. גרף תמיד צריך לומר מאיזה {{commit}} הוא צולם.
+      בשיעור 5 נחזור למה שקורה כשהקוד ממשיך להשתנות והתצלום לא.
+  - en: >-
+      A graph does not replace reading code. It tells the agent **where** to read.
+    he: >-
+      גרף לא מחליף קריאה של קוד. הוא אומר לסוכן **איפה** לקרוא.
+
+explorers:
+  - kind: graphView
+    start: money.format_price
+    hops: 1
+    caption:
+      en: "Tap a node, then drag the handle to widen the blast radius"
+      he: "הקישו על צומת, ואז גררו את הידית כדי להרחיב את רדיוס הפגיעה"
+
+keyPoints:
+  - en: A node is a thing in the code. An edge is a relation between two things.
+    he: צומת הוא דבר שקיים בקוד. קשת היא קשר בין שני דברים.
+  - en: Two functions with the same name are two different nodes.
+    he: שתי פונקציות עם אותו שם הן שני צמתים שונים.
+  - en: Blast radius is everything you reach by following "depends on" edges backwards from the thing you change.
+    he: רדיוס הפגיעה הוא כל מה שמגיעים אליו כשהולכים אחורה על קשתות "תלוי ב" מהדבר שמשנים.
+  - en: A graph is a snapshot of one commit, and should say which.
+    he: גרף הוא תמונת מצב של commit אחד, והוא צריך לומר איזה.
+
+quiz:
+  - type: mcq
+    id: q1-node-or-edge
+    prompt:
+      en: "\"{{get_order}} calls {{load_order}}\". In the graph, what is this sentence?"
+      he: "\"{{get_order}} קוראת ל-{{load_order}}\". מה המשפט הזה בגרף?"
+    choices:
+      - en: A node
+        he: צומת
+      - en: An edge between two nodes
+        he: קשת בין שני צמתים
+      - en: A snapshot
+        he: תמונת מצב
+    correctIndex: 1
+    explanation:
+      en: The two functions are nodes. "Calls" is the edge that joins them.
+      he: שתי הפונקציות הן צמתים. "קוראת ל" היא הקשת שמחברת ביניהן.
+  - type: numeric
+    id: q2-two-hops
+    prompt:
+      en: "Starting from {{format_price}} in {{money.py}}, how many nodes depend on it within two steps?"
+      he: "כשמתחילים מ-{{format_price}} שב-{{money.py}}, כמה צמתים תלויים בה בטווח של שני צעדים?"
+    correctValue: 2
+    tolerance: 0
+    explanation:
+      en: "Two: {{get_order}} calls it (one step), and the endpoint is handled by {{get_order}} (two steps)."
+      he: "שניים: {{get_order}} קוראת לה (צעד אחד), ונקודת הקצה מטופלת על ידי {{get_order}} (שני צעדים)."
+  - type: mcq
+    id: q3-snapshot
+    prompt:
+      en: "What does it mean that a graph is a snapshot?"
+      he: "מה המשמעות של זה שגרף הוא תמונת מצב?"
+    choices:
+      - en: It updates by itself every time someone types
+        he: הוא מתעדכן מעצמו בכל פעם שמישהו מקליד
+      - en: It was computed from the code at one commit, and it is true for that commit
+        he: הוא חושב מהקוד ב-commit אחד, והוא נכון ל-commit הזה
+      - en: It contains only part of the files
+        he: הוא מכיל רק חלק מהקבצים
+    correctIndex: 1
+    explanation:
+      en: After that commit the code can change, and the graph will not know until it is computed again.
+      he: אחרי ה-commit הזה הקוד יכול להשתנות, והגרף לא יֵדע על כך עד שיחשבו אותו מחדש.
+  - type: mcq
+    id: q4-same-name
+    prompt:
+      en: "The shop has two functions named {{format_price}}. How does the graph show them?"
+      he: "בחנות יש שתי פונקציות בשם {{format_price}}. איך הגרף מציג אותן?"
+    choices:
+      - en: As one node with two files
+        he: כצומת אחד עם שני קבצים
+      - en: As two separate nodes, each with its own edges
+        he: כשני צמתים נפרדים, לכל אחד הקשתות שלו
+      - en: It shows only the newer one
+        he: הוא מציג רק את החדשה יותר
+    correctIndex: 1
+    explanation:
+      en: They are different functions with different callers. Keeping them apart is the point.
+      he: אלה פונקציות שונות עם קוראים שונים. כל העניין הוא לא לערבב ביניהן.

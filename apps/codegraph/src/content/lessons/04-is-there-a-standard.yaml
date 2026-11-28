@@ -1,0 +1,172 @@
+id: is-there-a-standard
+topic: code-graphs
+order: 4
+
+title:
+  en: "Is there a standard?"
+  he: "יש לזה תקן?"
+
+subtitle:
+  en: "Chapter 4 · a map of what exists"
+  he: "פרק 4 · מפה של מה שקיים"
+
+intro:
+  - en: >-
+      The short answer: **no single standard**. There are several public pieces, they sit
+      in different layers, and every organization puts its own combination together.
+    he: >-
+      התשובה הקצרה: **אין תקן אחד**. יש כמה חלקים ציבוריים, הם יושבים בשכבות שונות, וכל
+      ארגון מרכיב מהם שילוב משלו.
+  - en: >-
+      The map above has five layers. Tap each one.
+    he: >-
+      במפה למעלה יש חמש שכבות. הקישו על כל אחת.
+  - en: >-
+      **The data format**: how an index is written to a file. {{LSIF}} came out of the
+      world of editors and the Language Server Protocol; its goal was code navigation
+      without a local copy of the source. {{SCIP}} was designed by Sourcegraph, partly to
+      fix pain points it had with {{LSIF}}; it is an open {{protobuf}} schema. {{Kythe}},
+      an open-source project from Google, defines its own graph schema and aims to be a
+      language-agnostic way for tools to exchange facts about code. Three open formats,
+      and none of them is "the" standard.
+    he: >-
+      **פורמט הנתונים**: איך כותבים אינדקס לקובץ. {{LSIF}} צמח מעולם עורכי הקוד ומהפרוטוקול
+      {{Language Server Protocol}}, ומטרתו הייתה ניווט בקוד בלי עותק מקומי של המקור.
+      {{SCIP}} תוכנן על ידי {{Sourcegraph}}, בין השאר כדי לפתור קשיים שהיו לה עם {{LSIF}},
+      והוא סכמת {{protobuf}} פתוחה. {{Kythe}}, פרויקט קוד פתוח של {{Google}}, מגדיר סכמת
+      גרף משלו, ומטרתו להיות דרך שאינה תלויה בשפה שבה כלים מחליפים ביניהם עובדות על קוד.
+      שלושה פורמטים פתוחים, ואף אחד מהם אינו "התקן".
+  - en: >-
+      **The indexers**: the programs that produce the data, one per language. Parsers
+      such as {{tree-sitter}}, compiler-based indexers, and tools such as {{CodeQL}},
+      which builds its own database of a codebase for analysis. These are open-source
+      projects, and how well a language is covered differs from one to the next.
+    he: >-
+      **כלי האינדוקס**: התוכנות שמייצרות את הנתונים, אחת לכל שפה. מנתחי תחביר כמו
+      {{tree-sitter}}, כלי אינדוקס שנשענים על המהדר, וכלים כמו {{CodeQL}}, שבונה מסד
+      נתונים משלו על בסיס הקוד לצורכי ניתוח. אלה פרויקטים של קוד פתוח, ורמת הכיסוי משתנה
+      משפה לשפה.
+  - en: >-
+      **Storage, query and the registry**: where the facts are kept and how you ask.
+      {{Glean}}, an open-source system from Meta, stores facts about code and has its own
+      query language; it can also take in {{SCIP}} or {{LSIF}}. Google described in 2020
+      one central index behind its Code Search, with the reasoning that a central index
+      means doing the work once. What has no standard at all is the **registry**: the
+      list that says which snapshot belongs to which repo and which commit. Each
+      organization builds that part itself.
+    he: >-
+      **אחסון, שאילתות והמרשם**: איפה העובדות נשמרות ואיך שואלים. {{Glean}}, מערכת קוד
+      פתוח של {{Meta}}, שומרת עובדות על קוד ויש לה שפת שאילתות משלה. היא יודעת לקלוט גם
+      {{SCIP}} או {{LSIF}}. {{Google}} תיארה ב-[[2020]] אינדקס מרכזי אחד מאחורי
+      {{Code Search}} שלה, עם הנימוק שאינדקס מרכזי פירושו לעשות את העבודה פעם אחת. מה
+      שאין לו תקן בכלל הוא **המרשם** ({{registry}}): הרשימה שאומרת איזו תמונת מצב שייכת
+      לאיזה מאגר ולאיזה {{commit}}. את החלק הזה כל ארגון בונה בעצמו.
+  - en: >-
+      **Serving**: how the agent asks. {{MCP}}, the Model Context Protocol, is an open
+      specification for how an agent discovers and calls tools on a server. It
+      standardizes the **call**. The specification does not cover what a code graph
+      contains or how it is stored. **Organization metadata**: who owns what. A software
+      catalog such as {{Backstage}} models components, APIs and teams with relations like
+      {{ownedBy}} and {{consumesApi}}. {{SBOM}} formats, {{SPDX}} and {{CycloneDX}}, list
+      the components a system is made of. Contract formats, {{OpenAPI}}, {{AsyncAPI}},
+      {{protobuf}} and {{GraphQL}}, describe the interfaces.
+    he: >-
+      **הגשה**: איך הסוכן שואל. {{MCP}}, {{Model Context Protocol}}, הוא מפרט פתוח שמגדיר
+      איך סוכן מגלה כלים בשרת וקורא להם. הוא קובע תקן ל**קריאה**. המפרט לא עוסק בשאלה מה
+      גרף קוד מכיל או איך שומרים אותו. **מידע ארגוני**: מי אחראי על מה. קטלוג תוכנה כמו
+      {{Backstage}} ממדל רכיבים, ממשקים וצוותים עם קשרים כמו {{ownedBy}} ו-{{consumesApi}}.
+      פורמטים של {{SBOM}}, כמו {{SPDX}} ו-{{CycloneDX}}, מפרטים מאילו רכיבים מערכת
+      מורכבת. פורמטים של חוזים, {{OpenAPI}}, {{AsyncAPI}}, {{protobuf}} ו-{{GraphQL}},
+      מתארים את הממשקים.
+  - en: >-
+      So when someone says "we have a knowledge graph of our code", ask which layer they
+      mean: which format, which indexer, where it is stored, how it is served. And about
+      any particular company you know only what that company has published. The rest is
+      unknown, and this course leaves it unknown.
+    he: >-
+      אז כשמישהו אומר "יש לנו גרף ידע של הקוד", שאלו לאיזו שכבה הוא מתכוון: איזה פורמט,
+      איזה כלי אינדוקס, איפה זה שמור ואיך זה מוגש. ועל חברה מסוימת יודעים רק את מה שהיא
+      עצמה פרסמה. כל השאר לא ידוע, והקורס הזה משאיר אותו לא ידוע.
+
+explorers:
+  - kind: landscape
+    layer: format
+    caption:
+      en: "Tap a layer to see what exists in it and what is not standardized"
+      he: "הקישו על שכבה כדי לראות מה קיים בה ומה לא מוסדר בתקן"
+
+keyPoints:
+  - en: There is no single standard for a code graph. There are open formats, open-source projects and patterns, in five layers.
+    he: אין תקן אחד לגרף קוד. יש פורמטים פתוחים, פרויקטים של קוד פתוח ודפוסים, בחמש שכבות.
+  - en: MCP standardizes how an agent calls tools. It does not define the graph.
+    he: MCP קובע תקן לאופן שבו סוכן קורא לכלים. הוא לא מגדיר את הגרף.
+  - en: The registry of snapshots and the way the layers are joined are built by each organization.
+    he: את מרשם תמונות המצב ואת אופן החיבור בין השכבות כל ארגון בונה בעצמו.
+  - en: About a specific company, only what it has published is known.
+    he: על חברה מסוימת ידוע רק מה שהיא עצמה פרסמה.
+
+quiz:
+  - type: mcq
+    id: q1-one-standard
+    prompt:
+      en: "Is there one standard that defines a code graph for an organization?"
+      he: "האם יש תקן אחד שמגדיר גרף קוד לארגון?"
+    choices:
+      - en: Yes, SCIP
+        he: כן, SCIP
+      - en: Yes, MCP
+        he: כן, MCP
+      - en: No. There are several open formats and projects in different layers, and each organization combines them
+        he: לא. יש כמה פורמטים ופרויקטים פתוחים בשכבות שונות, וכל ארגון משלב ביניהם
+    correctIndex: 2
+    explanation:
+      en: SCIP is one open index format among several, and MCP is about calling tools. Neither is a standard for the whole thing.
+      he: SCIP הוא פורמט אינדקס פתוח אחד מתוך כמה, ו-MCP עוסק בקריאה לכלים. אף אחד מהם אינו תקן לכל העניין.
+  - type: mcq
+    id: q2-mcp-scope
+    prompt:
+      en: "What does MCP standardize?"
+      he: "למה MCP קובע תקן?"
+    choices:
+      - en: What a code graph contains
+        he: למה שגרף קוד מכיל
+      - en: How an agent discovers and calls tools on a server
+        he: לאופן שבו סוכן מגלה כלים בשרת וקורא להם
+      - en: How an index is stored on disk
+        he: לאופן שבו אינדקס נשמר בדיסק
+    correctIndex: 1
+    explanation:
+      en: Two servers can both speak MCP and serve completely different graphs. The protocol is the phone line, not the conversation.
+      he: שני שרתים יכולים לדבר MCP ולהגיש גרפים שונים לגמרי. הפרוטוקול הוא קו הטלפון, לא השיחה.
+  - type: mcq
+    id: q3-ownership
+    prompt:
+      en: "Which piece is meant to tell you which team owns a service?"
+      he: "איזה חלק נועד לומר לכם איזה צוות אחראי על שירות?"
+    choices:
+      - en: A compiler index
+        he: אינדקס מהדר
+      - en: A software catalog, with a relation such as {{ownedBy}}
+        he: קטלוג תוכנה, עם קשר כמו {{ownedBy}}
+      - en: A parser
+        he: מנתח תחביר
+    correctIndex: 1
+    explanation:
+      en: An index knows symbols and references. Ownership lives in the organization-metadata layer.
+      he: אינדקס מכיר סמלים והפניות. הבעלות נמצאת בשכבת המידע הארגוני.
+  - type: mcq
+    id: q4-sbom
+    prompt:
+      en: "What does an SBOM format such as SPDX or CycloneDX describe?"
+      he: "מה מתאר פורמט SBOM כמו SPDX או CycloneDX?"
+    choices:
+      - en: Which function calls which function
+        he: איזו פונקציה קוראת לאיזו פונקציה
+      - en: Which components and dependencies a system is made of
+        he: מאילו רכיבים ותלויות מערכת מורכבת
+      - en: Who may read which repo
+        he: מי רשאי לקרוא איזה מאגר
+    correctIndex: 1
+    explanation:
+      en: It is a bill of materials, a list of parts. Useful next to a code graph, and not a replacement for one.
+      he: זו רשימת חלקים. היא שימושית לצד גרף קוד, ולא באה במקומו.
