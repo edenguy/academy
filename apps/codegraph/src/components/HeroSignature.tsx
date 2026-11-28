@@ -29,7 +29,6 @@ const SAMPLES = 100;
 const SWEEP_TARGET = 0.62;
 const SWEEP_MS = 1400;
 const TAG_W = 70; // minimum; the tag grows with its text (Code Graph's tag is longer than a number)
-const TAG_CHAR = 7.2;
 const TAG_H = 24;
 
 export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
@@ -39,6 +38,15 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
   const sweptRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
   const [a, b] = curve.domain;
+  // rendered px per viewBox unit, so the tag text never renders below 12 px (Code Graph checklist item 8)
+  const [scale, setScale] = useState(0.6);
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setScale(el.getBoundingClientRect().width / VB_W || 0.6));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const yRange = useMemo(() => {
     let min = Infinity;
@@ -98,9 +106,13 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
   const hx = scaleX(x);
   const hy = scaleY(curve.fn(x));
   const tagText = curve.tagText(x, t);
-  const tagW = Math.max(TAG_W, tagText.length * TAG_CHAR + 18);
+  const tagFont = Math.max(11.5, 12.4 / scale);
+  // a long tag is split at " · " into lines so it stays narrow when the font is scaled up
+  const tagLines = tagText.split(' · ');
+  const tagW = Math.max(TAG_W, Math.max(...tagLines.map((l) => l.length)) * (tagFont * 0.62) + 18);
+  const tagH = Math.max(TAG_H, tagLines.length * tagFont * 1.3 + 10);
   const tagX = Math.min(VB_W - PAD - tagW, Math.max(PAD, hx - tagW / 2));
-  const tagY = Math.max(PAD, Math.min(VB_H - PAD - TAG_H, hy - 36));
+  const tagY = Math.max(PAD, Math.min(VB_H - PAD - tagH, hy - 36 - (tagH - TAG_H)));
 
   return (
     <svg
@@ -154,17 +166,17 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
       <circle cx={hx} cy={hy} r={9} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2.5} />
 
       <g transform={`translate(${tagX}, ${tagY})`}>
-        <rect width={tagW} height={TAG_H} rx={6} fill="var(--accent)" />
+        <rect width={tagW} height={tagH} rx={6} fill="var(--accent)" />
         <text
-          x={tagW / 2}
-          y={TAG_H / 2 + 4}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
-          fontSize={11.5}
+          fontSize={tagFont}
           fontWeight={600}
           fill="var(--accent-ink)"
         >
-          {tagText}
+          {tagLines.map((l, i) => (
+            <tspan key={i} x={tagW / 2} y={tagFont * 1.05 + 5 + i * tagFont * 1.3}>{l}</tspan>
+          ))}
         </text>
       </g>
     </svg>

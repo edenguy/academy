@@ -154,8 +154,9 @@ h1, h2, h3, h4 {
 }
 :root[lang='he'] [class*='tracking-'] { letter-spacing: 0; }
 p { margin: 0; }
-button { font: inherit; color: inherit; }
-a { color: inherit; }
+/* in the base layer, so a text-* utility on a button wins (unlayered, it beat text-accent-ink and left ink on plum) */
+@layer base { button { font: inherit; color: inherit; } }
+@layer base { a { color: inherit; } }
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;

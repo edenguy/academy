@@ -172,7 +172,7 @@ export function Quiz({
         <div className={clsx('rounded-[var(--r-md)] p-4 flex gap-3 anim-pop', isCorrect ? 'bg-good-soft' : 'bg-critical-soft')}>
           <Icon name={isCorrect ? 'check' : 'alert'} size={20} className={clsx('shrink-0 mt-0.5', isCorrect ? 'text-good-fill' : 'text-critical-fill')} />
           <div className="min-w-0">
-            <div className={clsx('font-semibold', isCorrect ? 'text-good' : 'text-critical')}>
+            <div className="font-semibold text-ink">
               {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
             </div>
             <Rich text={pick(q.explanation, locale)} className="text-ink-2 text-sm mt-1" />

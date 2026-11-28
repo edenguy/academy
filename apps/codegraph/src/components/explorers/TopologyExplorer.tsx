@@ -175,12 +175,13 @@ export function TopologyExplorer({ config, locale }: { config: Extract<ExplorerC
       { kind: 'chip', text: t('explorer.topology.node.client') },
     ];
     if (topo === 'local' || topo === 'hybrid') rows.push({ kind: 'chip', text: t('explorer.topology.node.local'), hl: cur.chip === 'local' && activeNodes.has(layoutNodeId('machine-1', layout)) && b.x === boxOf('machine-1', topo, layout)!.x });
-    let y = y1 + (layout === 'wide' ? 36 : 40);
+    // the first row shares a line with the kind icon at the start corner
+    let y = y1 + 6;
     return rows.map((r, i) => {
       const lines = wrap(r.text, chipW - 10, size);
-      const h = r.kind === 'text' ? size * 1.4 : lines.length * size * 1.2 + 10;
+      const h = r.kind === 'text' ? size * 1.4 : lines.length * size * 1.2 + 6;
       const top = y;
-      y += h + 6;
+      y += h + 4;
       return (
         <g key={i}>
           {r.kind === 'chip' && (
@@ -188,7 +189,7 @@ export function TopologyExplorer({ config, locale }: { config: Extract<ExplorerC
           )}
           <text textAnchor="middle" fontSize={size} fill="var(--ink)" fontWeight={r.kind === 'text' ? 600 : 400} style={{ direction: he ? 'rtl' : 'ltr', unicodeBidi: 'isolate' }}>
             {lines.map((ln, li) => (
-              <tspan key={li} x={b.x} y={top + (r.kind === 'text' ? size * 1.05 : 5 + size * 0.95 + li * size * 1.2)}>{ln}</tspan>
+              <tspan key={li} x={b.x} y={top + (r.kind === 'text' ? size * 1.05 : 3 + size * 0.95 + li * size * 1.2)}>{ln}</tspan>
             ))}
           </text>
         </g>

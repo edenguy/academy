@@ -176,8 +176,8 @@ export function ToyGraphSvg({
             )}
             {m.hop !== undefined && m.hop > 0 && (
               <g>
-                <circle cx={r.x2 - 2} cy={r.y1 + 2} r={10} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2} />
-                <text x={r.x2 - 2} y={r.y1 + 2 + 4} textAnchor="middle" fontSize={12} fontWeight={700} fill="var(--accent-ink)" fontFamily="var(--font-mono)">
+                <circle cx={r.x2 - 2} cy={r.y1 + 2} r={Math.max(10, subSize * 0.85)} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2} />
+                <text x={r.x2 - 2} y={r.y1 + 2 + subSize * 0.36} textAnchor="middle" fontSize={subSize} fontWeight={700} fill="var(--accent-ink)" fontFamily="var(--font-mono)">
                   {m.hop}
                 </text>
               </g>

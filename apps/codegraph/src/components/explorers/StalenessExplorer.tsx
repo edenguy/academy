@@ -56,7 +56,7 @@ function Timeline({ head, pub, onHead, onPub, label }: { head: number; pub: numb
       {[0, 1, 2, 3, 4].map((i) => (
         <g key={i}>
           <line x1={TL_X(i)} y1={22} x2={TL_X(i)} y2={38} stroke="var(--axis)" strokeWidth={2} />
-          <text x={TL_X(i)} y={64} textAnchor="middle" fontSize={15} fontFamily="var(--font-mono)" fill="var(--ink-2)">{`c${i}`}</text>
+          <text x={TL_X(i)} y={66} textAnchor="middle" fontSize={17} fontFamily="var(--font-mono)" fill="var(--ink-2)">{`c${i}`}</text>
         </g>
       ))}
       <rect x={TL_X(pub) - 9} y={21} width={18} height={18} rx={3} fill="var(--series-b)" stroke="var(--surface)" strokeWidth={2.5} />
@@ -172,7 +172,7 @@ export function StalenessExplorer({ config, locale }: { config: Extract<Explorer
           <div><div className="text-ink-2">{t('explorer.staleness.codeSays')}</div><div className="flex flex-wrap gap-1.5 mt-1">{liveAnswer.map((id) => <span key={id} className="sci">{short(id)}</span>)}</div></div>
         </div>
         {mismatch && (
-          <span className="inline-flex items-center gap-1.5 rounded-pill bg-highlight-soft text-highlight px-2.5 h-7 text-[13px] font-semibold"><Icon name="alert" size={14} /> {t('explorer.staleness.mismatch')}</span>
+          <span className="inline-flex items-center gap-1.5 rounded-pill bg-highlight-soft text-ink px-2.5 h-7 text-[13px] font-semibold"><Icon name="alert" className="text-highlight" size={14} /> {t('explorer.staleness.mismatch')}</span>
         )}
       </div>
       <div className="space-y-1" data-fab-avoid>

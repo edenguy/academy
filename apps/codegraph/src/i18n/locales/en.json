@@ -286,7 +286,6 @@
         "answerAsOf": "The snapshot is behind and there is no source. Answer, and say which commit the answer is for."
       },
       "figure": "A timeline of five commits with the head and the last publish, and the graph below it",
-      "wasNamed": "was {{name}}",
       "timeline": "The commit timeline"
     },
     "cadence": {
@@ -306,7 +305,6 @@
       "figure": "One day as a timeline, with commits and publish points",
       "axisDay": "hours in the day",
       "axisWeek": "days in the week",
-      "nowLabel": "now",
       "gap": "The gap"
     },
     "topology": {
@@ -420,8 +418,7 @@
       "legendPublish": "Publish",
       "legendQuery": "Question",
       "legendPolicy": "Access rule",
-      "legendClone": "Repo clone",
-      "badgeMany": "many"
+      "legendClone": "Repo clone"
     },
     "access": {
       "share": "Share of repos this developer may read",
@@ -448,9 +445,7 @@
         "registry": "Registry"
       },
       "modelNote": "A model of one common design, not a description of a product.",
-      "figure": "The path of a request from the developer to the registry, with the places where access is checked",
-      "blocked": "Blocked",
-      "exposedWord": "Exposed"
+      "figure": "The path of a request from the developer to the registry, with the places where access is checked"
     },
     "landscape": {
       "layer": {

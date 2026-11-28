@@ -19,10 +19,11 @@ const TERM: Record<QuestionId, string> = { callers: 'format_price', callees: 'ge
 const KINDS: GraphKind[] = ['syntax', 'index', 'contract'];
 
 const VERDICT: Record<Verdict, { icon: IconName; cls: string }> = {
-  right: { icon: 'check', cls: 'bg-good-soft text-good' },
-  imprecise: { icon: 'approx', cls: 'bg-highlight-soft text-highlight' },
-  blind: { icon: 'emptyCircle', cls: 'bg-surface-3 text-muted border border-line-strong' },
-  unavailable: { icon: 'pause', cls: 'bg-critical-soft text-critical' },
+  // the word stays in --ink (4.5:1 on the soft tints); the icon and the tint carry the colour
+  right: { icon: 'check', cls: 'bg-good-soft text-ink [&_svg]:text-good' },
+  imprecise: { icon: 'approx', cls: 'bg-highlight-soft text-ink [&_svg]:text-highlight' },
+  blind: { icon: 'emptyCircle', cls: 'bg-surface-3 text-ink border border-line-strong' },
+  unavailable: { icon: 'pause', cls: 'bg-critical-soft text-ink [&_svg]:text-critical' },
 };
 
 /** The one-sentence reason, chosen by (question, kind, verdict) from the locale table. */

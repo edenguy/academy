@@ -11,8 +11,8 @@ import { Caption } from './controls';
 import { useNarrow } from './useNarrow';
 
 const STATUS: Record<PieceStatus, { icon: IconName; cls: string }> = {
-  spec: { icon: 'doc', cls: 'bg-accent-soft text-accent' },
-  project: { icon: 'cube', cls: 'bg-series-b-soft text-series-b' },
+  spec: { icon: 'doc', cls: 'bg-accent-soft text-ink [&_svg]:text-accent' },
+  project: { icon: 'cube', cls: 'bg-series-b-soft text-ink [&_svg]:text-series-b' },
   pattern: { icon: 'puzzle', cls: 'bg-surface-3 text-ink border border-line-strong' },
 };
 const STATUSES: PieceStatus[] = ['spec', 'project', 'pattern'];

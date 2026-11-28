@@ -58,8 +58,8 @@ function FilePanel({
                   <span className="ms-auto ps-3 flex items-center gap-1.5 shrink-0 font-sans text-[12px]">
                     <span className="rounded-pill bg-surface-3 text-ink px-2 leading-5">{hitRoles.get(r.n)!.label}</span>
                     {relevant.has(r.n) && (
-                      <span className="rounded-pill bg-good-soft text-good px-2 leading-5 inline-flex items-center gap-1">
-                        <Icon name="check" size={12} /> {t('explorer.role.answer')}
+                      <span className="rounded-pill bg-good-soft text-ink px-2 leading-5 inline-flex items-center gap-1">
+                        <Icon name="check" size={12} className="text-good" /> {t('explorer.role.answer')}
                       </span>
                     )}
                   </span>

@@ -139,8 +139,8 @@ export function AccessExplorer({ config, locale }: { config: Extract<ExplorerCon
         <Readout label={t('explorer.access.shouldNotSee')} value={formatCount(repos - may)} />
         <Readout label={t('explorer.access.exposed')} value={formatCount(exposed)} tone={exposed === 0 ? 'good' : 'ink'} />
         <div className="elev-0 px-3.5 py-2.5 min-w-[130px] flex-1 basis-[130px] flex items-center">
-          <span className={clsx('inline-flex items-center gap-1.5 rounded-pill px-3 h-9 text-[15px] font-bold', blocked ? 'bg-good-soft text-good' : 'bg-critical-soft text-critical')}>
-            <Icon name={blocked ? 'shield' : 'alert'} size={16} /> {blocked ? t('explorer.access.v.blocked') : t('explorer.access.v.exposed')}
+          <span className={clsx('inline-flex items-center gap-1.5 rounded-pill px-3 h-9 text-[15px] font-bold', 'bg-surface-3 text-ink')}>
+            <Icon name={blocked ? 'shield' : 'alert'} size={16} className={blocked ? 'text-good' : 'text-critical'} /> {blocked ? t('explorer.access.v.blocked') : t('explorer.access.v.exposed')}
           </span>
         </div>
       </div>
