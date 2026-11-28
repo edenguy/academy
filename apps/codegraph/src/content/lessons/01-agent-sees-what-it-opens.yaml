@@ -14,20 +14,19 @@ intro:
   - en: >-
       A **coding agent** is a program that reads code, runs searches and edits files for
       you. It has one hard limit: it knows only what it has opened in the current
-      session. Any file it has not read does not exist for it yet.
+      session.
     he: >-
       **סוכן קוד** הוא תוכנה שקוראת קוד, מריצה חיפושים ועורכת קבצים בשבילכם. יש לו מגבלה
-      אחת קשיחה: הוא יודע רק את מה שפתח בשיחה הנוכחית. קובץ שלא קרא פשוט לא קיים מבחינתו,
-      עד שיקרא אותו.
+      אחת קשיחה: הוא יודע רק את מה שפתח בשיחה הנוכחית.
   - en: >-
-      So how does it find anything? Mostly the way you would: a text search. Type a name,
-      get the lines that contain it, open the files, read. Below is a toy shop: [[4]]
-      files in [[2]] repos. The question is simple: who calls {{format_price}}, the one
+      Any file it has not read does not exist for it yet. So how does it find anything?
+      Mostly the way you would: a text search. Type a name, get the lines that contain
+      it, open the files, read. Above is a toy shop: [[4]] files in [[2]] repos. The question is simple: who calls {{format_price}}, the one
       in {{money.py}}?
     he: >-
-      אז איך הוא מוצא משהו? בעיקר כמו שאתם הייתם מוצאים: חיפוש טקסט. מקלידים שם, מקבלים את
-      השורות שמכילות אותו, פותחים את הקבצים וקוראים. למטה יש חנות צעצוע: [[4]] קבצים
-      ב-[[2]] מאגרי קוד. השאלה פשוטה: מי קורא ל-{{format_price}}, זו שנמצאת ב-{{money.py}}?
+      קובץ שלא קרא פשוט לא קיים מבחינתו, עד שיקרא אותו. אז איך הוא מוצא משהו? בעיקר כמו
+      שאתם הייתם מוצאים: חיפוש טקסט. מקלידים שם, מקבלים את השורות שמכילות אותו, פותחים את
+      הקבצים וקוראים. למעלה יש חנות צעצוע: [[4]] קבצים ב-[[2]] מאגרי קוד. השאלה פשוטה: מי קורא ל-{{format_price}}, זו שנמצאת ב-{{money.py}}?
   - en: >-
       Drag the slider; each step is one action of the agent. The search comes back with
       [[6]] lines in [[4]] files: two definitions with the same name, an import, a call

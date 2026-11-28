@@ -13,13 +13,16 @@ subtitle:
 intro:
   - en: >-
       A graph is dots joined by lines. In a code graph each dot, a **node**, is a thing
-      in the code: a function, an API endpoint, a field in a response. Each line, an
-      **edge**, is a relation between two of them: "calls", "requests", "handled by",
-      "reads", "part of".
+      in the code: a function, an API endpoint, a field in a response.
     he: >-
       גרף הוא נקודות שמחוברות בקווים. בגרף קוד כל נקודה, **צומת**, היא דבר שקיים בקוד:
-      פונקציה, נקודת קצה של {{API}}, שדה בתשובה. כל קו, **קשת**, הוא קשר בין שניים מהם:
-      "קורא ל", "פונה אל", "מטופל על ידי", "קורא את", "חלק מ".
+      פונקציה, נקודת קצה של {{API}}, שדה בתשובה.
+  - en: >-
+      Each line, an **edge**, is a relation between two of them: "calls", "requests",
+      "handled by", "reads", "part of".
+    he: >-
+      כל קו, **קשת**, הוא קשר בין שניים מהם: "קורא ל", "פונה אל", "מטופל על ידי", "קורא
+      את", "חלק מ".
   - en: >-
       The toy shop from the last lesson has [[11]] nodes and [[10]] edges. Tap a node to
       see its edges. Look for {{format_price}}: it appears twice, because there are two

@@ -28,6 +28,21 @@ describe('topology metrics', () => {
   });
 });
 
+describe('lanes', () => {
+  it('each node sits in the lane of the team that owns it (CI belongs to the platform team)', () => {
+    const lane = Object.fromEntries(TNODES.map((n) => [n.id, n.lane]));
+    expect(lane).toEqual({
+      'repo-a': 'product', 'repo-b': 'product', 'repo-c': 'product',
+      ci: 'platform', registry: 'platform', 'server-1': 'platform', 'server-2': 'platform', 'server-3': 'platform',
+      policy: 'security', 'machine-1': 'developers', 'machine-2': 'developers', 'machine-3': 'developers',
+    });
+  });
+  it('describeTopology lists CI under the platform team', () => {
+    const tr = (k: string) => k.split('.').pop()!;
+    expect(describeTopology('central', tr)[1]).toBe('platform: ci, server, registry');
+  });
+});
+
 describe('steps', () => {
   it('lengths: question 5 / 5 / 5 / 4, publish 4 / 4 / 4 / 1', () => {
     expect((['central', 'sharded', 'hybrid', 'local'] as Topology[]).map((t) => stepsFor(t, 'question').length)).toEqual([5, 5, 5, 4]);

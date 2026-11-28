@@ -12,12 +12,15 @@ subtitle:
 
 intro:
   - en: >-
-      There is no single "code graph". There are at least three kinds. They differ in
-      **who builds them**, and that decides what each one knows. You choose by the
-      question you are asking.
+      There is no single "code graph". There are at least three kinds.
     he: >-
-      אין "גרף קוד" אחד. יש לפחות שלושה סוגים. הם נבדלים בשאלה **מי בונה אותם**, וזה קובע
-      מה כל אחד מהם יודע. בוחרים לפי השאלה ששואלים.
+      אין "גרף קוד" אחד. יש לפחות שלושה סוגים.
+  - en: >-
+      They differ in **who builds them**, and that decides what each one knows. You choose
+      by the question you are asking.
+    he: >-
+      הם נבדלים בשאלה **מי בונה אותם**, וזה קובע מה כל אחד מהם יודע. בוחרים לפי השאלה
+      ששואלים.
   - en: >-
       **Structure: "what does this code call?"** A **syntax graph** is built by a parser.
       A parser reads the text of one file and recognizes its shape: here a function
@@ -61,12 +64,12 @@ intro:
       לא כתוב בשפה של אף אחד מהצדדים. נקודת התורפה שלו: הוא לא יודע שום דבר על מה שקורה
       בתוך השירות. ("גרף חוזים" הוא השם שהקורס הזה נותן לרעיון, לא מונח תקני.)
   - en: >-
-      Ask the three questions below and watch four columns answer: plain search and the
+      Ask the three questions in the explorer above and watch four columns answer: plain search and the
       three graphs. Then break the build and see who is still standing. Each graph is
       blind exactly where another one sees. You do not want "the code graph". You want
       the right one for the question.
     he: >-
-      שאלו את שלוש השאלות למטה וראו ארבע עמודות עונות: חיפוש רגיל ושלושת הגרפים. אחר כך
+      שאלו את שלוש השאלות בסימולציה שלמעלה וראו ארבע עמודות עונות: חיפוש רגיל ושלושת הגרפים. אחר כך
       שברו את הבנייה וראו מי נשאר עומד. כל גרף עיוור בדיוק במקום שבו גרף אחר רואה. לא
       מחפשים את "גרף הקוד". מחפשים את הגרף הנכון לשאלה.
 

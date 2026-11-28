@@ -13,11 +13,14 @@ subtitle:
 intro:
   - en: >-
       The short answer: **no single standard**. There are several public pieces, they sit
-      in different layers, and every organization puts its own combination together. The
-      map below has five layers. Tap each one.
+      in different layers, and every organization puts its own combination together.
     he: >-
       התשובה הקצרה: **אין תקן אחד**. יש כמה חלקים ציבוריים, הם יושבים בשכבות שונות, וכל
-      ארגון מרכיב מהם שילוב משלו. במפה למטה יש חמש שכבות. הקישו על כל אחת.
+      ארגון מרכיב מהם שילוב משלו.
+  - en: >-
+      The map above has five layers. Tap each one.
+    he: >-
+      במפה למעלה יש חמש שכבות. הקישו על כל אחת.
   - en: >-
       **The data format**: how an index is written to a file. {{LSIF}} came out of the
       world of editors and the Language Server Protocol; its goal was code navigation

@@ -13,20 +13,26 @@ subtitle:
 intro:
   - en: >-
       The boxes first. A **developer machine** runs the agent, and inside the agent sits
-      an {{MCP}} client. **Repos** are owned by teams. A **{{CI}}** job builds the index
-      and publishes it. A **registry** lists the snapshots. An **{{MCP}} server** answers
-      questions. Two facts from the {{MCP}} specification make everything below possible:
+      an {{MCP}} client. **Repos** are owned by teams.
+    he: >-
+      קודם התיבות. **מחשב של מפתח** מריץ את הסוכן, ובתוך הסוכן יושב לקוח {{MCP}}.
+      **מאגרי הקוד** שייכים לצוותים.
+  - en: >-
+      A **{{CI}}** job builds the index and publishes it. A **registry** lists the
+      snapshots. An **{{MCP}} server** answers questions.
+    he: >-
+      משימת **{{CI}}** בונה את האינדקס ומפרסמת אותו. **מרשם** מפרט את תמונות המצב. **שרת
+      {{MCP}}** עונה על שאלות.
+  - en: >-
+      Two facts from the {{MCP}} specification make everything that follows possible:
       a server can be a local process or a remote service, and there are two standard
       ways to connect. In one the client launches the server as a subprocess on the same
       machine. In the other the server is an independent process, reached over {{HTTP}},
       that serves many clients.
     he: >-
-      קודם התיבות. **מחשב של מפתח** מריץ את הסוכן, ובתוך הסוכן יושב לקוח {{MCP}}.
-      **מאגרי הקוד** שייכים לצוותים. משימת **{{CI}}** בונה את האינדקס ומפרסמת אותו.
-      **מרשם** מפרט את תמונות המצב. **שרת {{MCP}}** עונה על שאלות. שתי עובדות מהמפרט של
-      {{MCP}} מאפשרות את כל מה שיבוא: שרת יכול להיות תהליך מקומי או שירות מרוחק, ויש שתי
-      דרכים תקניות להתחבר. באחת הלקוח מפעיל את השרת כתת-תהליך על אותו מחשב. בשנייה השרת
-      הוא תהליך עצמאי, שפונים אליו ב-{{HTTP}}, והוא משרת לקוחות רבים.
+      שתי עובדות מהמפרט של {{MCP}} מאפשרות את כל מה שיבוא: שרת יכול להיות תהליך מקומי או
+      שירות מרוחק, ויש שתי דרכים תקניות להתחבר. באחת הלקוח מפעיל את השרת כתת-תהליך על אותו
+      מחשב. בשנייה השרת הוא תהליך עצמאי, שפונים אליו ב-{{HTTP}}, והוא משרת לקוחות רבים.
   - en: >-
       **Local.** Every machine runs its own server over graphs it built from the repos it
       has. It is as fresh as it gets, down to changes you have not committed, and it

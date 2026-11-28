@@ -55,14 +55,30 @@ export function LessonPage() {
         </div>
       </header>
 
+      {/* Lead with the interaction: the first paragraph, then the first explorer, then the rest of
+          the narrative, then any further explorers (CODEGRAPH_LLD.md section 9). */}
       <div className="lesson-prose space-y-4 max-w-[68ch]">
-        {lesson.intro.map((p, i) => (
+        {lesson.intro.slice(0, 1).map((p, i) => (
           <Rich key={i} text={pick(p, locale)} />
         ))}
       </div>
 
-      {lesson.explorers?.map((explorer, i) => (
+      {lesson.explorers?.slice(0, 1).map((explorer, i) => (
         <div key={`${lesson.id}-${i}`} className="my-8">
+          <LessonExplorer config={explorer} locale={locale} />
+        </div>
+      ))}
+
+      {lesson.intro.length > 1 && (
+        <div className="lesson-prose space-y-4 max-w-[68ch]">
+          {lesson.intro.slice(1).map((p, i) => (
+            <Rich key={i} text={pick(p, locale)} />
+          ))}
+        </div>
+      )}
+
+      {lesson.explorers?.slice(1).map((explorer, i) => (
+        <div key={`${lesson.id}-${i + 1}`} className="my-8">
           <LessonExplorer config={explorer} locale={locale} />
         </div>
       ))}

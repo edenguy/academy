@@ -13,15 +13,18 @@ subtitle:
 intro:
   - en: >-
       Meet the example organization used from here on: [[500]] repos, [[20,000]]
-      developers, a few dozen teams. These numbers are an example. They describe no real
-      company, and the sliders let you change them. Every developer has an agent, and
-      every agent sometimes needs a fact about code in a repo its developer does not
-      have.
+      developers, a few dozen teams.
     he: >-
       הכירו את הארגון לדוגמה שילווה אותנו מכאן: [[500]] מאגרי קוד, [[20,000]] מפתחים,
-      כמה עשרות צוותים. המספרים האלה הם דוגמה. הם לא מתארים שום חברה אמיתית, והמחוונים
-      מאפשרים לשנות אותם. לכל מפתח יש סוכן, וכל סוכן צריך מדי פעם עובדה על קוד שנמצא
-      במאגר שאין למפתח שלו.
+      כמה עשרות צוותים.
+  - en: >-
+      These numbers are an example. They describe no real company, and the sliders above
+      let you change them. Every developer has an agent, and every agent sometimes needs a
+      fact about code in a repo its developer does not have.
+    he: >-
+      המספרים האלה הם דוגמה. הם לא מתארים שום חברה אמיתית, והמחוונים שלמעלה מאפשרים
+      לשנות אותם. לכל מפתח יש סוכן, וכל סוכן צריך מדי פעם עובדה על קוד שנמצא במאגר שאין
+      למפתח שלו.
   - en: >-
       **Option one: every machine indexes everything.** That is [[500]] × [[20,000]] =
       [[10,000,000]] index builds, repeated as the code changes, and every machine needs

@@ -2053,25 +2053,25 @@ two lines, centred at x = 74.
 
 | Lane | Band y1 to y2 |
 |---|---|
-| `product` (Product teams, repo owners) | 8 to 138 |
-| `platform` (Platform team) | 146 to 276 |
-| `security` (Security and access) | 284 to 384 |
-| `developers` (Developers) | 392 to 552 |
+| `product` (Product teams, repo owners) | 8 to 108 |
+| `platform` (Platform team) | 116 to 296 |
+| `security` (Security and access) | 304 to 404 |
+| `developers` (Developers) | 412 to 552 |
 
 | Node id | Kind | Centre (x, y) | w × h |
 |---|---|---|---|
-| `repo-a` | repo | (250, 73) | 120 × 60 |
-| `repo-b` | repo | (390, 73) | 120 × 60 |
-| `repo-c` | repo | (530, 73) | 120 × 60 |
-| `ci` | ci | (850, 73) | 170 × 64 |
-| `server-1` | server | central and hybrid: (460, 211), 180 × 64; sharded: (300, 211), 140 × 64 |
-| `server-2` | server | sharded only: (460, 211) | 140 × 64 |
-| `server-3` | server | sharded only: (620, 211) | 140 × 64 |
-| `registry` | registry | (850, 211) | 170 × 64 |
-| `policy` | policy | (850, 334) | 200 × 56 |
-| `machine-1` | machine | (300, 472) | 140 × 132 |
-| `machine-2` | machine | (460, 472) | 140 × 132 |
-| `machine-3` | machine | (620, 472) | 140 × 132 |
+| `repo-a` | repo | (250, 58) | 120 × 60 |
+| `repo-b` | repo | (390, 58) | 120 × 60 |
+| `repo-c` | repo | (530, 58) | 120 × 60 |
+| `ci` | ci | (850, 156), platform lane | 170 × 64 |
+| `server-1` | server | central and hybrid: (460, 254), 180 × 64; sharded: (300, 254), 140 × 64 |
+| `server-2` | server | sharded only: (460, 254) | 140 × 64 |
+| `server-3` | server | sharded only: (620, 254) | 140 × 64 |
+| `registry` | registry | (850, 254) | 170 × 64 |
+| `policy` | policy | (850, 354) | 200 × 56 |
+| `machine-1` | machine | (300, 484) | 140 × 132 |
+| `machine-2` | machine | (460, 484) | 140 × 132 |
+| `machine-3` | machine | (620, 484) | 140 × 132 |
 
 Narrow layout, `viewBox="0 0 360 850"` (`machine-1` and `machine-2` are 150 wide at x 21 to 171 and 189 to 339), rendered at the container width up to a maximum
 of 420 px, centred. Lanes are stacked full-width bands (x 8 to 352), each with its label
@@ -2081,8 +2081,8 @@ side). `repo-c`, `machine-3` are not drawn (`narrow: null`); the count badges ca
 
 | Lane | Band y1 to y2 |
 |---|---|
-| `product` | 8 to 190 |
-| `platform` | 198 to 388 |
+| `product` | 8 to 120 |
+| `platform` | 128 to 388 |
 | `security` | 396 to 486 |
 | `developers` | 494 to 842 |
 
@@ -2090,7 +2090,7 @@ side). `repo-c`, `machine-3` are not drawn (`narrow: null`); the count badges ca
 |---|---|---|
 | `repo-a` | (96, 80) | 150 × 46 |
 | `repo-b` | (264, 80) | 150 × 46 |
-| `ci` | (180, 152) | 300 × 46 |
+| `ci` | (180, 190), platform lane | 300 × 46 |
 | `registry` | (180, 262) | 300 × 46 |
 | `server-1` | central and hybrid: (180, 344), 300 × 46; sharded: (66, 344), 104 × 46 |
 | `server-2` | sharded: (180, 344) | 104 × 46 |
@@ -2138,12 +2138,14 @@ bottom), go vertically to the midpoint y between the two facing sides, horizonta
 
 | Edge | Layout | Waypoints |
 |---|---|---|
-| `clone` | wide | (190, 73) → (166, 73) → (166, 472) → (230, 472) |
+| `merge` | wide | (590, 58) → (850, 58) → (850, 124) |
+| `merge` | narrow | (264, 103) → (264, 167) |
+| `clone` | wide | (190, 58) → (166, 58) → (166, 484) → (230, 484) |
 | `clone` | narrow | (21, 80) → (14, 80) → (14, 690) → (21, 690) |
-| `ask-n` (central, hybrid) | wide | machine top centre → (machine.x, 300) → (460, 300) → (460, 243) |
+| `ask-n` (central, hybrid) | wide | machine top centre → (machine.x, 330) → (460, 330) → (460, 286) |
 | `ask-n` (sharded) | wide | straight vertical, machine top centre to server bottom centre |
-| `load-n` (sharded) | wide | (765, 211) → (745, 211) → (745, 160) → (server.x, 160) → (server.x, 179) |
-| `policy-server` | wide | (750, 334) → (server.x + 40, 334) → (server.x + 40, 243) |
+| `load-n` (sharded) | wide | (765, 254) → (745, 254) → (745, 198) → (server.x, 198) → (server.x, 222) |
+| `policy-server` | wide | (750, 354) → (server.x + 40, 354) → (server.x + 40, 286) |
 | `ask-n` (central, hybrid) | narrow | machine top centre → (machine.x, 520) → (150, 520) → (150, 367); passes the security band to the left of `policy` |
 | `ask-n` (sharded) | narrow | machine top centre → (machine.x, 520) → (server.x, 520) → server bottom centre (`machine-1` → `server-1`, `machine-2` → `server-2`) |
 | `load-n` (sharded) | narrow | (180, 285) → (180, 304) → (server.x, 304) → (server.x, 321) |
@@ -3063,21 +3065,30 @@ Where the build departs from sections 1 to 8. Everything not listed here follows
    a fixed 28. In the staleness drawing a renamed function is drawn once, at its old place, with
    the old name as its sub-label, and the two edges that land on the same line are drawn 8 px
    apart.
-7. **Topology.** `TNode` has an optional `sharded` box and `TEdge` has no `wide`/`narrow` fields;
+7. **Topology.** The CI box is in the **platform** lane in every arrangement (the spec's
+   coordinates put it in the product lane, which contradicted §3.8). The lane bands, the y of
+   every box and the affected waypoints in §4.8 are updated above; the merge edge now runs out
+   of `repo-c` on its row and down into the top of CI. `TNode` has an optional `sharded` box and `TEdge` has no `wide`/`narrow` fields;
    paths come from `pathFor(edge, topology, layout)`. Extra edge ids `policy-server-2` and
    `policy-server-3` exist in the sharded arrangement. `developersPerServer` rounds a shard up.
    A machine has no title row (the lane names it); its rows start on the icon's line so the
    three rows fit 132 px. Hebrew lane headers in the narrow layout sit at the right (the start
-   side) and have a halo so a line that crosses them stays readable. The CI box sits in the
-   product lane, as the §4.8 coordinates put it, while §3.8 says the platform team owns the
-   pipeline: **Guy to decide** whether CI moves to the platform lane or the sentence changes.
+   side) and have a halo so a line that crosses them stays readable.
 8. **SearchCost.** The "With a graph: 1 query" line shows the correct answer (`truth`), because
    the compiler index is blind for `total_price`.
 9. **Smaller points.** `relevantHits` takes an optional `term`. The landscape link for
    `central-index` is the published abseil.io URL. The lesson page keys each explorer by lesson
    id so state does not leak between lessons. `*.tsbuildinfo` is not tracked (Chemistry does not
    track it either). `home.curriculumNote` is shown under the syllabus lead.
-10. **Not done.** The project websites in §2 could not be reached from the build sandbox (no
+10. **Lesson page order.** `LessonPage` renders the first narrative paragraph, then the first
+    explorer, then the remaining paragraphs, then any further explorers, then the key points and
+    the quiz, so each lesson opens with something to touch (§7.1). Paragraphs that were longer
+    than about four lines at 390 px were split in the YAML (lessons 2 to 6), one sentence moved
+    to the next paragraph in lesson 1 and a sentence from lesson 5's first paragraph moved to
+    its second; no fact or number changed. Wording that pointed at the explorer was adjusted to
+    its new place ("Above is a toy shop", "the explorer above", "the sliders above", "everything
+    that follows").
+11. **Not done.** The project websites in §2 could not be reached from the build sandbox (no
     response from any of them), so nothing was re-read there and the table in §2 is unchanged.
     `ACADEMY_PRIVATE_PATTERN` was not supplied, so checklist item 26's fourth grep was not run;
     the other five were.

@@ -39,14 +39,14 @@ export const VIEWBOX: Record<Layout, { w: number; h: number }> = {
 
 export const LANE_BANDS: Record<Layout, Record<Lane, { y1: number; y2: number }>> = {
   wide: {
-    product: { y1: 8, y2: 138 },
-    platform: { y1: 146, y2: 276 },
-    security: { y1: 284, y2: 384 },
-    developers: { y1: 392, y2: 552 },
+    product: { y1: 8, y2: 108 },
+    platform: { y1: 116, y2: 296 },
+    security: { y1: 304, y2: 404 },
+    developers: { y1: 412, y2: 552 },
   },
   narrow: {
-    product: { y1: 8, y2: 190 },
-    platform: { y1: 198, y2: 388 },
+    product: { y1: 8, y2: 120 },
+    platform: { y1: 128, y2: 388 },
     security: { y1: 396, y2: 486 },
     developers: { y1: 494, y2: 842 },
   },
@@ -57,27 +57,27 @@ export const LANE_X: Record<Layout, { x1: number; x2: number }> = { wide: { x1: 
 const B = (x: number, y: number, w: number, h: number): Box => ({ x, y, w, h });
 
 export const TNODES: TNode[] = [
-  { id: 'repo-a', kind: 'repo', lane: 'product', wide: B(250, 73, 120, 60), narrow: B(96, 80, 150, 46) },
-  { id: 'repo-b', kind: 'repo', lane: 'product', wide: B(390, 73, 120, 60), narrow: B(264, 80, 150, 46) },
-  { id: 'repo-c', kind: 'repo', lane: 'product', wide: B(530, 73, 120, 60), narrow: null },
-  { id: 'ci', kind: 'ci', lane: 'product', wide: B(850, 73, 170, 64), narrow: B(180, 152, 300, 46) },
+  { id: 'repo-a', kind: 'repo', lane: 'product', wide: B(250, 58, 120, 60), narrow: B(96, 80, 150, 46) },
+  { id: 'repo-b', kind: 'repo', lane: 'product', wide: B(390, 58, 120, 60), narrow: B(264, 80, 150, 46) },
+  { id: 'repo-c', kind: 'repo', lane: 'product', wide: B(530, 58, 120, 60), narrow: null },
+  { id: 'ci', kind: 'ci', lane: 'platform', wide: B(850, 156, 170, 64), narrow: B(180, 190, 300, 46) },
   {
-    id: 'server-1', kind: 'server', lane: 'platform', wide: B(460, 211, 180, 64), narrow: B(180, 344, 300, 46),
-    sharded: { wide: B(300, 211, 140, 64), narrow: B(66, 344, 104, 46) },
+    id: 'server-1', kind: 'server', lane: 'platform', wide: B(460, 254, 180, 64), narrow: B(180, 344, 300, 46),
+    sharded: { wide: B(300, 254, 140, 64), narrow: B(66, 344, 104, 46) },
   },
   {
-    id: 'server-2', kind: 'server', lane: 'platform', wide: B(460, 211, 140, 64), narrow: B(180, 344, 104, 46),
-    sharded: { wide: B(460, 211, 140, 64), narrow: B(180, 344, 104, 46) },
+    id: 'server-2', kind: 'server', lane: 'platform', wide: B(460, 254, 140, 64), narrow: B(180, 344, 104, 46),
+    sharded: { wide: B(460, 254, 140, 64), narrow: B(180, 344, 104, 46) },
   },
   {
-    id: 'server-3', kind: 'server', lane: 'platform', wide: B(620, 211, 140, 64), narrow: B(294, 344, 104, 46),
-    sharded: { wide: B(620, 211, 140, 64), narrow: B(294, 344, 104, 46) },
+    id: 'server-3', kind: 'server', lane: 'platform', wide: B(620, 254, 140, 64), narrow: B(294, 344, 104, 46),
+    sharded: { wide: B(620, 254, 140, 64), narrow: B(294, 344, 104, 46) },
   },
-  { id: 'registry', kind: 'registry', lane: 'platform', wide: B(850, 211, 170, 64), narrow: B(180, 262, 300, 46) },
-  { id: 'policy', kind: 'policy', lane: 'security', wide: B(850, 334, 200, 56), narrow: B(270, 448, 150, 46) },
-  { id: 'machine-1', kind: 'machine', lane: 'developers', wide: B(300, 472, 140, 132), narrow: B(96, 690, 150, 270) },
-  { id: 'machine-2', kind: 'machine', lane: 'developers', wide: B(460, 472, 140, 132), narrow: B(264, 690, 150, 270) },
-  { id: 'machine-3', kind: 'machine', lane: 'developers', wide: B(620, 472, 140, 132), narrow: null },
+  { id: 'registry', kind: 'registry', lane: 'platform', wide: B(850, 254, 170, 64), narrow: B(180, 262, 300, 46) },
+  { id: 'policy', kind: 'policy', lane: 'security', wide: B(850, 354, 200, 56), narrow: B(270, 448, 150, 46) },
+  { id: 'machine-1', kind: 'machine', lane: 'developers', wide: B(300, 484, 140, 132), narrow: B(96, 690, 150, 270) },
+  { id: 'machine-2', kind: 'machine', lane: 'developers', wide: B(460, 484, 140, 132), narrow: B(264, 690, 150, 270) },
+  { id: 'machine-3', kind: 'machine', lane: 'developers', wide: B(620, 484, 140, 132), narrow: null },
 ];
 
 export function tnode(id: string): TNode {
@@ -186,8 +186,12 @@ export function pathFor(e: TEdge, t: Topology, layout: Layout): Point[] {
   const wide = layout === 'wide';
   const sharded = t === 'sharded';
 
+  if (e.id === 'merge') {
+    // out to the right of repo-c on its own row, then down into the top of CI (the platform lane)
+    return wide ? [P(590, 58), P(850, 58), P(850, 124)] : [P(264, 103), P(264, 167)];
+  }
   if (e.id === 'clone') {
-    return wide ? [P(190, 73), P(166, 73), P(166, 472), P(230, 472)] : [P(21, 80), P(14, 80), P(14, 690), P(21, 690)];
+    return wide ? [P(190, 58), P(166, 58), P(166, 484), P(230, 484)] : [P(21, 80), P(14, 80), P(14, 690), P(21, 690)];
   }
   if (e.kind === 'query') {
     // the narrow layout draws two machines; the third ask would lie on top of the second
@@ -195,19 +199,19 @@ export function pathFor(e: TEdge, t: Topology, layout: Layout): Point[] {
     const top = P(from.x, from.y - from.h / 2);
     if (wide) {
       if (sharded) return [top, P(to.x, to.y + to.h / 2)];
-      return [top, P(from.x, 300), P(460, 300), P(460, 243)];
+      return [top, P(from.x, 330), P(460, 330), P(460, 286)];
     }
     if (sharded) return [top, P(from.x, 520), P(to.x, 520), P(to.x, to.y + to.h / 2)];
     return [top, P(from.x, 520), P(150, 520), P(150, 367)];
   }
   if (e.id.startsWith('load-') && sharded) {
     return wide
-      ? [P(765, 211), P(745, 211), P(745, 160), P(to.x, 160), P(to.x, 179)]
+      ? [P(765, 254), P(745, 254), P(745, 198), P(to.x, 198), P(to.x, 222)]
       : [P(180, 285), P(180, 304), P(to.x, 304), P(to.x, 321)];
   }
   if (e.id === 'policy-registry' && !wide) return [P(345, 448), P(350, 448), P(350, 262), P(330, 262)];
   if (e.id.startsWith('policy-server')) {
-    if (wide) return [P(750, 334), P(to.x + 40, 334), P(to.x + 40, 243)];
+    if (wide) return [P(750, 354), P(to.x + 40, 354), P(to.x + 40, 286)];
     if (!sharded) return [P(270, 425), P(270, 367)];
     const n = serverNo(e.to);
     if (n === 3) return [P(270, 425), P(270, 367)];
