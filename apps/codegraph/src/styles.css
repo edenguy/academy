@@ -99,6 +99,7 @@
   --color-critical-fill: var(--critical-fill);
   --color-critical-soft: var(--critical-soft);
   --color-grid: var(--grid);
+  --radius-pill: 999px;
   --font-sans: 'Rubik Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Rubik Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
@@ -327,3 +328,12 @@ input[type='range'].slider:active::-webkit-slider-thumb { transform: scale(1.12)
 .lesson-prose em { font-style: italic; }
 @media (min-width: 768px) { .lesson-prose { font-size: 1.15rem; } }
 /* === /SKIN BASE === */
+
+/* === CODEGRAPH === classes used by the explorers (CODEGRAPH_LLD.md section 5.2) === */
+.toy-node:focus-visible { outline-offset: 3px; }
+.code-panel { direction: ltr; font-family: var(--font-mono); font-size: 13px; overflow-x: auto; }
+@media (hover: hover) {
+  .toy-node:hover .toy-node-rect { stroke: var(--accent); }
+}
+@keyframes topo-travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.topo-dot { offset-distance: 0%; animation: topo-travel 320ms cubic-bezier(.2, .8, .2, 1) 1 both; }

@@ -71,7 +71,7 @@ export function nodeLabel(n: ToyNode): string {
 }
 
 /** One string per node and per edge, for the visually hidden text alternative. */
-export function describeGraph(g: Graph, t: (key: string, o?: object) => string): string[] {
+export function describeGraph(g: Graph, t: (key: string) => string): string[] {
   const byId = new Map(g.nodes.map((n) => [n.id, n]));
   const label = (id: string) => {
     const n = byId.get(id);

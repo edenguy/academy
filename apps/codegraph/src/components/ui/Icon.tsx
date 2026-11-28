@@ -5,7 +5,7 @@ export type IconName =
   | 'speakerMute' | 'paperclip' | 'handle' | 'pin' | 'envelope' | 'target' | 'lock' | 'trophy' | 'play'
   | 'repo' | 'gear' | 'stack' | 'server' | 'shield' | 'laptop' | 'doc' | 'cube' | 'puzzle' | 'approx' | 'emptyCircle' | 'pause';
 
-const paths: Record<IconName, string> = {
+export const ICON_PATHS: Record<IconName, string> = {
   check: 'm5 12 5 5L20 7',
   x: 'M6 6l12 12M18 6 6 18',
   arrow: 'M5 12h14m-6-6 6 6-6 6',
@@ -62,7 +62,7 @@ export function Icon({ name, size = 20, className, ...rest }: { name: IconName; 
       aria-hidden="true"
       {...rest}
     >
-      <path d={paths[name]} />
+      <path d={ICON_PATHS[name]} />
       {extra?.('extra')}
     </svg>
   );

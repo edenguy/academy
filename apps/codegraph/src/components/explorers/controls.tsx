@@ -31,7 +31,7 @@ export function Readout({
   return (
     <div className="elev-0 px-3.5 py-2.5 min-w-[130px] flex-1 basis-[130px]">
       <div className="text-[13px] text-ink-2">{label}</div>
-      <div className={clsx('readout text-[26px] md:text-[32px] font-semibold leading-tight', color)}>
+      <div className={clsx('readout font-semibold leading-tight', typeof value === 'string' && value.length > 7 ? 'text-[20px] md:text-[24px]' : 'text-[26px] md:text-[32px]', color)}>
         {icon && <Icon name={icon} size={20} className="inline-block align-[-3px] me-1.5" />}
         {value}
       </div>

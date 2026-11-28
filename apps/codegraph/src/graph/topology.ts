@@ -326,7 +326,7 @@ export function topologyMetrics(org: Org, t: Topology, p: { reposPerDeveloper: n
  * Text alternative: one item per lane, one per used edge, one per unused node.
  * Keys used: explorer.topology.lane.*, node.*, edge.*, notUsed.
  */
-export function describeTopology(t: Topology, tr: (key: string, o?: object) => string): string[] {
+export function describeTopology(t: Topology, tr: (key: string) => string): string[] {
   const nodes = nodesFor(t);
   const used = new Set(nodes.filter((n) => n.used).map((n) => n.id));
   const kindName = (k: TNodeKind) => tr(`explorer.topology.node.${k}`);

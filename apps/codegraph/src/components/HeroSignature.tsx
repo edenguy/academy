@@ -28,7 +28,8 @@ const PLOT_H = VB_H - PAD * 2;
 const SAMPLES = 100;
 const SWEEP_TARGET = 0.62;
 const SWEEP_MS = 1400;
-const TAG_W = 70;
+const TAG_W = 70; // minimum; the tag grows with its text (Code Graph's tag is longer than a number)
+const TAG_CHAR = 7.2;
 const TAG_H = 24;
 
 export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
@@ -96,7 +97,9 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
   const x = a + t * (b - a);
   const hx = scaleX(x);
   const hy = scaleY(curve.fn(x));
-  const tagX = Math.min(VB_W - PAD - TAG_W, Math.max(PAD, hx - TAG_W / 2));
+  const tagText = curve.tagText(x, t);
+  const tagW = Math.max(TAG_W, tagText.length * TAG_CHAR + 18);
+  const tagX = Math.min(VB_W - PAD - tagW, Math.max(PAD, hx - tagW / 2));
   const tagY = Math.max(PAD, Math.min(VB_H - PAD - TAG_H, hy - 36));
 
   return (
@@ -151,9 +154,9 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
       <circle cx={hx} cy={hy} r={9} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2.5} />
 
       <g transform={`translate(${tagX}, ${tagY})`}>
-        <rect width={TAG_W} height={TAG_H} rx={6} fill="var(--accent)" />
+        <rect width={tagW} height={TAG_H} rx={6} fill="var(--accent)" />
         <text
-          x={TAG_W / 2}
+          x={tagW / 2}
           y={TAG_H / 2 + 4}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
@@ -161,7 +164,7 @@ export function HeroSignature({ curve }: { curve: HeroCurveConfig }) {
           fontWeight={600}
           fill="var(--accent-ink)"
         >
-          {curve.tagText(x, t)}
+          {tagText}
         </text>
       </g>
     </svg>

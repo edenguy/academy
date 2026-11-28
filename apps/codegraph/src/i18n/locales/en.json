@@ -172,7 +172,9 @@
       "dependsOn": "Depends on",
       "dependedOnBy": "Is depended on by",
       "filterNote": "The filter changes only what is drawn. The count uses the whole graph.",
-      "figure": "The toy shop as a graph: 11 nodes and 10 edges in two repos"
+      "figure": "The toy shop as a graph: 11 nodes and 10 edges in two repos",
+      "legendOrders": "repo orders-service",
+      "legendWeb": "repo web-shop (dashed outline)"
     },
     "kind": {
       "function": "Function",
@@ -283,7 +285,9 @@
         "verifyLive": "The snapshot is behind and the source is at hand. Check the code directly.",
         "answerAsOf": "The snapshot is behind and there is no source. Answer, and say which commit the answer is for."
       },
-      "figure": "A timeline of five commits with the head and the last publish, and the graph below it"
+      "figure": "A timeline of five commits with the head and the last publish, and the graph below it",
+      "wasNamed": "was {{name}}",
+      "timeline": "The commit timeline"
     },
     "cadence": {
       "commitsPerDay": "Commits per repo per day",
@@ -299,7 +303,11 @@
       "lessThanOne": "less than 1",
       "publishes": "Publishes a day across {{repos}} repos",
       "assumption": "Assumes commits are spread evenly over the day.",
-      "figure": "One day as a timeline, with commits and publish points"
+      "figure": "One day as a timeline, with commits and publish points",
+      "axisDay": "hours in the day",
+      "axisWeek": "days in the week",
+      "nowLabel": "now",
+      "gap": "The gap"
     },
     "topology": {
       "t": {
@@ -408,7 +416,12 @@
         "p3": "The snapshot is stored and its commit is recorded in the registry.",
         "p4": "The servers load the new snapshot. Answers are current from now on.",
         "n1": "Nothing is published in this arrangement. Each machine indexes for itself."
-      }
+      },
+      "legendPublish": "Publish",
+      "legendQuery": "Question",
+      "legendPolicy": "Access rule",
+      "legendClone": "Repo clone",
+      "badgeMany": "many"
     },
     "access": {
       "share": "Share of repos this developer may read",
@@ -435,7 +448,9 @@
         "registry": "Registry"
       },
       "modelNote": "A model of one common design, not a description of a product.",
-      "figure": "The path of a request from the developer to the registry, with the places where access is checked"
+      "figure": "The path of a request from the developer to the registry, with the places where access is checked",
+      "blocked": "Blocked",
+      "exposedWord": "Exposed"
     },
     "landscape": {
       "layer": {
@@ -503,7 +518,10 @@
         "spdx": "An open standard for a software bill of materials (SBOM).",
         "cyclonedx": "A bill-of-materials standard, published as ECMA-424.",
         "joining": "No standard joins the three. \"Contract graph\" in this course names an idea, not a format."
-      }
+      },
+      "standardTitle": "What is standardized here",
+      "notStandardTitle": "What is not",
+      "sourceOpens": "Opens in a new tab"
     }
   }
 }
